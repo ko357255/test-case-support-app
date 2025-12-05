@@ -34,7 +34,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* フォントをCSS変数に登録する */}
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {/* サイドバーとメインを横に並べる */}
+        <div className="flex h-screen bg-gray-50">
+          {/* サイドバー */}
+          <aside className="w-64 border-r border-gray-200 bg-white">
+            ここはサイドバーです
+          </aside>
+
+          {/* メイン */}
+          <main
+            className="flex-1 overflow-hidden"
+            // flex-1: 余白を埋める
+          >
+            {/* page.tsx が入る */}
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   );
 }
