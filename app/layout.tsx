@@ -8,6 +8,10 @@ const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
+// ↓のように生成される
+// .font-geist-sans {
+//   --font-geist-sans: 'Geist Variable', sans-serif;
+// }
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
@@ -29,6 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* フォントをCSS変数に登録する */}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
