@@ -9,7 +9,7 @@ import {
   XCircle,
 } from 'lucide-react';
 
-interface SidebarProps {
+interface Props {
   /** 選択中のステータスフィルタ */
   filterStatus: string;
   /** 選択中のカテゴリフィルタ */
@@ -19,10 +19,7 @@ interface SidebarProps {
 /**
  * サイドバーコンポーネント（サーバー）
  */
-export default async function Sidebar({
-  filterStatus,
-  filterCategory,
-}: SidebarProps) {
+export default async function Sidebar({ filterStatus, filterCategory }: Props) {
   // テストケースの一覧を取得
   const testcases = await fetchTestCases();
   // カテゴリの一覧を抽出
