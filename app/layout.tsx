@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import Sidebar from '@/components/layout/Sidebar';
 
 // フォントの設定
 const geistSans = Geist({
@@ -40,9 +41,7 @@ export default function RootLayout({
         {/* サイドバーとメインを横に並べる */}
         <div className="flex h-screen bg-gray-50">
           {/* サイドバー */}
-          <aside className="w-64 border-r border-gray-200 bg-white">
-            ここはサイドバーです
-          </aside>
+          <Sidebar />
 
           {/* メイン */}
           <main
