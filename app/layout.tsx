@@ -40,7 +40,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* サイドバーとメインを横に並べる */}
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex h-screen bg-gray-100">
           {/* サイドバー */}
           <Sidebar filterStatus="all" filterCategory="all" />
 

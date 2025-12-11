@@ -21,7 +21,7 @@ export default function TestCaseTableRow({ testCase }: Props) {
   return (
     <tr
       onClick={() => router.push(`/testcases/${testCase.id}`)}
-      className="cursor-pointer transition-colors hover:bg-gray-50"
+      className="cursor-pointer transition-colors hover:bg-gray-100"
     >
       <StatusCell status={testCase.status} />
       <TitleCell title={testCase.title} description={testCase.description} />

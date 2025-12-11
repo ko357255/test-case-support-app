@@ -1,7 +1,7 @@
 export default function TestCaseTableHeader() {
   return (
     <thead>
-      <tr className="border-b border-gray-200 bg-gray-100">
+      <tr className="border-b border-gray-300 bg-gray-50">
         {[
           'ステータス',
           'タイトル',

@@ -10,10 +10,10 @@ type Props = {
 
 export default function TestCaseTable({ testCases }: Props) {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm">
       <table className="w-full">
         <TestCaseTableHeader />
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-gray-300">
           {testCases.map((tc) => (
             <TestCaseTableRow key={tc.id} testCase={tc} />
           ))}
