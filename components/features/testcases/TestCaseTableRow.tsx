@@ -20,6 +20,7 @@ export default function TestCaseTableRow({ testCase }: Props) {
 
   return (
     <tr
+      // クリック時に詳細ページへ遷移
       onClick={() => router.push(`/testcases/${testCase.id}`)}
       className="cursor-pointer transition-colors hover:bg-gray-100"
     >
