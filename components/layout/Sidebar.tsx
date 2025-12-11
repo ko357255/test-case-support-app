@@ -9,15 +9,23 @@ import {
   XCircle,
 } from 'lucide-react';
 
-// Sidebar コンポーネント
-export default async function Sidebar({
-  filterStatus, // 選択中のステータスフィルタ
-  filterCategory, // 選択中のカテゴリフィルタ
-}: {
+interface SidebarProps {
+  /** 選択中のステータスフィルタ */
   filterStatus: string;
+  /** 選択中のカテゴリフィルタ */
   filterCategory: string;
-}) {
+}
+
+/**
+ * サイドバーコンポーネント（サーバー）
+ */
+export default async function Sidebar({
+  filterStatus,
+  filterCategory,
+}: SidebarProps) {
+  // テストケースの一覧を取得
   const testcases = await fetchTestCases();
+  // カテゴリの一覧を抽出
   const categories = Array.from(new Set(testcases.map((tc) => tc.category)));
 
   return (
