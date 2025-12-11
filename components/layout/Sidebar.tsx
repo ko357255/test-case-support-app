@@ -1,3 +1,4 @@
+import { fetchTestCases } from '@/lib/api/testcases';
 import {
   CheckCircle,
   Circle,
@@ -9,13 +10,16 @@ import {
 } from 'lucide-react';
 
 // Sidebar コンポーネント
-export default function Sidebar({
+export default async function Sidebar({
   filterStatus, // 選択中のステータスフィルタ
   filterCategory, // 選択中のカテゴリフィルタ
 }: {
   filterStatus: string;
   filterCategory: string;
 }) {
+  const testcases = await fetchTestCases();
+  const categories = Array.from(new Set(testcases.map((tc) => tc.category)));
+
   return (
     // サイドバー全体（縦に並べる）
     <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
@@ -122,35 +126,19 @@ export default function Sidebar({
               すべて
             </button>
 
-            <button
-              className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
-                filterCategory === '認証'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              HTML
-            </button>
-
-            <button
-              className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
-                filterCategory === '検索'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              CSS
-            </button>
-
-            <button
-              className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
-                filterCategory === '決済'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              ルーティング
-            </button>
+            {/* categoriesから自動生成 */}
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
+                  filterCategory === category
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
       </div>
