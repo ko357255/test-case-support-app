@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
+import Header from '@/components/layout/Header';
 
 // フォントの設定
 const geistSans = Geist({
@@ -43,14 +44,18 @@ export default function RootLayout({
           {/* サイドバー */}
           <Sidebar />
 
-          {/* メイン */}
-          <main
-            className="flex-1 overflow-hidden"
-            // flex-1: 余白を埋める
-          >
-            {/* page.tsx が入る */}
-            {children}
-          </main>
+          {/* ヘッダーとメインを縦に並べる */}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <Header></Header>
+            <main
+              className="flex-1 overflow-y-auto"
+              // flex-1: 余白を埋める
+              // overflow-y-auto: 縦方向にスクロール可
+            >
+              {/* page.tsx が入る */}
+              {children}
+            </main>
+          </div>
         </div>
       </body>
     </html>
