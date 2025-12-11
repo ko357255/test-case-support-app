@@ -1,0 +1,196 @@
+[
+  {
+    "id": "1",
+    "title": "ログイン機能の正常系テスト",
+    "description": "正しいメールアドレスとパスワードでログインできることを確認する",
+    "category": "認証",
+    "priority": "high",
+    "status": "passed",
+    "groupId": "group1",
+    "steps": [
+      {
+        "id": "s1",
+        "stepNumber": 1,
+        "action": "ログインページにアクセス",
+        "expected": "ログインフォームが表示される",
+        "actual": "ログインフォームが正常に表示された",
+        "status": "passed",
+        "evidences": [
+          {
+            "id": "e1",
+            "name": "ログイン画面スクリーンショット",
+            "type": "screenshot",
+            "url": "/placeholder-screenshot.png",
+            "uploadedAt": "2025-12-04T10:30:00",
+            "note": "ログインフォームの表示確認"
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "stepNumber": 2,
+        "action": "有効なメールアドレスとパスワードを入力",
+        "expected": "エラーなく入力できる",
+        "actual": "正常に入力できた",
+        "status": "passed"
+      },
+      {
+        "id": "s3",
+        "stepNumber": 3,
+        "action": "ログインボタンをクリック",
+        "expected": "ダッシュボードにリダイレクトされる",
+        "actual": "ダッシュボードに遷移した",
+        "status": "passed",
+        "evidences": [
+          {
+            "id": "e1-2",
+            "name": "ダッシュボード画面",
+            "type": "screenshot",
+            "url": "/placeholder-screenshot.png",
+            "uploadedAt": "2025-12-04T10:31:00",
+            "note": "ログイン成功後の画面"
+          }
+        ]
+      }
+    ],
+    "evidences": [],
+    "createdAt": "2025-12-01T09:00:00",
+    "updatedAt": "2025-12-04T10:30:00"
+  },
+  {
+    "id": "2",
+    "title": "ログイン機能の異常系テスト - 無効なパスワード",
+    "description": "無効なパスワードでログインした場合、適切なエラーメッセージが表示されることを確認",
+    "category": "認証",
+    "priority": "high",
+    "status": "failed",
+    "groupId": "group1",
+    "steps": [
+      {
+        "id": "s4",
+        "stepNumber": 1,
+        "action": "有効なメールアドレスと無効なパスワードを入力",
+        "expected": "エラーなく入力できる",
+        "actual": "正常に入力できた",
+        "status": "passed"
+      },
+      {
+        "id": "s5",
+        "stepNumber": 2,
+        "action": "ログインボタンをクリック",
+        "expected": "エラーメッセージ「パスワードが正しくありません」が表示される",
+        "actual": "エラーメッセージが表示されなかった",
+        "status": "failed"
+      }
+    ],
+    "evidences": [],
+    "createdAt": "2025-12-01T09:15:00",
+    "updatedAt": "2025-12-04T11:00:00"
+  },
+  {
+    "id": "3",
+    "title": "ユーザー登録機能テスト",
+    "description": "新規ユーザーが登録できることを確認する",
+    "category": "認証",
+    "priority": "medium",
+    "status": "in_progress",
+    "groupId": "group2",
+    "steps": [
+      {
+        "id": "s6",
+        "stepNumber": 1,
+        "action": "登録ページにアクセス",
+        "expected": "登録フォームが表示される"
+      },
+      {
+        "id": "s7",
+        "stepNumber": 2,
+        "action": "必要事項を入力",
+        "expected": "エラーなく入力できる"
+      },
+      {
+        "id": "s8",
+        "stepNumber": 3,
+        "action": "登録ボタンをクリック",
+        "expected": "登録完了メッセージが表示される"
+      }
+    ],
+    "evidences": [],
+    "createdAt": "2025-12-02T14:00:00",
+    "updatedAt": "2025-12-04T09:00:00"
+  },
+  {
+    "id": "4",
+    "title": "商品検索機能テスト",
+    "description": "キーワードで商品を検索できることを確認する",
+    "category": "検索",
+    "priority": "medium",
+    "status": "not_started",
+    "groupId": "group2",
+    "steps": [
+      {
+        "id": "s9",
+        "stepNumber": 1,
+        "action": "検索バーにキーワードを入力",
+        "expected": "検索候補が表示される"
+      },
+      {
+        "id": "s10",
+        "stepNumber": 2,
+        "action": "検索ボタンをクリック",
+        "expected": "検索結果一覧が表示される"
+      }
+    ],
+    "evidences": [],
+    "createdAt": "2025-12-03T10:00:00",
+    "updatedAt": "2025-12-03T10:00:00"
+  },
+  {
+    "id": "5",
+    "title": "決済機能の正常系テスト",
+    "description": "クレジットカードで決済できることを確認する",
+    "category": "決済",
+    "priority": "high",
+    "status": "passed",
+    "groupId": "group1",
+    "steps": [
+      {
+        "id": "s11",
+        "stepNumber": 1,
+        "action": "カート画面で決済ボタンをクリック",
+        "expected": "決済画面に遷移する",
+        "actual": "決済画面が表示された",
+        "status": "passed"
+      },
+      {
+        "id": "s12",
+        "stepNumber": 2,
+        "action": "クレジットカード情報を入力",
+        "expected": "エラーなく入力できる",
+        "actual": "正常に入力できた",
+        "status": "passed"
+      },
+      {
+        "id": "s13",
+        "stepNumber": 3,
+        "action": "決済実行ボタンをクリック",
+        "expected": "決済完了画面が表示される",
+        "actual": "決済完了画面が表示された",
+        "status": "passed",
+        "evidences": [
+          {
+            "id": "e2",
+            "name": "決済完了画面",
+            "type": "screenshot",
+            "url": "/placeholder-screenshot.png",
+            "uploadedAt": "2025-12-04T14:00:00",
+            "note": "決済完了メッセージの表示確認"
+          }
+        ]
+      }
+    ],
+    "evidences": [],
+    "createdAt": "2025-12-02T11:00:00",
+    "updatedAt": "2025-12-04T14:00:00"
+  }
+]
