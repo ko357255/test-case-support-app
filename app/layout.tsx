@@ -42,7 +42,7 @@ export default function RootLayout({
         {/* サイドバーとメインを横に並べる */}
         <div className="flex h-screen bg-gray-50">
           {/* サイドバー */}
-          <Sidebar />
+          <Sidebar filterStatus="all" filterCategory="all" />
 
           {/* ヘッダーとメインを縦に並べる */}
           <div className="flex flex-1 flex-col overflow-hidden">
