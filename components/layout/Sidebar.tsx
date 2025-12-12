@@ -9,12 +9,12 @@ import {
   XCircle,
 } from 'lucide-react';
 
-interface Props {
+type Props = {
   /** 選択中のステータスフィルタ */
   filterStatus: string;
   /** 選択中のカテゴリフィルタ */
   filterCategory: string;
-}
+};
 
 /**
  * サイドバーコンポーネント（サーバー）
