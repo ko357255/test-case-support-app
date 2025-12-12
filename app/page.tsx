@@ -1,4 +1,4 @@
-import TestCaseTable from '@/components/features/testcases/TestCaseTable';
+import TestCaseTable from '@/components/features/testcases/table/TestCaseTable';
 import { fetchTestCases } from '@/lib/api/testcases';
 
 /**

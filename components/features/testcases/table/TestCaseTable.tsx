@@ -1,8 +1,8 @@
 'use client';
 
 import type { TestCase } from '@/types/testcase';
-import TestCaseTableHeader from './TestCaseTableHeader';
-import TestCaseTableRow from './TestCaseTableRow';
+import TestCaseTableHeader from '@/components/features/testcases/table/TestCaseTableHeader';
+import TestCaseTableRow from '@/components/features/testcases/table/TestCaseTableRow';
 
 type Props = {
   testCases: TestCase[];
