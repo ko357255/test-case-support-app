@@ -59,7 +59,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
                 // 選択中なら強調表示
                 filterStatus === 'all'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <Circle className="h-4 w-4" />
@@ -70,7 +70,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
                 filterStatus === 'not_started'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <Circle className="h-4 w-4 text-gray-400" />
@@ -81,7 +81,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
                 filterStatus === 'in_progress'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <Clock className="h-4 w-4 text-blue-500" />
@@ -92,7 +92,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
                 filterStatus === 'passed'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <CheckCircle className="h-4 w-4 text-green-500" />
@@ -103,7 +103,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
                 filterStatus === 'failed'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <XCircle className="h-4 w-4 text-red-500" />
@@ -125,7 +125,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
               className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
                 filterCategory === 'all'
                   ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               すべて
@@ -138,7 +138,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
                 className={`w-full rounded-lg px-3 py-2 text-left transition-colors ${
                   filterCategory === category
                     ? 'bg-blue-50 text-blue-700'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 {category}
