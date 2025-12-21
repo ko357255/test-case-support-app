@@ -1,7 +1,7 @@
 import { fetchTestCases } from '@/lib/api/testcases';
 import SidebarHeader from './SidebarHeader';
 import SidebarFilters from './SidebarFilters';
-import { ThemeSwitch } from '../ThemeSwitch';
+import ThemeSwitch from '../ThemeSwitch';
 
 type Props = {
   /** 選択中のステータスフィルタ */
