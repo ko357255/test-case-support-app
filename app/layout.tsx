@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
+import Providers from '@/components/Providers';
 
 // フォントの設定
 const geistSans = Geist({
@@ -34,29 +35,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    // ハイドレーションの不一致による警告を許容
+    <html lang="ja" suppressHydrationWarning>
       {/* フォントをCSS変数に登録する */}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}
       >
-        {/* サイドバーとメインを横に並べる */}
-        <div className="flex h-screen bg-gray-100">
-          {/* サイドバー */}
-          <Sidebar filterStatus="all" filterCategory="all" />
+        <Providers>
+          {/* サイドバーとメインを横に並べる */}
+          <div className="bg-muted flex h-screen">
+            {/* サイドバー */}
+            <Sidebar filterStatus="all" filterCategory="all" />
 
-          {/* ヘッダーとメインを縦に並べる */}
-          <div className="flex flex-1 flex-col overflow-hidden">
-            <Header></Header>
-            <main
-              className="flex-1 overflow-y-auto"
-              // flex-1: 余白を埋める
-              // overflow-y-auto: 縦方向にスクロール可
-            >
-              {/* page.tsx が入る */}
-              {children}
-            </main>
+            {/* ヘッダーとメインを縦に並べる */}
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <Header></Header>
+              <main
+                className="flex-1 overflow-y-auto"
+                // flex-1: 余白を埋める
+                // overflow-y-auto: 縦方向にスクロール可
+              >
+                {/* page.tsx が入る */}
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
+        </Providers>
       </body>
     </html>
   );

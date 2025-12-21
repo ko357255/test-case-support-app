@@ -5,9 +5,9 @@ import { Search } from 'lucide-react';
  */
 export default async function Header() {
   return (
-    <header className="border-b border-gray-200 bg-white px-8 py-4 shadow-sm">
+    <header className="border-border bg-background border-b px-8 py-4 shadow-sm">
       <div className="mb-4">
-        <h1 className="text-2xl text-gray-900">プロジェクト名</h1>
+        <h1 className="text-foreground text-2xl">プロジェクト名</h1>
       </div>
 
       <div className="flex items-center justify-between">
@@ -18,7 +18,7 @@ export default async function Header() {
             <input
               type="text"
               placeholder="テストケースを検索..."
-              className="w-full rounded-lg border border-gray-300 bg-white py-2 pr-4 pl-10 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+              className="bg-background border-border w-full rounded-lg border py-2 pr-4 pl-10 focus:border-transparent focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
