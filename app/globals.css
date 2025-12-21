@@ -46,9 +46,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --color-success: var(--success);
-  --color-success-bg: var(--success-bg);
-  --color-success-border: var(--success-border);
+  --color-passed: var(--passed);
+  --color-passed-bg: var(--passed-bg);
+  --color-passed-border: var(--passed-border);
   --color-failed: var(--failed);
   --color-failed-bg: var(--failed-bg);
   --color-failed-border: var(--failed-border);
@@ -94,10 +94,10 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-  /* success */
-  --success: oklch(0.72 0.19 145);
-  --success-bg: oklch(0.96 0.04 145);
-  --success-border: oklch(0.86 0.08 145);
+  /* passed */
+  --passed: oklch(0.72 0.19 145);
+  --passed-bg: oklch(0.96 0.04 145);
+  --passed-border: oklch(0.86 0.08 145);
   /* failed */
   --failed: oklch(0.72 0.19 20);
   --failed-bg: oklch(0.95 0.05 20);
@@ -146,10 +146,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-  /* success */
-  --success: oklch(0.78 0.16 145);
-  --success-bg: oklch(0.24 0.05 145);
-  --success-border: oklch(0.38 0.08 145);
+  /* passed */
+  --passed: oklch(0.78 0.16 145);
+  --passed-bg: oklch(0.24 0.05 145);
+  --passed-border: oklch(0.38 0.08 145);
   /* failed */
   --failed: oklch(0.78 0.17 20);
   --failed-bg: oklch(0.25 0.04 20);

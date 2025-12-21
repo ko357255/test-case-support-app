@@ -14,9 +14,9 @@ import {
 export const statusConfig = {
   passed: {
     label: '成功',
-    color: 'text-success',
-    bgColor: 'bg-success-bg',
-    borderColor: 'border-success-border',
+    color: 'text-passed',
+    bgColor: 'bg-passed-bg',
+    borderColor: 'border-passed-border',
     icon: CheckCircle,
   },
   failed: {
