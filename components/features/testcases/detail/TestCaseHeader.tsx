@@ -20,7 +20,7 @@ export default function TestCaseHeader({
   const StatusIcon = statusConfig[editedTestCase.status].icon;
 
   return (
-    <div className="border-b border-gray-200 bg-gray-50 px-8 py-6">
+    <div className="border-border bg-muted/50 border-b px-8 py-6">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
           {isEditing ? (
@@ -30,23 +30,23 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, title: e.target.value })
               }
-              className="w-full rounded border border-gray-300 px-3 py-2 text-2xl text-gray-900"
+              className="border-input bg-background text-foreground w-full rounded border px-3 py-2 text-2xl"
             />
           ) : (
-            <h2 className="text-2xl text-gray-900">{editedTestCase.title}</h2>
+            <h2 className="text-foreground text-2xl">{editedTestCase.title}</h2>
           )}
         </div>
 
         <div className="ml-4 flex gap-2">
           {isEditing ? (
             <>
-              <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700">
+              <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 transition-colors">
                 <Save className="h-4 w-4" />
                 保存
               </button>
               <button
                 onClick={onCancel}
-                className="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg px-4 py-2 transition-colors"
               >
                 キャンセル
               </button>
@@ -54,7 +54,7 @@ export default function TestCaseHeader({
           ) : (
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 transition-colors"
             >
               <Edit2 className="h-4 w-4" />
               編集
@@ -69,16 +69,16 @@ export default function TestCaseHeader({
           onChange={(e) =>
             setTestCase({ ...editedTestCase, description: e.target.value })
           }
-          className="w-full rounded border border-gray-300 px-3 py-2 text-gray-600"
+          className="border-input bg-background text-muted-foreground w-full rounded border px-3 py-2"
           rows={2}
         />
       ) : (
-        <p className="text-gray-600">{editedTestCase.description}</p>
+        <p className="text-muted-foreground">{editedTestCase.description}</p>
       )}
 
       <div className="mt-4 flex gap-4">
         <div className="flex">
-          <span className="text-gray-500">ステータス:</span>
+          <span className="text-muted-foreground">ステータス:</span>
           {isEditing ? (
             <select
               value={editedTestCase.status}
@@ -88,7 +88,7 @@ export default function TestCaseHeader({
                   status: e.target.value as TestCase['status'],
                 })
               }
-              className="ml-2 rounded border border-gray-300 px-2 py-1"
+              className="border-input bg-background ml-2 rounded border px-2 py-1"
             >
               <option value="not_started">未実施</option>
               <option value="in_progress">実施中</option>
@@ -106,7 +106,7 @@ export default function TestCaseHeader({
         </div>
 
         <div className="flex">
-          <span className="text-gray-500">カテゴリ:</span>
+          <span className="text-muted-foreground">カテゴリ:</span>
           {isEditing ? (
             <input
               type="text"
@@ -114,17 +114,17 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, category: e.target.value })
               }
-              className="ml-2 w-32 rounded border border-gray-300 px-2 py-1 text-sm"
+              className="border-input bg-background ml-2 w-32 rounded border px-2 py-1 text-sm"
             />
           ) : (
-            <span className="ml-2 text-gray-900">
+            <span className="text-foreground ml-2">
               {editedTestCase.category}
             </span>
           )}
         </div>
 
         <div className="flex">
-          <span className="text-gray-500">優先度:</span>
+          <span className="text-muted-foreground">優先度:</span>
           {isEditing ? (
             <select
               value={editedTestCase.priority}
@@ -134,14 +134,14 @@ export default function TestCaseHeader({
                   priority: e.target.value as TestCase['priority'],
                 })
               }
-              className="ml-2 rounded border border-gray-300 px-2 py-1 text-sm"
+              className="border-input bg-background ml-2 rounded border px-2 py-1 text-sm"
             >
               <option value="high">高</option>
               <option value="medium">中</option>
               <option value="low">低</option>
             </select>
           ) : (
-            <span className="ml-2 text-gray-900">
+            <span className="text-foreground ml-2">
               {editedTestCase.priority === 'high'
                 ? '高'
                 : editedTestCase.priority === 'medium'

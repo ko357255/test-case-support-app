@@ -9,7 +9,7 @@ export default function BackButton({ onBack }: Props) {
     <div className="mb-6">
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
+        className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
       >
         <ArrowLeft className="h-5 w-5" />
         テストケース一覧に戻る

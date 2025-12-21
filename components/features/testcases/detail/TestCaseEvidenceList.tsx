@@ -11,9 +11,9 @@ export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
   return (
     <div className="px-8 py-6">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg text-gray-900">全体エビデンス</h3>
+        <h3 className="text-foreground text-lg">全体エビデンス</h3>
         {isEditing && (
-          <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-white transition-colors hover:bg-blue-700">
+          <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-3 py-1.5 transition-colors">
             <Upload className="h-4 w-4" />
             エビデンス追加
           </button>
@@ -21,7 +21,7 @@ export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
       </div>
 
       {evidences.length === 0 ? (
-        <div className="py-8 text-center text-gray-500">
+        <div className="text-muted-foreground py-8 text-center">
           全体エビデンスがありません
         </div>
       ) : (
@@ -32,31 +32,33 @@ export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
             return (
               <div
                 key={evidence.id}
-                className="rounded-lg border border-gray-200 p-4 transition-colors hover:bg-gray-50"
+                className="border-border hover:bg-muted/50 rounded-lg border p-4 transition-colors"
               >
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <EvidenceIcon
                       className={`h-5 w-5 ${evidenceTypeConfig[evidence.type].color}`}
                     />
-                    <span className="text-sm text-gray-900">
+                    <span className="text-foreground text-sm">
                       {evidence.name}
                     </span>
                   </div>
 
                   {isEditing && (
-                    <button className="text-red-500 hover:text-red-700">
+                    <button className="text-destructive hover:text-destructive/90">
                       <Trash2 className="h-4 w-4" />
                     </button>
                   )}
                 </div>
 
-                <div className="mb-2 text-xs text-gray-500">
+                <div className="text-muted-foreground mb-2 text-xs">
                   {new Date(evidence.uploadedAt).toLocaleString('ja-JP')}
                 </div>
 
                 {evidence.note && (
-                  <p className="mt-2 text-sm text-gray-600">{evidence.note}</p>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    {evidence.note}
+                  </p>
                 )}
               </div>
             );

@@ -30,7 +30,7 @@ export default function TestCaseDetail({ testCase }: Props) {
     <div className="p-8">
       <BackButton onBack={router.back} />
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
         <TestCaseHeader
           isEditing={isEditing}
           editedTestCase={editedTestCase}

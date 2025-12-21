@@ -10,10 +10,10 @@ type Props = {
 
 export default function TestStepItem({ step, isEditing }: Props) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+    <div className="border-border bg-muted/50 rounded-lg border p-4">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
+          <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
             {step.stepNumber}
           </div>
           {step.status && (
@@ -25,7 +25,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
           )}
         </div>
         {isEditing && (
-          <button className="text-red-500 hover:text-red-700">
+          <button className="text-destructive hover:text-destructive/90">
             <Trash2 className="h-4 w-4" />
           </button>
         )}
@@ -33,58 +33,64 @@ export default function TestStepItem({ step, isEditing }: Props) {
 
       <div className="mb-3 grid grid-cols-1 gap-3">
         <div>
-          <label className="mb-1 block text-sm text-gray-700">操作</label>
+          <label className="text-muted-foreground mb-1 block text-sm">
+            操作
+          </label>
           {isEditing ? (
             <input
               type="text"
               value={step.action}
               onChange={() => {}}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+              className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
             />
           ) : (
-            <p className="text-sm text-gray-900">{step.action}</p>
+            <p className="text-foreground text-sm">{step.action}</p>
           )}
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-gray-700">期待結果</label>
+          <label className="text-muted-foreground mb-1 block text-sm">
+            期待結果
+          </label>
           {isEditing ? (
             <input
               type="text"
               value={step.expected}
               onChange={() => {}}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+              className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
             />
           ) : (
-            <p className="text-sm text-gray-900">{step.expected}</p>
+            <p className="text-foreground text-sm">{step.expected}</p>
           )}
         </div>
 
         {step.actual && (
           <div>
-            <label className="mb-1 block text-sm text-gray-700">実行結果</label>
+            <label className="text-muted-foreground mb-1 block text-sm">
+              実行結果
+            </label>
             {isEditing ? (
               <input
                 type="text"
                 value={step.actual}
                 onChange={() => {}}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
               />
             ) : (
-              <p className="text-sm text-gray-900">{step.actual}</p>
+              <p className="text-foreground text-sm">{step.actual}</p>
             )}
           </div>
         )}
 
         {isEditing && (
           <div>
-            <label className="mb-1 block text-sm text-gray-700">
+            <label className="text-muted-foreground mb-1 block text-sm">
               ステップステータス
             </label>
             <select
               value={step.status || ''}
               onChange={() => {}}
-              className="rounded border border-gray-300 px-3 py-2 text-sm"
+              className="border-input bg-background rounded border px-3 py-2 text-sm"
             >
               <option value="">未設定</option>
               <option value="passed">成功</option>

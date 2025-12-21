@@ -9,11 +9,11 @@ type Props = {
 
 export default function TestCaseStepList({ isEditing, steps }: Props) {
   return (
-    <div className="border-b border-gray-200 px-8 py-6">
+    <div className="border-border border-b px-8 py-6">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg text-gray-900">テストステップ</h3>
+        <h3 className="text-foreground text-lg">テストステップ</h3>
         {isEditing && (
-          <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-white transition-colors hover:bg-blue-700">
+          <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-3 py-1.5 transition-colors">
             <Plus className="h-4 w-4" />
             ステップ追加
           </button>
