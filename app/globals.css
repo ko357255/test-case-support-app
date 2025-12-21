@@ -1,7 +1,10 @@
-@import 'tailwindcss'; /* Tailwindの読み込み */
-@import 'tw-animate-css'; /* TWアニメーションの拡張 */
+@import 'tailwindcss';
+/* Tailwindの読み込み */
+@import 'tw-animate-css';
+/* TWアニメーションの拡張 */
 
-@custom-variant dark (&:is(.dark *)); /* TWのダークモード変換 */
+@custom-variant dark (&:is(.dark *));
+/* TWのダークモード変換 */
 
 /* shadcn Tailwind にテーマを登録 */
 @theme inline {
@@ -42,6 +45,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+  --color-failed: var(--failed);
+  --color-failed-bg: var(--failed-bg);
+  --color-failed-border: var(--failed-border);
+  --color-in-progress: var(--in-progress);
+  --color-in-progress-bg: var(--in-progress-bg);
+  --color-in-progress-border: var(--in-progress-border);
+  --color-not-started: var(--not-started);
+  --color-not-started-bg: var(--not-started-bg);
+  --color-not-started-border: var(--not-started-border);
 }
 
 /* ライトモードや、角丸などの変数 */
@@ -78,6 +94,23 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  /* success */
+  --success: oklch(0.72 0.19 145);
+  --success-bg: oklch(0.96 0.04 145);
+  --success-border: oklch(0.86 0.08 145);
+  /* failed */
+  --failed: oklch(0.72 0.19 20);
+  --failed-bg: oklch(0.95 0.05 20);
+  --failed-border: oklch(0.85 0.08 20);
+  /* in_progress */
+  --in-progress: oklch(0.72 0.19 240);
+  --in-progress-bg: oklch(0.95 0.05 240);
+  --in-progress-border: oklch(0.85 0.08 240);
+  /* not_started */
+  --not-started: oklch(0.65 0 200);
+  --not-started-bg: oklch(0.97 0 200);
+  --not-started-border: oklch(0.88 0 200);
+
 }
 
 /* ダークモード */
@@ -113,6 +146,22 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  /* success */
+  --success: oklch(0.78 0.16 145);
+  --success-bg: oklch(0.24 0.05 145);
+  --success-border: oklch(0.38 0.08 145);
+  /* failed */
+  --failed: oklch(0.78 0.17 20);
+  --failed-bg: oklch(0.25 0.04 20);
+  --failed-border: oklch(0.38 0.08 20);
+  /* in_progress */
+  --in-progress: oklch(0.78 0.17 240);
+  --in-progress-bg: oklch(0.25 0.04 240);
+  --in-progress-border: oklch(0.38 0.08 240);
+  /* not_started */
+  --not-started: oklch(0.90 0 200);
+  --not-started-bg: oklch(0.35 0 200);
+  --not-started-border: oklch(0.55 0 200);
 }
 
 /* bodyや全体のベーススタイル */
@@ -120,6 +169,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
