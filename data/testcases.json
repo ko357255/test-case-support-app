@@ -124,7 +124,7 @@
     "title": "商品検索機能テスト",
     "description": "キーワードで商品を検索できることを確認する",
     "category": "検索",
-    "priority": "medium",
+    "priority": "low",
     "status": "not_started",
     "groupId": "group2",
     "steps": [
