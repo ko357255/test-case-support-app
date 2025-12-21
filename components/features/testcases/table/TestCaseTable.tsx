@@ -13,13 +13,13 @@ type Props = {
  */
 export default function TestCaseTable({ testCases }: Props) {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm">
+    <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
       <table className="w-full">
         {/* 列名 */}
         <TestCaseTableHeader />
 
         {/* 行 */}
-        <tbody className="divide-y divide-gray-300">
+        <tbody className="divide-border divide-y">
           {testCases.map((tc) => (
             // テストケースの行
             <TestCaseTableRow key={tc.id} testCase={tc} />

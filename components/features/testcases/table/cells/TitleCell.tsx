@@ -7,8 +7,8 @@ export default function TitleCell({
 }) {
   return (
     <td className="px-6 py-4">
-      <div className="text-sm text-gray-900">{title}</div>
-      <div className="mt-1 line-clamp-1 text-sm text-gray-500">
+      <div className="text-foreground text-sm">{title}</div>
+      <div className="text-muted-foreground mt-1 line-clamp-1 text-sm">
         {description}
       </div>
     </td>

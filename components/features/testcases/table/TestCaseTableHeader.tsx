@@ -1,7 +1,7 @@
 export default function TestCaseTableHeader() {
   return (
     <thead>
-      <tr className="border-b border-gray-300 bg-gray-50">
+      <tr className="border-border bg-muted border-b">
         {[
           'ステータス',
           'タイトル',
@@ -13,7 +13,7 @@ export default function TestCaseTableHeader() {
         ].map((label) => (
           <th
             key={label}
-            className="px-6 py-3 text-left text-xs tracking-wider text-gray-500 uppercase"
+            className="text-muted-foreground px-6 py-3 text-left text-xs tracking-wider uppercase"
           >
             {label}
           </th>
