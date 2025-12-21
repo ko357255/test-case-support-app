@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 /* TWのダークモード変換 */
 
-/* shadcn Tailwind にテーマを登録 */
+/* Tailwind にテーマのエイリアスを登録 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -58,6 +58,15 @@
   --color-not-started: var(--not-started);
   --color-not-started-bg: var(--not-started-bg);
   --color-not-started-border: var(--not-started-border);
+  --color-priority-high: var(--priority-high);
+  --color-priority-high-bg: var(--priority-high-bg);
+  --color-priority-high-border: var(--priority-high-border);
+  --color-priority-medium: var(--priority-medium);
+  --color-priority-medium-bg: var(--priority-medium-bg);
+  --color-priority-medium-border: var(--priority-medium-border);
+  --color-priority-low: var(--priority-low);
+  --color-priority-low-bg: var(--priority-low-bg);
+  --color-priority-low-border: var(--priority-low-border);
 }
 
 /* ライトモードや、角丸などの変数 */
@@ -110,10 +119,18 @@
   --not-started: oklch(0.65 0 200);
   --not-started-bg: oklch(0.97 0 200);
   --not-started-border: oklch(0.88 0 200);
-
+  /* High */
+  --priority-high: oklch(0.62 0.23 27);
+  --priority-high-bg: oklch(0.96 0.05 27);
+  /* Medium */
+  --priority-medium: oklch(0.78 0.18 85);
+  --priority-medium-bg: oklch(0.96 0.06 85);
+  /* Low */
+  --priority-low: oklch(0.72 0.19 145);
+  --priority-low-bg: oklch(0.96 0.04 145);
 }
 
-/* ダークモード */
+/* ダークモードの変数 */
 .dark {
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
@@ -162,6 +179,20 @@
   --not-started: oklch(0.90 0 200);
   --not-started-bg: oklch(0.35 0 200);
   --not-started-border: oklch(0.55 0 200);
+  /* High */
+  --priority-high: oklch(0.82 0.12 27);
+  --priority-high-bg: oklch(0.34 0.08 27);
+  --priority-high-border: oklch(0.44 0.08 27);
+
+  /* Medium */
+  --priority-medium: oklch(0.88 0.10 85);
+  --priority-medium-bg: oklch(0.38 0.08 85);
+  --priority-medium-border: oklch(0.48 0.08 85);
+
+  /* Low */
+  --priority-low: oklch(0.86 0.10 145);
+  --priority-low-bg: oklch(0.36 0.06 145);
+  --priority-low-border: oklch(0.46 0.06 145);
 }
 
 /* bodyや全体のベーススタイル */
