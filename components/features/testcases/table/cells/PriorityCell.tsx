@@ -11,7 +11,7 @@ export default function PriorityCell({
   return (
     <td className="px-6 py-4">
       <span
-        className={`inline-flex px-2 py-1 text-xs ${info.color} ${info.bgColor} rounded`}
+        className={`inline-flex px-2 py-1 text-xs font-medium ${info.color} ${info.bgColor} rounded`}
       >
         {info.label}
       </span>
