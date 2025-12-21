@@ -4,12 +4,11 @@ import { statusConfig } from '@/config/testcase';
 import { Circle, Filter } from 'lucide-react';
 
 const STATUSES = [
-  { key: 'all', label: 'すべて', icon: Circle },
-  ...Object.entries(statusConfig).map(([key, value]) => ({
-    key,
-    label: value.label,
-    icon: value.icon,
-  })),
+  { key: 'all', label: 'すべて', icon: Circle, color: 'text-foreground' },
+  { key: 'not_started', ...statusConfig.not_started },
+  { key: 'in_progress', ...statusConfig.in_progress },
+  { key: 'passed', ...statusConfig.passed },
+  { key: 'failed', ...statusConfig.failed },
 ] as const;
 
 export default function StatusFilter({
@@ -25,7 +24,7 @@ export default function StatusFilter({
       </div>
 
       <div className="space-y-1">
-        {STATUSES.map(({ key, label, icon: Icon }) => (
+        {STATUSES.map(({ key, label, icon: Icon, color }) => (
           <button
             key={key}
             className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
@@ -34,7 +33,7 @@ export default function StatusFilter({
                 : 'hover:bg-muted'
             }`}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className={`h-4 w-4 ${color}`} />
             {label}
           </button>
         ))}
