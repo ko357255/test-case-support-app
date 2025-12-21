@@ -43,7 +43,7 @@ export default function RootLayout({
       >
         <Providers>
           {/* サイドバーとメインを横に並べる */}
-          <div className="bg-muted flex h-screen">
+          <div className="flex h-screen">
             {/* サイドバー */}
             <Sidebar filterStatus="all" filterCategory="all" />
 
