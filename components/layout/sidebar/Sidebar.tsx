@@ -1,6 +1,7 @@
 import { fetchTestCases } from '@/lib/api/testcases';
 import SidebarHeader from './SidebarHeader';
 import SidebarFilters from './SidebarFilters';
+import { ThemeSwitch } from '../ThemeSwitch';
 
 type Props = {
   /** 選択中のステータスフィルタ */
@@ -23,6 +24,7 @@ export default async function Sidebar({ filterStatus, filterCategory }: Props) {
     <aside className="bg-sidebar text-sidebar-foreground border-border flex w-64 flex-col border-r">
       {/* タイトル */}
       <SidebarHeader />
+      <ThemeSwitch />
       {/* フィルタ */}
       <SidebarFilters
         filterStatus={filterStatus}

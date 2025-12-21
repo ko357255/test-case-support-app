@@ -21,7 +21,7 @@ export default function CategoryFilter({ filterCategory, categories }: Props) {
             key={category}
             className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
               filterCategory === category
-                ? 'bg-accent text-accent-foreground'
+                ? 'dark:bg-accent dark:text-accent-foreground dark:ring-border bg-blue-50 text-blue-700'
                 : 'hover:bg-muted'
             }`}
           >

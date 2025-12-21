@@ -4,7 +4,7 @@ import { statusConfig } from '@/config/testcase';
 import { Circle, Filter } from 'lucide-react';
 
 const STATUSES = [
-  { key: 'all', label: 'すべて', icon: Circle, color: 'text-foreground' },
+  { key: 'all', label: 'すべて', icon: Circle, color: '' },
   { key: 'not_started', ...statusConfig.not_started },
   { key: 'in_progress', ...statusConfig.in_progress },
   { key: 'passed', ...statusConfig.passed },
@@ -29,7 +29,7 @@ export default function StatusFilter({
             key={key}
             className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
               filterStatus === key
-                ? 'bg-accent text-accent-foreground'
+                ? 'dark:bg-accent dark:text-accent-foreground dark:ring-border bg-blue-50 text-blue-700'
                 : 'hover:bg-muted'
             }`}
           >

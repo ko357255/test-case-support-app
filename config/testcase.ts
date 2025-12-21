@@ -48,19 +48,19 @@ export const statusConfig = {
 export const priorityConfig = {
   high: {
     label: '高',
-    color: 'text-muted-foreground',
+    color: 'text-priority-high',
     bgColor: 'bg-priority-high-bg',
     borderColor: 'border-priority-high-border',
   },
   medium: {
     label: '中',
-    color: 'text-muted-foreground',
+    color: 'text-priority-medium',
     bgColor: 'bg-priority-medium-bg',
     borderColor: 'border-priority-medium-border',
   },
   low: {
     label: '低',
-    color: 'text-muted-foreground',
+    color: 'text-priority-low',
     bgColor: 'bg-priority-low-bg',
     borderColor: 'border-priority-low-border',
   },

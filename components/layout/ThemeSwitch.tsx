@@ -8,7 +8,7 @@ export function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 px-6 pt-4">
       <Sun className="h-4 w-4" />
       <Switch
         checked={theme === 'dark'}
