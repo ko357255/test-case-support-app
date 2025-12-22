@@ -11,11 +11,14 @@ const STATUSES = [
   { key: 'failed', ...statusConfig.failed },
 ] as const;
 
-export default function StatusFilter({
-  filterStatus,
-}: {
+type Props = {
+  /** 選択中のステータスフィルタ */
   filterStatus: string;
-}) {
+  /** ステータス変更時のコールバック */
+  onStatusChange: (status: string) => void;
+};
+
+export default function StatusFilter({ filterStatus, onStatusChange }: Props) {
   return (
     <div className="mb-6">
       <div className="mb-3 flex items-center gap-2">
@@ -27,6 +30,7 @@ export default function StatusFilter({
         {STATUSES.map(({ key, label, icon: Icon, color }) => (
           <button
             key={key}
+            onClick={() => onStatusChange(key)}
             className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
               filterStatus === key
                 ? 'dark:bg-accent dark:text-accent-foreground dark:ring-border bg-blue-50 text-blue-700'
