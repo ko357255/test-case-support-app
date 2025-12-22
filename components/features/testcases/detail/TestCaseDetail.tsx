@@ -28,9 +28,11 @@ export default function TestCaseDetail({ testCase }: Props) {
 
   return (
     <div className="p-8">
+      {/* 戻るボタン */}
       <BackButton onBack={router.back} />
 
       <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        {/* テストケースのヘッダー */}
         <TestCaseHeader
           isEditing={isEditing}
           editedTestCase={editedTestCase}
@@ -38,9 +40,9 @@ export default function TestCaseDetail({ testCase }: Props) {
           onEdit={handleEdit}
           onCancel={handleCancel}
         />
-
+        {/* テストステップ一覧 */}
         <TestCaseStepList isEditing={isEditing} steps={editedTestCase.steps} />
-
+        {/* エビデンス一覧 */}
         <TestCaseEvidenceList
           isEditing={isEditing}
           evidences={editedTestCase.evidences}
