@@ -46,6 +46,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
                         <input
                           type="text"
                           value={evidence.name}
+                          onChange={() => {}}
                           className="border-input bg-background text-foreground mb-1 w-full rounded border px-2 py-1 text-sm"
                         />
                       ) : (
