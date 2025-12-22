@@ -50,11 +50,7 @@ export default async function RootLayout({
           {/* サイドバーとメインを横に並べる */}
           <div className="flex h-screen">
             {/* サイドバー */}
-            <Sidebar
-              filterStatus="all"
-              filterCategory="all"
-              categories={categories}
-            />
+            <Sidebar categories={categories} />
 
             {/* ヘッダーとメインを縦に並べる */}
             <div className="flex flex-1 flex-col overflow-hidden">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import CategoryFilter from './CategoryFilter';
 import StatusFilter from './StatusFilter';
 
@@ -18,19 +18,35 @@ export default function SidebarFilters({
   filterCategory,
   categories,
 }: Props) {
-  const [currentStatus, setCurrentStatus] = useState(filterStatus);
-  const [currentCategory, setCurrentCategory] = useState(filterCategory);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleFilterChange = (type: 'status' | 'category', value: string) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+
+    if (value === 'all') {
+      current.delete(type);
+    } else {
+      current.set(type, value);
+    }
+
+    const query = current.toString();
+    router.push(`${pathname}?${query}`);
+  };
 
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <StatusFilter
-        filterStatus={currentStatus}
-        onStatusChange={setCurrentStatus}
+        filterStatus={filterStatus}
+        onStatusChange={(status) => handleFilterChange('status', status)}
       />
       <CategoryFilter
-        filterCategory={currentCategory}
+        filterCategory={filterCategory}
         categories={categories}
-        onCategoryChange={setCurrentCategory}
+        onCategoryChange={(category) =>
+          handleFilterChange('category', category)
+        }
       />
     </div>
   );
