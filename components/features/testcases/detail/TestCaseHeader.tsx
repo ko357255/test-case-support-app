@@ -3,11 +3,17 @@ import { TestCase } from '@/types/testcase';
 import { statusConfig } from '@/config/testcase';
 
 type Props = {
+  /** 編集モードかどうか */
   isEditing: boolean;
+  /** 編集中のテストケース */
   editedTestCase: TestCase;
+  /** テストケースを更新するための関数 */
   setTestCase: (tc: TestCase) => void;
+  /** 編集モードに切り替えるための関数 */
   onEdit: () => void;
+  /** キャンセルするための関数 */
   onCancel: () => void;
+  /** 保存するための関数 */
   onSave?: () => void;
 };
 

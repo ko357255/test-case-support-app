@@ -10,24 +10,33 @@ import TestCaseEvidenceList from '../detail/TestCaseEvidenceList';
 
 export default function TestCaseCreate() {
   const router = useRouter();
-  const [newTestCase, setNewTestCase] = useState<TestCase>({
-    id: '',
-    title: '',
-    description: '',
-    status: 'not_started',
-    priority: 'medium',
-    category: '',
-    steps: [],
-    evidences: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
+  const [newTestCase, setNewTestCase] = useState<TestCase>(
+    // テストケースの初期値を設定
+    {
+      id: '',
+      title: '',
+      description: '',
+      status: 'not_started',
+      priority: 'medium',
+      category: '',
+      steps: [],
+      evidences: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  );
 
+  /**
+   * 保存
+   */
   const handleSave = async () => {
     // 保存処理
     router.push('/');
   };
 
+  /**
+   * キャンセル
+   */
   const handleCancel = () => {
     router.back();
   };

@@ -4,9 +4,13 @@ import { TestStep } from '@/types/testcase';
 import StepEvidenceList from './StepEvidenceList';
 
 type Props = {
+  /** テストステップ */
   step: TestStep;
+  /** 編集モードかどうか */
   isEditing: boolean;
+  /** テストステップを変更するための関数 */
   onChange?: (step: TestStep) => void;
+  /** テストステップを削除するための関数 */
   onDelete?: (id: string) => void;
 };
 

@@ -1,10 +1,13 @@
 import { Plus } from 'lucide-react';
-import { TestCase, TestStep } from '@/types/testcase';
+import { TestStep } from '@/types/testcase';
 import TestStepItem from './TestStepItem';
 
 type Props = {
+  /** 編集モードかどうか */
   isEditing: boolean;
+  /** テストステップの配列 */
   steps: TestStep[];
+  /** テストステップの配列が変更されたときに呼ばれる関数 */
   onStepsChange?: (steps: TestStep[]) => void;
 };
 
@@ -13,7 +16,7 @@ export default function TestCaseStepList({
   steps,
   onStepsChange,
 }: Props) {
-  const handleStepChange = (updatedStep: TestCase['steps'][number]) => {
+  const handleStepChange = (updatedStep: TestStep) => {
     const newSteps = steps.map((s) =>
       s.id === updatedStep.id ? updatedStep : s,
     );
@@ -26,6 +29,7 @@ export default function TestCaseStepList({
   };
 
   const handleStepAdd = () => {
+    // ステップの初期値を設定
     const newStep = {
       id: crypto.randomUUID(),
       stepNumber: steps.length + 1,
