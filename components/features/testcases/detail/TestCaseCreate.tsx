@@ -27,15 +27,15 @@ export default function TestCaseCreate() {
   );
 
   /**
-   * 保存
+   * 保存処理
    */
   const handleSave = async () => {
-    // 保存処理
+    // DB保存処理
     router.push('/');
   };
 
   /**
-   * キャンセル
+   * キャンセル処理
    */
   const handleCancel = () => {
     router.back();
@@ -50,7 +50,7 @@ export default function TestCaseCreate() {
           isEditing={true}
           editedTestCase={newTestCase}
           setTestCase={setNewTestCase}
-          onEdit={() => {}} // 新規作成時は使用しない
+          onEdit={() => {}} // 作成時は使用しない
           onCancel={handleCancel}
           onSave={handleSave}
         />

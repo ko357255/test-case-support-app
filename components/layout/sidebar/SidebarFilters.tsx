@@ -22,13 +22,15 @@ export default function SidebarFilters({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // フィルタ変更時の処理
   const handleFilterChange = (type: 'status' | 'category', value: string) => {
+    // クエリパラメータを取得
     const current = new URLSearchParams(Array.from(searchParams.entries()));
 
     if (value === 'all') {
-      current.delete(type);
+      current.delete(type); // 'all'の場合はクエリパラメータを削除
     } else {
-      current.set(type, value);
+      current.set(type, value); // それ以外はセット
     }
 
     const query = current.toString();

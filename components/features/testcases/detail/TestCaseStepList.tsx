@@ -7,7 +7,7 @@ type Props = {
   isEditing: boolean;
   /** テストステップの配列 */
   steps: TestStep[];
-  /** テストステップの配列が変更されたときに呼ばれる関数 */
+  /** テストステップ配列変更時のコールバック */
   onStepsChange?: (steps: TestStep[]) => void;
 };
 

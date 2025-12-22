@@ -21,13 +21,21 @@ export default function TestCaseDetail({ testCase }: Props) {
     setIsEditing(true);
   };
 
+  /**
+   * キャンセル処理
+   */
   const handleCancel = () => {
     setTestCase(testCase);
     setIsEditing(false);
   };
 
+  /**
+   * 保存処理
+   */
   const handleSave = () => {
     setIsEditing(false);
+
+    // DB保存処理
   };
 
   return (

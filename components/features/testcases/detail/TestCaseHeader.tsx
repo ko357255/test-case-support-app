@@ -7,13 +7,13 @@ type Props = {
   isEditing: boolean;
   /** 編集中のテストケース */
   editedTestCase: TestCase;
-  /** テストケースを更新するための関数 */
+  /** テストケース更新時のコールバック */
   setTestCase: (tc: TestCase) => void;
   /** 編集モードに切り替えるための関数 */
   onEdit: () => void;
-  /** キャンセルするための関数 */
+  /** キャンセル時のコールバック */
   onCancel: () => void;
-  /** 保存するための関数 */
+  /** 保存時のコールバック */
   onSave?: () => void;
 };
 

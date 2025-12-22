@@ -8,9 +8,9 @@ type Props = {
   step: TestStep;
   /** 編集モードかどうか */
   isEditing: boolean;
-  /** テストステップを変更するための関数 */
+  /** テストステップ変更時のコールバック */
   onChange?: (step: TestStep) => void;
-  /** テストステップを削除するための関数 */
+  /** テストステップ削除時のコールバック */
   onDelete?: (id: string) => void;
 };
 
