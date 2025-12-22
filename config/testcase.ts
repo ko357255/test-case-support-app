@@ -72,24 +72,34 @@ export const priorityConfig = {
 export const stepStatusConfig = {
   passed: {
     label: '成功',
-    color: 'bg-green-500',
+    color: 'text-passed',
+    bgColor: 'bg-passed-bg',
+    borderColor: 'border-passed-border',
   },
   failed: {
     label: '失敗',
-    color: 'bg-red-500',
-  },
-  skipped: {
-    label: 'スキップ',
-    color: 'bg-gray-400',
+    color: 'text-failed',
+    bgColor: 'bg-failed-bg',
+    borderColor: 'border-failed-border',
   },
   in_progress: {
     label: '実施中',
-    color: 'text-blue-600',
+    color: 'text-in-progress',
+    bgColor: 'bg-in-progress-bg',
+    borderColor: 'border-in-progress-border',
   },
   not_started: {
     label: '未実施',
-    color: 'text-gray-600',
+    color: 'text-not-started',
+    bgColor: 'bg-not-started-bg',
+    borderColor: 'border-not-started-border',
   },
+  // skipped: {
+  //   label: 'スキップ',
+  //   color: 'text-gray-400',
+  //   bgColor: 'bg-gray-200',
+  //   borderColor: 'border-gray-300',
+  // },
 };
 
 export const evidenceTypeConfig = {
