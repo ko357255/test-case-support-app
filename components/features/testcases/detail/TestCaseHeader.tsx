@@ -30,7 +30,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, title: e.target.value })
               }
-              className="border-input bg-background text-foreground w-full rounded border px-3 py-2 text-2xl"
+              className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-2xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
             <h2 className="text-foreground text-2xl">{editedTestCase.title}</h2>
@@ -40,13 +40,13 @@ export default function TestCaseHeader({
         <div className="ml-4 flex gap-2">
           {isEditing ? (
             <>
-              <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 transition-colors">
+              <button className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                 <Save className="h-4 w-4" />
                 保存
               </button>
               <button
                 onClick={onCancel}
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg px-4 py-2 transition-colors"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 キャンセル
               </button>
@@ -54,7 +54,7 @@ export default function TestCaseHeader({
           ) : (
             <button
               onClick={onEdit}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 transition-colors"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <Edit2 className="h-4 w-4" />
               編集
@@ -69,7 +69,7 @@ export default function TestCaseHeader({
           onChange={(e) =>
             setTestCase({ ...editedTestCase, description: e.target.value })
           }
-          className="border-input bg-background text-muted-foreground w-full rounded border px-3 py-2"
+          className="border-input bg-background text-muted-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           rows={2}
         />
       ) : (
@@ -88,7 +88,7 @@ export default function TestCaseHeader({
                   status: e.target.value as TestCase['status'],
                 })
               }
-              className="border-input bg-background ml-2 rounded border px-2 py-1"
+              className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <option value="not_started">未実施</option>
               <option value="in_progress">実施中</option>
@@ -114,7 +114,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, category: e.target.value })
               }
-              className="border-input bg-background ml-2 w-32 rounded border px-2 py-1 text-sm"
+              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring ml-2 w-32 rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
             <span className="text-foreground ml-2">
@@ -134,7 +134,7 @@ export default function TestCaseHeader({
                   priority: e.target.value as TestCase['priority'],
                 })
               }
-              className="border-input bg-background ml-2 rounded border px-2 py-1 text-sm"
+              className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <option value="high">高</option>
               <option value="medium">中</option>

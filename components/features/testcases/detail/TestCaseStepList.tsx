@@ -13,7 +13,7 @@ export default function TestCaseStepList({ isEditing, steps }: Props) {
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-foreground text-lg">テストステップ</h3>
         {isEditing && (
-          <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-3 py-1.5 transition-colors">
+          <button className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
             <Plus className="h-4 w-4" />
             ステップ追加
           </button>

@@ -25,7 +25,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
           )}
         </div>
         {isEditing && (
-          <button className="text-destructive hover:text-destructive/90">
+          <button className="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors">
             <Trash2 className="h-4 w-4" />
           </button>
         )}
@@ -41,7 +41,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
               type="text"
               value={step.action}
               onChange={() => {}}
-              className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
+              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
             <p className="text-foreground text-sm">{step.action}</p>
@@ -57,7 +57,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
               type="text"
               value={step.expected}
               onChange={() => {}}
-              className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
+              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
             <p className="text-foreground text-sm">{step.expected}</p>
@@ -74,7 +74,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
                 type="text"
                 value={step.actual}
                 onChange={() => {}}
-                className="border-input bg-background w-full rounded border px-3 py-2 text-sm"
+                className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               />
             ) : (
               <p className="text-foreground text-sm">{step.actual}</p>
@@ -90,7 +90,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
             <select
               value={step.status || ''}
               onChange={() => {}}
-              className="border-input bg-background rounded border px-3 py-2 text-sm"
+              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <option value="">未設定</option>
               <option value="passed">成功</option>

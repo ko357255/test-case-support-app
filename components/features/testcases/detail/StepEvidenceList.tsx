@@ -19,7 +19,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
         </div>
 
         {isEditing && (
-          <button className="bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-1 rounded px-2 py-1 text-sm transition-colors">
+          <button className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
             <Upload className="h-3 w-3" />
             追加
           </button>
@@ -34,7 +34,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
             return (
               <div
                 key={evidence.id}
-                className="border-border bg-background rounded border p-3"
+                className="border-border bg-background rounded-md border p-3"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex flex-1 items-start gap-2">
@@ -47,7 +47,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
                           type="text"
                           value={evidence.name}
                           onChange={() => {}}
-                          className="border-input bg-background text-foreground mb-1 w-full rounded border px-2 py-1 text-sm"
+                          className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring mb-1 w-full rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                         />
                       ) : (
                         <div className="text-foreground mb-1 text-sm">
@@ -66,7 +66,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
                   </div>
 
                   {isEditing && (
-                    <button className="text-destructive hover:text-destructive/90 ml-2 shrink-0">
+                    <button className="text-destructive hover:bg-destructive/10 ml-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors">
                       <Trash2 className="h-3 w-3" />
                     </button>
                   )}
