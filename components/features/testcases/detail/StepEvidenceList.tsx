@@ -1,9 +1,9 @@
 import { Paperclip, Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
-import { TestCase } from '@/types/testcase';
+import { TestStep } from '@/types/testcase';
 
 type Props = {
-  step: TestCase['steps'][number];
+  step: TestStep;
   isEditing: boolean;
 };
 

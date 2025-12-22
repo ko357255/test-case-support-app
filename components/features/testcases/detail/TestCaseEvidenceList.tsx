@@ -1,10 +1,10 @@
 import { Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
-import { TestCase } from '@/types/testcase';
+import { Evidence } from '@/types/testcase';
 
 type Props = {
   isEditing: boolean;
-  evidences: TestCase['evidences'];
+  evidences: Evidence[];
 };
 
 export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
