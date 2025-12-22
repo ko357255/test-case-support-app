@@ -26,6 +26,10 @@ export default function TestCaseDetail({ testCase }: Props) {
     setIsEditing(false);
   };
 
+  const handleSave = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="p-8">
       {/* 戻るボタン */}
@@ -39,9 +43,14 @@ export default function TestCaseDetail({ testCase }: Props) {
           setTestCase={setTestCase}
           onEdit={handleEdit}
           onCancel={handleCancel}
+          onSave={handleSave}
         />
         {/* テストステップ一覧 */}
-        <TestCaseStepList isEditing={isEditing} steps={editedTestCase.steps} />
+        <TestCaseStepList
+          isEditing={isEditing}
+          steps={editedTestCase.steps}
+          onStepsChange={(steps) => setTestCase({ ...editedTestCase, steps })}
+        />
         {/* エビデンス一覧 */}
         <TestCaseEvidenceList
           isEditing={isEditing}

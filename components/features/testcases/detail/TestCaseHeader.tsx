@@ -8,6 +8,7 @@ type Props = {
   setTestCase: (tc: TestCase) => void;
   onEdit: () => void;
   onCancel: () => void;
+  onSave?: () => void;
 };
 
 export default function TestCaseHeader({
@@ -16,6 +17,7 @@ export default function TestCaseHeader({
   setTestCase,
   onEdit,
   onCancel,
+  onSave,
 }: Props) {
   const StatusIcon = statusConfig[editedTestCase.status].icon;
 
@@ -40,7 +42,10 @@ export default function TestCaseHeader({
         <div className="ml-4 flex gap-2">
           {isEditing ? (
             <>
-              <button className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+              <button
+                onClick={onSave}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
                 <Save className="h-4 w-4" />
                 保存
               </button>
@@ -69,7 +74,7 @@ export default function TestCaseHeader({
           onChange={(e) =>
             setTestCase({ ...editedTestCase, description: e.target.value })
           }
-          className="border-input bg-background text-muted-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="border-input bg-background text-muted-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-20 w-full rounded-md border px-3 py-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           rows={2}
         />
       ) : (

@@ -1,14 +1,27 @@
 import { Trash2 } from 'lucide-react';
 import { stepStatusConfig } from '@/config/testcase';
-import { TestCase } from '@/types/testcase';
+import { TestStep } from '@/types/testcase';
 import StepEvidenceList from './StepEvidenceList';
 
 type Props = {
-  step: TestCase['steps'][number];
+  step: TestStep;
   isEditing: boolean;
+  onChange?: (step: TestStep) => void;
+  onDelete?: (id: string) => void;
 };
 
-export default function TestStepItem({ step, isEditing }: Props) {
+export default function TestStepItem({
+  step,
+  isEditing,
+  onChange,
+  onDelete,
+}: Props) {
+  const handleChange = (field: keyof typeof step, value: string) => {
+    if (onChange) {
+      onChange({ ...step, [field]: value });
+    }
+  };
+
   return (
     <div className="border-border bg-muted/50 rounded-lg border p-4">
       <div className="mb-3 flex items-start justify-between">
@@ -25,7 +38,10 @@ export default function TestStepItem({ step, isEditing }: Props) {
           )}
         </div>
         {isEditing && (
-          <button className="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors">
+          <button
+            onClick={() => onDelete?.(step.id)}
+            className="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors"
+          >
             <Trash2 className="h-4 w-4" />
           </button>
         )}
@@ -40,7 +56,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
             <input
               type="text"
               value={step.action}
-              onChange={() => {}}
+              onChange={(e) => handleChange('action', e.target.value)}
               className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
@@ -56,7 +72,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
             <input
               type="text"
               value={step.expected}
-              onChange={() => {}}
+              onChange={(e) => handleChange('expected', e.target.value)}
               className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           ) : (
@@ -73,7 +89,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
               <input
                 type="text"
                 value={step.actual}
-                onChange={() => {}}
+                onChange={(e) => handleChange('actual', e.target.value)}
                 className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               />
             ) : (
@@ -89,7 +105,7 @@ export default function TestStepItem({ step, isEditing }: Props) {
             </label>
             <select
               value={step.status || ''}
-              onChange={() => {}}
+              onChange={(e) => handleChange('status', e.target.value)}
               className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <option value="">未設定</option>
