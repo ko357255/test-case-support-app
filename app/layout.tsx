@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import Header from '@/components/layout/Header';
+import { fetchTestCases } from '@/lib/api/testcases';
 import Providers from '@/components/Providers';
 
 // フォントの設定
@@ -29,11 +30,15 @@ export const metadata: Metadata = {
 
 // <html> など外枠を作る
 // ここに Header / Sidebar / Footer を配置する
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // テストケースの一覧を取得
+  const testcases = await fetchTestCases();
+  // カテゴリの一覧を抽出
+  const categories = Array.from(new Set(testcases.map((tc) => tc.category)));
   return (
     // ハイドレーションの不一致による警告を許容
     <html lang="ja" suppressHydrationWarning>
@@ -45,7 +50,11 @@ export default function RootLayout({
           {/* サイドバーとメインを横に並べる */}
           <div className="flex h-screen">
             {/* サイドバー */}
-            <Sidebar filterStatus="all" filterCategory="all" />
+            <Sidebar
+              filterStatus="all"
+              filterCategory="all"
+              categories={categories}
+            />
 
             {/* ヘッダーとメインを縦に並べる */}
             <div className="flex flex-1 flex-col overflow-hidden">
