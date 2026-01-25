@@ -1,7 +1,7 @@
 'use client';
 
 import { ThemeProvider } from 'next-themes';
-import { AuthProvider } from './auth/AuthProvider';
+import { AuthProvider } from '@/app/AuthProvider';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
