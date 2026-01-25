@@ -1,4 +1,15 @@
 /**
+ * プロジェクト
+ */
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
  * エビデンス
  */
 export interface Evidence {
@@ -64,6 +75,9 @@ export interface TestStep {
 export interface TestCase {
   /** テストケースID */
   id: string;
+
+  /** プロジェクトID */
+  projectId: string;
 
   /** テストケースのタイトル */
   title: string;
