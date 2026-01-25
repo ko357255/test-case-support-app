@@ -13,7 +13,6 @@ export default function TestCaseCreate() {
   const [newTestCase, setNewTestCase] = useState<TestCase>(
     // テストケースの初期値を設定
     {
-      projectId: '',
       id: '',
       title: '',
       description: '',
