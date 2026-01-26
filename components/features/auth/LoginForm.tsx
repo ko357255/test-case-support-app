@@ -30,22 +30,20 @@ export default function LoginForm() {
     setIsLoading(true);
     setError('');
 
-    try {
-      // カスタムフックの login を使用する
-      const result = await login(email, password);
+    // ログイン処理
+    const result = await login(email, password);
 
-      if (result.success) {
-        router.push('/projects');
-      }
-    } catch {
-      console.log('era-');
-      // 再読み込みされず、ここにエラーが届くようになります
+    if (result.success) {
+      // ログイン成功時、プロジェクト一覧へ遷移
+      router.push('/projects');
+    } else {
+      // ログイン失敗時、エラーメッセージを表示
       setError(
         'ログインに失敗しました。メールアドレスとパスワードを確認してください。',
       );
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   };
 
   return (
