@@ -44,6 +44,9 @@ export interface TestStep {
   /** ステップID */
   id: string;
 
+  /** テストケースID */
+  testCaseId: string;
+
   /** ステップ番号 */
   stepNumber: number;
 
