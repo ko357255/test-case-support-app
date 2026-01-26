@@ -3,11 +3,11 @@ import { Search } from 'lucide-react';
 /**
  * ヘッダーコンポーネント（サーバー）
  */
-export default async function Header() {
+export default async function Header({ projectName }: { projectName: string }) {
   return (
     <header className="border-border bg-background border-b px-8 py-4 shadow-sm">
       <div className="mb-4">
-        <h1 className="text-foreground text-2xl">プロジェクト名</h1>
+        <h1 className="text-foreground text-2xl">{projectName}</h1>
       </div>
 
       <div className="flex items-center justify-between">
