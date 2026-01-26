@@ -1,7 +1,11 @@
-import type { TestCase } from '@/types/testcase';
+import type { NestedTestCase } from '@/types/testcase';
 import { statusConfig } from '@/config/testcase';
 
-export default function StatusCell({ status }: { status: TestCase['status'] }) {
+export default function StatusCell({
+  status,
+}: {
+  status: NestedTestCase['status'];
+}) {
   const info = statusConfig[status];
   const Icon = info.icon;
 

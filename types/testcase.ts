@@ -1,122 +1,43 @@
-// /**
-//  * プロジェクト
-//  */
-// export interface Project {
-//   id: string;
-//   name: string;
-//   description: string;
-//   createdAt: string;
-//   updatedAt: string;
-// }
+import {
+  ProjectDoc,
+  TestCaseDoc,
+  TestStepDoc,
+  EvidenceDoc,
+} from '@/types/firestore';
 
-// /**
-//  * エビデンス
-//  */
-// export interface Evidence {
-//   /** エビデンスID */
-//   id: string;
+/** * Timestampプロパティを Date に変換し、必須化する
+ * 元のDoc定義に存在する createdAt, updatedAt を Date 型に上書きします
+ */
+type StrictDates<T> = Omit<T, 'createdAt' | 'updatedAt'> & {
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-//   /** エビデンスの表示名 */
-//   name: string;
+/** エビデンス: EvidenceDoc の日付を Date に変換 */
+export type NestedEvidence = StrictDates<EvidenceDoc>;
 
-//   /**
-//    * エビデンスの種類
-//    * - screenshot: 画像
-//    * - document:   PDFやテキストなどの資料
-//    * - video:      動画など
-//    */
-//   type: 'screenshot' | 'document' | 'video';
+/** ステップ: 日付を Date に変換し、evidences を追加 */
+export interface NestedTestStep extends StrictDates<TestStepDoc> {
+  evidences: NestedEvidence[];
+}
 
-//   /** エビデンスファイルのURL*/
-//   url: string;
+/** テストケース: 日付を Date に変換し、steps と evidences を追加 */
+export interface NestedTestCase extends StrictDates<TestCaseDoc> {
+  steps: NestedTestStep[];
+  evidences: NestedEvidence[];
+}
 
-//   /** エビデンスのアップロード日時 */
-//   uploadedAt: string;
+/** プロジェクト: 日付を Date に変換し、testCases を追加 */
+export interface NestedProject extends StrictDates<ProjectDoc> {
+  testCases: NestedTestCase[];
+}
 
-//   /** 補足情報（任意） */
-//   note?: string;
-// }
-
-// /**
-//  * テストケースのステップ
-//  */
-// export interface TestStep {
-//   /** ステップID */
-//   id: string;
-
-//   /** テストケースID */
-//   testCaseId: string;
-
-//   /** ステップ番号 */
-//   stepNumber: number;
-
-//   /** 実施するアクション */
-//   action: string;
-
-//   /** 期待結果 */
-//   expected: string;
-
-//   /** 実際の結果 未実施の場合は undefined */
-//   actual?: string;
-
-//   /**
-//    * ステップの進捗状況
-//    * - passed       : 成功
-//    * - failed       : 失敗
-//    * - in_progress  : 実施中
-//    * - not_started  : 未実施
-//    */
-//   status?: 'passed' | 'failed' | 'in_progress' | 'not_started';
-
-//   /** エビデンスの配列 無い場合は undefined */
-//   evidences?: Evidence[];
-// }
-
-// /**
-//  * テストケース
-//  */
-// export interface TestCase {
-//   /** テストケースID */
-//   id: string;
-
-//   /** プロジェクトID */
-//   projectId: string;
-
-//   /** テストケースのタイトル */
-//   title: string;
-
-//   /** 説明 */
-//   description: string;
-
-//   /** カテゴリ */
-//   category: string;
-
-//   /** 優先度（high / medium / low） */
-//   priority: 'high' | 'medium' | 'low';
-
-//   /**
-//    * テストケース全体の進捗状況
-//    * - passed       : 成功
-//    * - failed       : 失敗
-//    * - in_progress  : 実施中
-//    * - not_started  : 未実施
-//    */
-//   status: 'passed' | 'failed' | 'in_progress' | 'not_started';
-
-//   /** テストステップの配列 */
-//   steps: TestStep[];
-
-//   /** テストケース全体のエビデンス */
-//   evidences: Evidence[];
-
-//   /** 作成日時 */
-//   createdAt: string;
-
-//   /** 更新日時 */
-//   updatedAt: string;
-
-//   /**
-//    * テストケースの分類用グループID (任意)
-//    */
-//   groupId?: string;
-// }
+/** * 変換前のモックデータ構造を定義する型 (mockDataのキャスト用)
+ * Firestoreの各Doc型（Timestamp保持）を維持した入れ子構造です
+ */
+export interface RawMockProject extends ProjectDoc {
+  testCases: (TestCaseDoc & {
+    steps: (TestStepDoc & { evidences: EvidenceDoc[] })[];
+    evidences: EvidenceDoc[];
+  })[];
+}

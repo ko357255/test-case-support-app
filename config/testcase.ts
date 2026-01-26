@@ -6,6 +6,7 @@ import {
   FileText,
   Video,
   Image,
+  Text,
 } from 'lucide-react';
 
 /**
@@ -117,5 +118,10 @@ export const evidenceTypeConfig = {
     label: '動画',
     icon: Video,
     color: 'text-purple-500',
+  },
+  none: {
+    label: 'テキスト',
+    icon: Text,
+    color: 'text-green-500',
   },
 };

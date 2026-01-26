@@ -1,99 +1,112 @@
 'use server';
 
+import { mockData } from '@/data/mock-data';
 import {
-  mockProjects,
-  mockTestCases,
-  mockTestSteps,
-  mockEvidences,
-} from '@/data/mockData';
-import {
-  ProjectDoc,
-  TestCaseDoc,
-  TestStepDoc,
-  EvidenceDoc,
-} from '@/types/firebase';
+  NestedProject,
+  NestedTestCase,
+  NestedTestStep,
+  NestedEvidence,
+} from '@/types/testcase'; // パスは適宜調整してください
+
+/**
+ * モックデータを取得（NestedProject[] 型として扱う）
+ */
+const getProjects = (): NestedProject[] => mockData as NestedProject[];
 
 /* ==========================================================================
-  Project 関連
+  API関数
 ========================================================================== */
 
-/** プロジェクト単体取得 */
-export async function getProject(id: string): Promise<ProjectDoc | undefined> {
-  return mockProjects.find((p) => p.id === id);
+export async function getProject(
+  id: string,
+): Promise<NestedProject | undefined> {
+  return getProjects().find((p) => p.id === id);
 }
 
-/** 自分がメンバーに含まれるプロジェクト一覧を取得 */
-export async function getMyProjects(userId: string): Promise<ProjectDoc[]> {
-  return mockProjects.filter((p) => p.memberIds.includes(userId));
+export async function getMyProjects(userId: string): Promise<NestedProject[]> {
+  return getProjects().filter((p) => p.memberIds.includes(userId));
 }
 
-/* ==========================================================================
-  TestCase 関連
-========================================================================== */
-
-/** テストケース単体取得 */
 export async function getTestCase(
   id: string,
-): Promise<TestCaseDoc | undefined> {
-  return mockTestCases.find((tc) => tc.id === id);
+): Promise<NestedTestCase | undefined> {
+  for (const project of getProjects()) {
+    const target = project.testCases.find((tc) => tc.id === id);
+    if (target) return target;
+  }
+  return undefined;
 }
 
-/** プロジェクト内の全テストケース取得 */
-export async function getTestCases(projectId: string): Promise<TestCaseDoc[]> {
-  return mockTestCases.filter((tc) => tc.projectId === projectId);
+export async function getTestCases(
+  projectId: string,
+): Promise<NestedTestCase[]> {
+  const p = await getProject(projectId);
+  return p ? p.testCases : [];
 }
 
-/** 特定のグループに属するテストケース取得 */
 export async function getTestCasesByGroup(
   groupId: string,
-): Promise<TestCaseDoc[]> {
-  return mockTestCases.filter((tc) => tc.groupId === groupId);
+): Promise<NestedTestCase[]> {
+  return getProjects().flatMap((p) =>
+    p.testCases.filter((tc) => tc.groupId === groupId),
+  );
 }
 
-/* ==========================================================================
-  TestStep 関連
-========================================================================== */
-
-/** ステップ単体取得 */
-export async function getStep(id: string): Promise<TestStepDoc | undefined> {
-  return mockTestSteps.find((s) => s.id === id);
+export async function getStep(id: string): Promise<NestedTestStep | undefined> {
+  for (const project of getProjects()) {
+    for (const tc of project.testCases) {
+      const step = tc.steps.find((s) => s.id === id);
+      if (step) return step;
+    }
+  }
+  return undefined;
 }
 
-/** テストケースに紐づくステップ一覧（番号順） */
-export async function getSteps(testCaseId: string): Promise<TestStepDoc[]> {
-  return mockTestSteps
-    .filter((step) => step.testCaseId === testCaseId)
-    .sort((a, b) => a.stepNumber - b.stepNumber);
+export async function getSteps(testCaseId: string): Promise<NestedTestStep[]> {
+  const tc = await getTestCase(testCaseId);
+  return tc ? tc.steps : [];
 }
 
-/* ==========================================================================
-  Evidence 関連
-========================================================================== */
-
-/** エビデンス単体取得 */
 export async function getEvidence(
   id: string,
-): Promise<EvidenceDoc | undefined> {
-  return mockEvidences.find((e) => e.id === id);
+): Promise<NestedEvidence | undefined> {
+  for (const project of getProjects()) {
+    for (const tc of project.testCases) {
+      // ステップ内のエビデンスを検索
+      const fromStep = tc.steps
+        .flatMap((s) => s.evidences)
+        .find((e) => e.id === id);
+      if (fromStep) return fromStep;
+      // ケース直下のエビデンスを検索
+      const fromCase = tc.evidences.find((e) => e.id === id);
+      if (fromCase) return fromCase;
+    }
+  }
+  return undefined;
 }
 
-/** テストケース全体に紐づくエビデンス一覧 */
 export async function getEvidencesByTestCase(
   testCaseId: string,
-): Promise<EvidenceDoc[]> {
-  return mockEvidences.filter((ev) => ev.testCaseId === testCaseId);
+): Promise<NestedEvidence[]> {
+  const tc = await getTestCase(testCaseId);
+  if (!tc) return [];
+  return [...tc.evidences, ...tc.steps.flatMap((s) => s.evidences)];
 }
 
-/** 特定のステップに紐づくエビデンス一覧 */
 export async function getEvidencesByStep(
   stepId: string,
-): Promise<EvidenceDoc[]> {
-  return mockEvidences.filter((ev) => ev.stepId === stepId);
+): Promise<NestedEvidence[]> {
+  const s = await getStep(stepId);
+  return s ? s.evidences : [];
 }
 
-/** プロジェクト内の全エビデンス一覧（メディアギャラリー用など） */
 export async function getEvidencesByProject(
   projectId: string,
-): Promise<EvidenceDoc[]> {
-  return mockEvidences.filter((ev) => ev.projectId === projectId);
+): Promise<NestedEvidence[]> {
+  const p = await getProject(projectId);
+  if (!p) return [];
+  return p.testCases.flatMap((tc) => [
+    ...tc.evidences,
+    ...tc.steps.flatMap((s) => s.evidences),
+  ]);
 }

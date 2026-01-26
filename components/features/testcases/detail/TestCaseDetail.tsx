@@ -2,19 +2,19 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { TestCase } from '@/types/testcase';
 import BackButton from './BackButton';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
+import { NestedTestCase } from '@/types/testcase';
 
 type Props = {
-  testCase: TestCase;
+  testCase: NestedTestCase;
 };
 
 export default function TestCaseDetail({ testCase }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTestCase, setTestCase] = useState<TestCase>(testCase);
+  const [editedTestCase, setTestCase] = useState<NestedTestCase>(testCase);
   const router = useRouter();
 
   const handleEdit = () => {

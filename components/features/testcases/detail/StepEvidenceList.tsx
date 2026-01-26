@@ -1,20 +1,23 @@
 import { Paperclip, Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
-import { TestStep } from '@/types/testcase';
+import { NestedEvidence } from '@/types/testcase';
 
 type Props = {
-  step: TestStep;
+  evidences: NestedEvidence[];
   isEditing: boolean;
 };
 
-export default function StepEvidenceList({ step, isEditing }: Props) {
+export default function StepEvidenceList({
+  evidences: evidences,
+  isEditing,
+}: Props) {
   return (
     <div className="border-border mt-4 border-t pt-4">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Paperclip className="text-muted-foreground h-4 w-4" />
           <span className="text-muted-foreground text-sm">
-            エビデンス ({step.evidences?.length || 0})
+            エビデンス ({evidences?.length || 0})
           </span>
         </div>
 
@@ -26,9 +29,9 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
         )}
       </div>
 
-      {step.evidences && step.evidences.length > 0 ? (
+      {evidences && evidences.length > 0 ? (
         <div className="space-y-2">
-          {step.evidences.map((evidence) => {
+          {evidences.map((evidence) => {
             const EvidenceIcon = evidenceTypeConfig[evidence.type].icon;
 
             return (
@@ -55,7 +58,7 @@ export default function StepEvidenceList({ step, isEditing }: Props) {
                         </div>
                       )}
                       <div className="text-muted-foreground text-xs">
-                        {new Date(evidence.uploadedAt).toLocaleString('ja-JP')}
+                        {evidence.createdAt.toLocaleString('ja-JP')}
                       </div>
                       {evidence.note && (
                         <div className="text-muted-foreground mt-1 text-xs">

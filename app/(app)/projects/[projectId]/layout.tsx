@@ -1,6 +1,6 @@
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import Header from '@/components/layout/Header';
-import { fetchTestCases } from '@/lib/api/testcases';
+import { getTestCases } from '@/lib/api/testcases';
 
 /**
  * プロジェクト内の外枠
@@ -11,7 +11,7 @@ export default async function ProjectLayout({
   children: React.ReactNode;
 }) {
   // テストケースの一覧を取得
-  const testcases = await fetchTestCases();
+  const testcases = await getTestCases('proj-001');
   // カテゴリの一覧を抽出
   const categories = Array.from(new Set(testcases.map((tc) => tc.category)));
 

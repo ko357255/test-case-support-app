@@ -1,17 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
 
-export interface EvidenceDoc {
-  id: string;
-  projectId: string;
-  stepId?: string;
-  testCaseId?: string;
-  name: string;
-  note?: string;
-  type: 'screenshot' | 'document' | 'video';
-  uploadedAt: Timestamp;
-  url: string;
-}
-
 export interface ProjectDoc {
   id: string;
   name: string;
@@ -24,7 +12,6 @@ export interface ProjectDoc {
 
 export interface TestCaseDoc {
   id: string;
-  projectId: string;
   title: string;
   description: string;
   category: string;
@@ -37,10 +24,21 @@ export interface TestCaseDoc {
 
 export interface TestStepDoc {
   id: string;
-  testCaseId: string;
   stepNumber: number;
   action: string;
   expected: string;
   actual?: string;
   status?: 'passed' | 'failed' | 'in_progress' | 'not_started';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface EvidenceDoc {
+  id: string;
+  name: string;
+  note?: string;
+  type: 'screenshot' | 'document' | 'video' | 'none';
+  url?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }

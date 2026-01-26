@@ -1,6 +1,6 @@
 'use client';
 
-import type { TestCase } from '@/types/testcase';
+import type { NestedTestCase } from '@/types/testcase';
 
 import StatusCell from './cells/StatusCell';
 import TitleCell from './cells/TitleCell';
@@ -12,7 +12,7 @@ import UpdatedAtCell from './cells/UpdatedAtCell';
 import { useRouter, useParams } from 'next/navigation'; // next/router ではなく next/navigation からインポート
 
 type Props = {
-  testCase: TestCase;
+  testCase: NestedTestCase;
 };
 
 export default function TestCaseTableRow({ testCase }: Props) {

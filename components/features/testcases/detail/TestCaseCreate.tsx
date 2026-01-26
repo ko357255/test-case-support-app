@@ -2,18 +2,18 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { TestCase } from '@/types/testcase';
 import BackButton from '../detail/BackButton';
 import TestCaseHeader from '../detail/TestCaseHeader';
 import TestCaseStepList from '../detail/TestCaseStepList';
 import TestCaseEvidenceList from '../detail/TestCaseEvidenceList';
+import { NestedTestCase } from '@/types/testcase';
+import { Timestamp } from 'firebase/firestore';
 
 export default function TestCaseCreate() {
   const router = useRouter();
-  const [newTestCase, setNewTestCase] = useState<TestCase>(
+  const [newTestCase, setNewTestCase] = useState<NestedTestCase>(
     // テストケースの初期値を設定
     {
-      projectId: '',
       id: '',
       title: '',
       description: '',
@@ -22,8 +22,8 @@ export default function TestCaseCreate() {
       category: '',
       steps: [],
       evidences: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   );
 

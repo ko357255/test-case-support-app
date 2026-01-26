@@ -1,10 +1,10 @@
 import { Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
-import { Evidence } from '@/types/testcase';
+import { NestedEvidence } from '@/types/testcase';
 
 type Props = {
   isEditing: boolean;
-  evidences: Evidence[];
+  evidences: NestedEvidence[];
 };
 
 export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
@@ -52,7 +52,7 @@ export default function TestCaseEvidenceList({ isEditing, evidences }: Props) {
                 </div>
 
                 <div className="text-muted-foreground mb-2 text-xs">
-                  {new Date(evidence.uploadedAt).toLocaleString('ja-JP')}
+                  {evidence.createdAt.toLocaleString('ja-JP')}
                 </div>
 
                 {evidence.note && (

@@ -1,14 +1,14 @@
 import { Edit2, Save } from 'lucide-react';
-import { TestCase } from '@/types/testcase';
+import { NestedTestCase } from '@/types/testcase';
 import { statusConfig } from '@/config/testcase';
 
 type Props = {
   /** 編集モードかどうか */
   isEditing: boolean;
   /** 編集中のテストケース */
-  editedTestCase: TestCase;
+  editedTestCase: NestedTestCase;
   /** テストケース更新時のコールバック */
-  setTestCase: (tc: TestCase) => void;
+  setTestCase: (tc: NestedTestCase) => void;
   /** 編集モードに切り替えるための関数 */
   onEdit: () => void;
   /** キャンセル時のコールバック */
@@ -96,7 +96,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({
                   ...editedTestCase,
-                  status: e.target.value as TestCase['status'],
+                  status: e.target.value as NestedTestCase['status'],
                 })
               }
               className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -142,7 +142,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({
                   ...editedTestCase,
-                  priority: e.target.value as TestCase['priority'],
+                  priority: e.target.value as NestedTestCase['priority'],
                 })
               }
               className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"

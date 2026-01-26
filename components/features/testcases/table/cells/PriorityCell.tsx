@@ -1,10 +1,10 @@
-import type { TestCase } from '@/types/testcase';
+import type { NestedTestCase } from '@/types/testcase';
 import { priorityConfig } from '@/config/testcase';
 
 export default function PriorityCell({
   priority,
 }: {
-  priority: TestCase['priority'];
+  priority: NestedTestCase['priority'];
 }) {
   const info = priorityConfig[priority];
 

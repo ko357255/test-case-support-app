@@ -1,15 +1,15 @@
 import { Trash2 } from 'lucide-react';
 import { stepStatusConfig } from '@/config/testcase';
-import { TestStep } from '@/types/testcase';
 import StepEvidenceList from './StepEvidenceList';
+import { NestedTestStep } from '@/types/testcase';
 
 type Props = {
   /** テストステップ */
-  step: TestStep;
+  step: NestedTestStep;
   /** 編集モードかどうか */
   isEditing: boolean;
   /** テストステップ変更時のコールバック */
-  onChange?: (step: TestStep) => void;
+  onChange?: (step: NestedTestStep) => void;
   /** テストステップ削除時のコールバック */
   onDelete?: (id: string) => void;
 };
@@ -127,7 +127,7 @@ export default function TestStepItem({
       </div>
 
       {/* 全体エビデンス */}
-      <StepEvidenceList step={step} isEditing={isEditing} />
+      <StepEvidenceList evidences={step.evidences} isEditing={isEditing} />
     </div>
   );
 }

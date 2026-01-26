@@ -1,14 +1,15 @@
 import { Plus } from 'lucide-react';
-import { TestStep } from '@/types/testcase';
+import { NestedTestStep } from '@/types/testcase';
 import TestStepItem from './TestStepItem';
+import { Timestamp } from 'firebase/firestore';
 
 type Props = {
   /** 編集モードかどうか */
   isEditing: boolean;
   /** テストステップの配列 */
-  steps: TestStep[];
+  steps: NestedTestStep[];
   /** テストステップ配列変更時のコールバック */
-  onStepsChange?: (steps: TestStep[]) => void;
+  onStepsChange?: (steps: NestedTestStep[]) => void;
 };
 
 export default function TestCaseStepList({
@@ -16,7 +17,7 @@ export default function TestCaseStepList({
   steps,
   onStepsChange,
 }: Props) {
-  const handleStepChange = (updatedStep: TestStep) => {
+  const handleStepChange = (updatedStep: NestedTestStep) => {
     const newSteps = steps.map((s) =>
       s.id === updatedStep.id ? updatedStep : s,
     );
@@ -30,12 +31,15 @@ export default function TestCaseStepList({
 
   const handleStepAdd = () => {
     // ステップの初期値を設定
-    const newStep = {
+    const newStep: NestedTestStep = {
       id: crypto.randomUUID(),
       stepNumber: steps.length + 1,
       action: '',
       expected: '',
       status: 'not_started' as const,
+      evidences: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     onStepsChange?.([...steps, newStep]);
   };
