@@ -2,17 +2,17 @@ import TestCaseDetail from '@/components/features/testcases/detail/TestCaseDetai
 import { fetchTestCaseById } from '@/lib/api/testcases';
 
 /**
- * ホーム（サーバー）
+ * テストケース詳細（サーバー）
  */
 export default async function page({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ testCaseId: string }>;
 }) {
-  const { id } = await params; // パラメータを受け取る
+  const { testCaseId } = await params; // パラメータを受け取る
 
   // テストケースを取得
-  const testcase = await fetchTestCaseById(id);
+  const testcase = await fetchTestCaseById(testCaseId);
   return (
     <div className="px-8 py-4">
       <TestCaseDetail testCase={testcase} />

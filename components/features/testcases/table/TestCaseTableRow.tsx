@@ -9,7 +9,7 @@ import PriorityCell from './cells/PriorityCell';
 import StepsCell from './cells/StepsCell';
 import EvidenceCell from './cells/EvidenceCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
-import { useRouter } from 'next/navigation'; // next/router ではなく next/navigation からインポート
+import { useRouter, useParams } from 'next/navigation'; // next/router ではなく next/navigation からインポート
 
 type Props = {
   testCase: TestCase;
@@ -17,11 +17,15 @@ type Props = {
 
 export default function TestCaseTableRow({ testCase }: Props) {
   const router = useRouter();
+  const params = useParams();
+  const projectId = params.projectId;
 
   return (
     <tr
       // クリック時に詳細ページへ遷移
-      onClick={() => router.push(`/testcases/${testCase.id}`)}
+      onClick={() =>
+        router.push(`/projects/${projectId}/testcases/${testCase.id}`)
+      }
       className="hover:bg-muted cursor-pointer transition-colors"
     >
       <StatusCell status={testCase.status} />
