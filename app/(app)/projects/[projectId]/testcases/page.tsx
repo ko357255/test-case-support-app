@@ -14,7 +14,7 @@ export default async function ProjectsPage({
     category?: string;
   }>;
 }) {
-  const { projectId } = await searchParams; // パラメータを受け取る
+  // const { projectId } = await searchParams; // パラメータを受け取る
 
   const resolvedSearchParams = await searchParams;
   // ステータスフィルタ

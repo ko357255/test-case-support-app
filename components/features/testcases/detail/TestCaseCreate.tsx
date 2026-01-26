@@ -7,7 +7,6 @@ import TestCaseHeader from '../detail/TestCaseHeader';
 import TestCaseStepList from '../detail/TestCaseStepList';
 import TestCaseEvidenceList from '../detail/TestCaseEvidenceList';
 import { NestedTestCase } from '@/types/testcase';
-import { Timestamp } from 'firebase/firestore';
 
 export default function TestCaseCreate() {
   const router = useRouter();

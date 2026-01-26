@@ -1,7 +1,6 @@
 import { Plus } from 'lucide-react';
 import { NestedTestStep } from '@/types/testcase';
 import TestStepItem from './TestStepItem';
-import { Timestamp } from 'firebase/firestore';
 
 type Props = {
   /** 編集モードかどうか */
