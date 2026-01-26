@@ -2,10 +2,11 @@ import { Timestamp } from 'firebase/firestore';
 
 export interface EvidenceDoc {
   id: string;
-  note?: string;
   projectId: string;
   stepId?: string;
   testCaseId?: string;
+  name: string;
+  note?: string;
   type: 'screenshot' | 'document' | 'video';
   uploadedAt: Timestamp;
   url: string;
