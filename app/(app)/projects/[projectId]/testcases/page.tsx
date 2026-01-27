@@ -6,15 +6,16 @@ import { NestedTestCase } from '@/types/testcase';
  * プロジェクト内のテストケース一覧
  */
 export default async function ProjectsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ projectId: string }>;
   searchParams: Promise<{
-    projectId: string;
     status?: string;
     category?: string;
   }>;
 }) {
-  // const { projectId } = await searchParams; // パラメータを受け取る
+  const { projectId } = await params; // パラメータを受け取る
 
   const resolvedSearchParams = await searchParams;
   // ステータスフィルタ
@@ -22,7 +23,7 @@ export default async function ProjectsPage({
   // カテゴリフィルタ
   const category = resolvedSearchParams?.category || 'all';
   // テストケースの一覧を取得
-  const allTestCases = await getTestCases('proj-001');
+  const allTestCases = await getTestCases(projectId);
 
   // フィルタリング
   const filteredTestCases = allTestCases.filter((tc: NestedTestCase) => {
