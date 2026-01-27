@@ -14,16 +14,16 @@ export default async function ProjectsPage() {
   const projects = await getMyProjects('user-admin-01');
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50 p-8">
+    <div className="bg-background h-full overflow-y-auto p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">プロジェクト</h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <h1 className="text-foreground text-2xl font-bold">プロジェクト</h1>
+            <p className="text-muted-foreground mt-1 text-sm">
               管理中のプロジェクト一覧
             </p>
           </div>
-          <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700">
+          <button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors">
             新規作成
           </button>
         </div>
@@ -33,11 +33,11 @@ export default async function ProjectsPage() {
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+              className="group border-border bg-card text-card-foreground hover:border-primary/50 relative flex flex-col overflow-hidden rounded-xl border shadow-sm transition-all hover:shadow-md"
             >
               <div className="flex flex-1 flex-col p-6">
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
+                  <div className="bg-primary/10 text-primary group-hover:bg-primary/20 flex h-10 w-10 items-center justify-center rounded-lg transition-colors">
                     <svg
                       className="h-6 w-6"
                       fill="none"
@@ -53,15 +53,15 @@ export default async function ProjectsPage() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="mb-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-blue-600">
+                <h3 className="text-card-foreground group-hover:text-primary mb-2 text-lg font-bold transition-colors">
                   {project.name}
                 </h3>
-                <p className="mb-4 line-clamp-3 flex-1 text-sm text-gray-500">
+                <p className="text-muted-foreground mb-4 line-clamp-3 flex-1 text-sm">
                   {project.description || 'プロジェクトの説明はありません。'}
                 </p>
-                <div className="mt-auto flex items-center border-t border-gray-100 pt-4 text-xs font-medium text-gray-500">
+                <div className="border-border text-muted-foreground mt-auto flex items-center border-t pt-4 text-xs font-medium">
                   <svg
-                    className="mr-1.5 h-4 w-4 text-gray-400"
+                    className="text-muted-foreground/70 mr-1.5 h-4 w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
