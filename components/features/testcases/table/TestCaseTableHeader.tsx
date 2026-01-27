@@ -13,7 +13,7 @@ export default function TestCaseTableHeader() {
         ].map((label) => (
           <th
             key={label}
-            className="text-muted-foreground px-6 py-3 text-left text-xs tracking-wider uppercase"
+            className="text-muted-foreground px-6 py-3 text-left text-xs tracking-wider whitespace-nowrap uppercase"
           >
             {label}
           </th>
