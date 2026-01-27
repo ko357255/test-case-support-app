@@ -210,4 +210,73 @@ export const mockData: NestedProject[] = [
       },
     ],
   },
+  // ==========================================
+  // プロジェクト: proj-002
+  // ==========================================
+  {
+    id: 'proj-002',
+    name: '社内勤怠管理システム',
+    description: '勤怠打刻・申請機能のテスト',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01'],
+    createdAt: new Date('2025-10-10T10:00:00'),
+    updatedAt: new Date('2025-11-01T09:00:00'),
+    testCases: [],
+  },
+
+  // ==========================================
+  // プロジェクト: proj-003
+  // ==========================================
+  {
+    id: 'proj-003',
+    name: 'モバイルアプリUI刷新',
+    description: 'デザイン変更に伴う回帰テスト',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01', 'user-designer-01'],
+    createdAt: new Date('2025-09-20T13:00:00'),
+    updatedAt: new Date('2025-10-05T18:00:00'),
+    testCases: [],
+  },
+
+  // ==========================================
+  // プロジェクト: proj-004
+  // ==========================================
+  {
+    id: 'proj-004',
+    name: 'API基盤リプレイス',
+    description: 'バックエンドAPIの結合テスト',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01', 'user-dev-02'],
+    createdAt: new Date('2025-08-01T09:00:00'),
+    updatedAt: new Date('2025-09-15T17:00:00'),
+    testCases: [],
+  },
+
+  // ==========================================
+  // プロジェクト: proj-005
+  // ==========================================
+  {
+    id: 'proj-005',
+    name: '外部決済サービス連携',
+    description: '決済プロバイダ切替に伴う検証',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01', 'user-qa-02'],
+    createdAt: new Date('2025-07-12T11:00:00'),
+    updatedAt: new Date('2025-07-30T16:00:00'),
+    testCases: [],
+  },
+
+  // ==========================================
+  // プロジェクト: proj-006
+  // ==========================================
+  {
+    id: 'proj-006',
+    name: '管理画面パフォーマンス改善',
+    description: '表示速度改善後の確認テスト',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01'],
+    createdAt: new Date('2025-06-05T10:00:00'),
+    updatedAt: new Date('2025-06-20T14:00:00'),
+    testCases: [],
+  },
 ];
