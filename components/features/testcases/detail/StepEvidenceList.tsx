@@ -5,12 +5,26 @@ import { NestedEvidence } from '@/types/testcase';
 type Props = {
   evidences: NestedEvidence[];
   isEditing: boolean;
+  onChange?: (evidences: NestedEvidence[]) => void;
 };
 
 export default function StepEvidenceList({
   evidences: evidences,
   isEditing,
+  onChange,
 }: Props) {
+  const handleEvidenceChange = (
+    id: string,
+    field: keyof NestedEvidence,
+    value: string,
+  ) => {
+    if (!onChange || !evidences) return;
+    const newEvidences = evidences.map((e) =>
+      e.id === id ? { ...e, [field]: value } : e,
+    );
+    onChange(newEvidences);
+  };
+
   return (
     <div className="border-border mt-4 border-t pt-4">
       <div className="mb-2 flex items-center justify-between">
@@ -46,25 +60,74 @@ export default function StepEvidenceList({
                     />
                     <div className="min-w-0 flex-1">
                       {isEditing ? (
-                        <input
-                          type="text"
-                          value={evidence.name}
-                          onChange={() => {}}
-                          className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring mb-1 w-full rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                        />
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            value={evidence.name}
+                            onChange={(e) =>
+                              handleEvidenceChange(
+                                evidence.id,
+                                'name',
+                                e.target.value,
+                              )
+                            }
+                            placeholder="エビデンス名"
+                            className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                          />
+                          {evidence.type === 'text' ? (
+                            <textarea
+                              value={evidence.textContent || ''}
+                              onChange={(e) =>
+                                handleEvidenceChange(
+                                  evidence.id,
+                                  'textContent',
+                                  e.target.value,
+                                )
+                              }
+                              placeholder="テキスト内容"
+                              className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring min-h-[60px] w-full rounded-md border px-2 py-1 text-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                            />
+                          ) : evidence.url ? (
+                            <div className="text-xs">
+                              <a
+                                href={evidence.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline"
+                              >
+                                添付ファイルを確認
+                              </a>
+                            </div>
+                          ) : null}
+                        </div>
                       ) : (
                         <div className="text-foreground mb-1 text-sm">
-                          {evidence.name}
+                          {evidence.url ? (
+                            <a
+                              href={evidence.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline"
+                            >
+                              {evidence.name}
+                            </a>
+                          ) : (
+                            <span className="text-foreground">
+                              {evidence.name}
+                            </span>
+                          )}
                         </div>
                       )}
+                      {!isEditing &&
+                        evidence.type === 'text' &&
+                        evidence.textContent && (
+                          <div className="bg-muted text-muted-foreground mt-1 rounded-md p-2 font-mono text-xs whitespace-pre-wrap">
+                            {evidence.textContent}
+                          </div>
+                        )}
                       <div className="text-muted-foreground text-xs">
                         {evidence.createdAt.toLocaleString('ja-JP')}
                       </div>
-                      {evidence.note && (
-                        <div className="text-muted-foreground mt-1 text-xs">
-                          {evidence.note}
-                        </div>
-                      )}
                     </div>
                   </div>
 

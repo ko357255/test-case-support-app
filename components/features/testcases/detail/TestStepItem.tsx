@@ -20,7 +20,7 @@ export default function TestStepItem({
   onChange,
   onDelete,
 }: Props) {
-  const handleChange = (field: keyof typeof step, value: string) => {
+  const handleChange = (field: keyof typeof step, value: unknown) => {
     if (onChange) {
       onChange({ ...step, [field]: value });
     }
@@ -127,7 +127,11 @@ export default function TestStepItem({
       </div>
 
       {/* 全体エビデンス */}
-      <StepEvidenceList evidences={step.evidences} isEditing={isEditing} />
+      <StepEvidenceList
+        evidences={step.evidences}
+        isEditing={isEditing}
+        onChange={(evidences) => handleChange('evidences', evidences)}
+      />
     </div>
   );
 }

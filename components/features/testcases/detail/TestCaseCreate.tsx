@@ -64,6 +64,9 @@ export default function TestCaseCreate() {
         <TestCaseEvidenceList
           isEditing={true}
           evidences={newTestCase.evidences}
+          onChange={(evidences) =>
+            setNewTestCase({ ...newTestCase, evidences })
+          }
         />
       </div>
     </div>
