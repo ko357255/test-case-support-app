@@ -5,35 +5,56 @@ import {
   EvidenceDoc,
 } from '@/types/firestore';
 
-/** * Timestampプロパティを Date に変換し、必須化する
- * 元のDoc定義に存在する createdAt, updatedAt を Date 型に上書きします
+/**
+ * Timestamp型をDate型に変換するためのユーティリティ
+ * T: 対象の型, K: Dateに変換したいプロパティ名のユニオン
  */
-type StrictDates<T> = Omit<T, 'createdAt' | 'updatedAt'> & {
-  createdAt: Date;
-  updatedAt: Date;
+type ToDate<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]: Date;
 };
 
-/** エビデンス: EvidenceDoc の日付を Date に変換 */
-export type NestedEvidence = StrictDates<EvidenceDoc>;
+// --- Nested Types (For Frontend Use) ---
 
-/** ステップ: 日付を Date に変換し、evidences を追加 */
-export interface NestedTestStep extends StrictDates<TestStepDoc> {
+/**
+ * エビデンス: updatedAt を持たないため createdAt のみ変換
+ */
+export type NestedEvidence = ToDate<EvidenceDoc, 'createdAt'>;
+
+/**
+ * ステップ: 日付を Date に変換し、evidences を追加
+ */
+export interface NestedTestStep extends ToDate<
+  TestStepDoc,
+  'createdAt' | 'updatedAt'
+> {
   evidences: NestedEvidence[];
 }
 
-/** テストケース: 日付を Date に変換し、steps と evidences を追加 */
-export interface NestedTestCase extends StrictDates<TestCaseDoc> {
+/**
+ * テストケース: 日付を Date に変換し、steps と evidences を追加
+ */
+export interface NestedTestCase extends ToDate<
+  TestCaseDoc,
+  'createdAt' | 'updatedAt'
+> {
   steps: NestedTestStep[];
   evidences: NestedEvidence[];
 }
 
-/** プロジェクト: 日付を Date に変換し、testCases を追加 */
-export interface NestedProject extends StrictDates<ProjectDoc> {
+/**
+ * プロジェクト: 日付を Date に変換し、testCases を追加
+ */
+export interface NestedProject extends ToDate<
+  ProjectDoc,
+  'createdAt' | 'updatedAt'
+> {
   testCases: NestedTestCase[];
 }
 
-/** * 変換前のモックデータ構造を定義する型 (mockDataのキャスト用)
- * Firestoreの各Doc型（Timestamp保持）を維持した入れ子構造です
+// --- Mock Data Types ---
+
+/**
+ * 変換前のモックデータ構造（Firestoreの構造をシミュレート）
  */
 export interface RawMockProject extends ProjectDoc {
   testCases: (TestCaseDoc & {

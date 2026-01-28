@@ -119,9 +119,9 @@ export const evidenceTypeConfig = {
     icon: Video,
     color: 'text-purple-500',
   },
-  none: {
+  text: {
     label: 'テキスト',
     icon: Text,
-    color: 'text-green-500',
+    color: 'text-gray-500',
   },
 };

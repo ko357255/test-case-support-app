@@ -36,9 +36,8 @@ export interface TestStepDoc {
 export interface EvidenceDoc {
   id: string;
   name: string;
-  note?: string;
-  type: 'screenshot' | 'document' | 'video' | 'none';
+  type: 'screenshot' | 'document' | 'video' | 'text';
   url?: string;
+  textContent?: string;
   createdAt: Timestamp;
-  updatedAt: Timestamp;
 }
