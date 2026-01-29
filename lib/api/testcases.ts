@@ -110,3 +110,50 @@ export async function getEvidencesByProject(
     ...tc.steps.flatMap((s) => s.evidences),
   ]);
 }
+
+/* ==========================================================================
+  更新・作成・削除 (Mock)
+========================================================================== */
+
+/**
+ * テストケースを作成
+ */
+export async function createTestCase(
+  projectId: string,
+  testCase: NestedTestCase,
+): Promise<void> {
+  const project = getProjects().find((p) => p.id === projectId);
+  if (project) {
+    // IDがなければ生成
+    if (!testCase.id) {
+      testCase.id = `tc-${Date.now()}`;
+    }
+    project.testCases.push(testCase);
+  }
+}
+
+/**
+ * テストケースを更新
+ */
+export async function updateTestCase(testCase: NestedTestCase): Promise<void> {
+  for (const project of getProjects()) {
+    const index = project.testCases.findIndex((tc) => tc.id === testCase.id);
+    if (index !== -1) {
+      project.testCases[index] = testCase;
+      return;
+    }
+  }
+}
+
+/**
+ * テストケースを削除
+ */
+export async function deleteTestCase(testCaseId: string): Promise<void> {
+  for (const project of getProjects()) {
+    const index = project.testCases.findIndex((tc) => tc.id === testCaseId);
+    if (index !== -1) {
+      project.testCases.splice(index, 1);
+      return;
+    }
+  }
+}
