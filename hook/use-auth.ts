@@ -42,10 +42,21 @@ export const useAuth = () => {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await firebaseSignOut(auth); // Firebase側
-      await nextAuthSignOut({ callbackUrl: '/login' }); // NextAuth側
-    } finally {
+      const results = await Promise.allSettled([
+        firebaseSignOut(auth), // firebaseのログアウト
+        nextAuthSignOut({ redirect: false }), // NextAuthのログアウト
+      ]);
+
+      const hasError = results.some((r) => r.status === 'rejected');
+
+      if (hasError) {
+        setIsLoading(false); // 失敗時はローディングを解除
+        return { success: false };
+      }
+      return { success: true };
+    } catch {
       setIsLoading(false);
+      return { success: false };
     }
   };
 
