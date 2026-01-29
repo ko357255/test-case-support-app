@@ -1,16 +1,18 @@
 'use client';
 
 import { Save } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import BackButton from './BackButton';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
 import { NestedTestCase } from '@/types/testcase';
 
-export default function TestCaseCreate() {
-  const router = useRouter();
+type Props = {
+  onSave: (testCase: NestedTestCase) => void;
+  onCancel: () => void;
+};
+
+export default function TestCaseCreate({ onSave, onCancel }: Props) {
   const [newTestCase, setNewTestCase] = useState<NestedTestCase>(
     // テストケースの初期値を設定
     {
@@ -32,19 +34,13 @@ export default function TestCaseCreate() {
    */
   const handleSave = async () => {
     // DB保存処理
-    router.push('/');
-  };
-
-  /**
-   * キャンセル処理
-   */
-  const handleCancel = () => {
-    router.back();
+    // 親コンポーネントにデータを渡す
+    onSave(newTestCase);
   };
 
   return (
     <div className="p-8">
-      <BackButton onBack={router.back} />
+      <h2 className="mb-6 text-2xl font-bold">新規テストケース作成</h2>
 
       <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
         <TestCaseHeader
@@ -61,7 +57,7 @@ export default function TestCaseCreate() {
                 保存
               </button>
               <button
-                onClick={handleCancel}
+                onClick={onCancel}
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 キャンセル

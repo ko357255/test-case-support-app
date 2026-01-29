@@ -24,7 +24,7 @@ export default function TestCaseEvidenceList({
 
     const newEvidence: NestedEvidence = {
       id: crypto.randomUUID(),
-      name: file.name,
+      name: '',
       type: 'screenshot',
       url: URL.createObjectURL(file),
       createdAt: new Date(),

@@ -12,6 +12,7 @@ import {
   Search,
   User,
   Settings as SettingsIcon,
+  Plus,
 } from 'lucide-react';
 import Link from 'next/link';
 import { NestedProject, NestedTestCase } from '@/types/testcase';
@@ -21,6 +22,7 @@ interface ProjectSidebarProps {
   selectedTestCaseId?: string;
   onSelectTestCase: (testCase: NestedTestCase) => void;
   onOpenSettings: () => void;
+  onAddTestCase: () => void;
   onOpenUserSettings: () => void;
 }
 
@@ -32,6 +34,7 @@ export default function ProjectSidebar({
   selectedTestCaseId,
   onSelectTestCase,
   onOpenSettings,
+  onAddTestCase,
   onOpenUserSettings,
 }: ProjectSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -211,6 +214,13 @@ export default function ProjectSidebar({
       <nav className="no-scrollbar flex-1 space-y-2 overflow-y-auto px-3 py-4">
         <div className="text-muted-foreground mb-2 flex items-center justify-between px-3 text-xs font-black uppercase">
           <span>{filteredTestCases.length} 件のケース</span>
+          <button
+            onClick={onAddTestCase}
+            className="hover:text-foreground flex items-center gap-1 transition-colors"
+          >
+            <Plus size={14} />
+            <span>追加</span>
+          </button>
         </div>
         {filteredTestCases.map((tc) => (
           <button

@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit2, Eye } from 'lucide-react';
+import { Edit2, Eye, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
@@ -11,9 +11,14 @@ import { updateTestCase } from '@/lib/api/testcases';
 type Props = {
   testCase: NestedTestCase | null;
   onUpdate: (updatedTestCase: NestedTestCase) => void;
+  onDelete: (testCaseId: string) => void;
 };
 
-export default function TestCaseDetail({ testCase, onUpdate }: Props) {
+export default function TestCaseDetail({
+  testCase,
+  onUpdate,
+  onDelete,
+}: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTestCase, setEditedTestCase] = useState<NestedTestCase | null>(
     null,
@@ -54,6 +59,16 @@ export default function TestCaseDetail({ testCase, onUpdate }: Props) {
   };
 
   /**
+   * 削除処理
+   */
+  const handleDelete = () => {
+    if (!testCase) return;
+    if (window.confirm('このテストケースを削除してもよろしいですか？')) {
+      onDelete(testCase.id);
+    }
+  };
+
+  /**
    * 親の testCase が切り替わったときの処理
    * 編集中なら自動で編集モードをオフにしてローカルコピーを破棄
    */
@@ -77,7 +92,7 @@ export default function TestCaseDetail({ testCase, onUpdate }: Props) {
     <div className="p-8">
       {currentTestCase && (
         <>
-          <div className="pointer-events-none sticky top-8 z-10 mb-4 flex justify-end">
+          <div className="pointer-events-none sticky top-8 z-10 mb-4 flex justify-end gap-2">
             <div className="border-border bg-background pointer-events-auto flex items-center rounded-lg border p-1 shadow-sm">
               <button
                 onClick={() => handleModeChange(false)}
@@ -111,6 +126,18 @@ export default function TestCaseDetail({ testCase, onUpdate }: Props) {
               editedTestCase={currentTestCase}
               setTestCase={setEditedTestCase}
               onBlur={handleAutoSave}
+              actions={
+                !isEditing ? (
+                  <button
+                    onClick={handleDelete}
+                    className="text-destructive hover:bg-destructive/10 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                    title="テストケースを削除"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">削除</span>
+                  </button>
+                ) : undefined
+              }
             />
 
             {/* テストステップ一覧 */}
