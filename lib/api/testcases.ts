@@ -8,9 +8,6 @@ import {
   NestedEvidence,
 } from '@/types/testcase'; // パスは適宜調整してください
 
-/**
- * モックデータを取得（NestedProject[] 型として扱う）
- */
 const getProjects = (): NestedProject[] => mockData as NestedProject[];
 
 /* ==========================================================================
