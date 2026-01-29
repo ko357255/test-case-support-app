@@ -1,14 +1,23 @@
-import { redirect } from 'next/navigation';
+// app/projects/[projectId]/page.tsx
+import { notFound } from 'next/navigation';
+import ProjectWorkspace from './ProjectWorkspace';
+import { getProject } from '@/lib/api/testcases';
 
 /**
  * プロジェクト（サーバー）
  */
-export default async function ProjectPage({
+export default async function Page({
   params,
 }: {
   params: Promise<{ projectId: string }>;
 }) {
-  // /projects/[projectId]/testcases へリダイレクト
   const { projectId } = await params;
-  redirect(`/projects/${projectId}/testcases`);
+  const project = await getProject(projectId);
+
+  // プロジェクトが見つからなければ、notfoundへ遷移
+  if (!project) {
+    notFound();
+  }
+
+  return <ProjectWorkspace initialProject={project} />;
 }
