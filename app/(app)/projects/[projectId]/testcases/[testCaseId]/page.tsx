@@ -1,4 +1,4 @@
-import TestCaseDetail from '@/components/features/testcases/detail/TestCaseDetail';
+import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
 import { getTestCase } from '@/lib/api/testcases';
 
 /**

@@ -122,6 +122,7 @@ export default function ProjectSidebar({
               { id: 'passed', label: '成功' },
               { id: 'failed', label: '失敗' },
               { id: 'in_progress', label: '実施中' },
+              { id: 'not_started', label: '未実施' },
             ].map((s) => (
               <button
                 key={s.id}

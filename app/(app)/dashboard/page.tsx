@@ -14,7 +14,7 @@ import {
 // --- Types ---
 import { NestedProject, NestedTestCase } from '@/types/testcase';
 import { mockData } from '@/data/mock-data';
-import TestCaseDetail from '@/components/features/testcases/detail/TestCaseDetail';
+import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
 
 const SettingsModal: React.FC<{
   isOpen: boolean;

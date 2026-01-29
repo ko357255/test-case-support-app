@@ -1,8 +1,8 @@
 'use client';
 
 import type { NestedTestCase } from '@/types/testcase';
-import TestCaseTableHeader from '@/components/features/testcases/table/TestCaseTableHeader';
-import TestCaseTableRow from '@/components/features/testcases/table/TestCaseTableRow';
+import TestCaseTableHeader from '@/components/features/testcase/table/TestCaseTableHeader';
+import TestCaseTableRow from '@/components/features/testcase/table/TestCaseTableRow';
 
 type Props = {
   testCases: NestedTestCase[];

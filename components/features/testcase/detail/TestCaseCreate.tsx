@@ -3,10 +3,10 @@
 import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import BackButton from '../detail/BackButton';
-import TestCaseHeader from '../detail/TestCaseHeader';
-import TestCaseStepList from '../detail/TestCaseStepList';
-import TestCaseEvidenceList from '../detail/TestCaseEvidenceList';
+import BackButton from './BackButton';
+import TestCaseHeader from './TestCaseHeader';
+import TestCaseStepList from './TestCaseStepList';
+import TestCaseEvidenceList from './TestCaseEvidenceList';
 import { NestedTestCase } from '@/types/testcase';
 
 export default function TestCaseCreate() {

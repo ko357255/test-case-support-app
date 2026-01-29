@@ -1,4 +1,4 @@
-import TestCaseCreate from '@/components/features/testcases/detail/TestCaseCreate';
+import TestCaseCreate from '@/components/features/testcase/detail/TestCaseCreate';
 
 /**
  * テストケース新規作成ページ（サーバー）

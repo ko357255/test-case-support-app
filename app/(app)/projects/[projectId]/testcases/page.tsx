@@ -1,4 +1,4 @@
-import TestCaseTable from '@/components/features/testcases/table/TestCaseTable';
+import TestCaseTable from '@/components/features/testcase/table/TestCaseTable';
 import { getTestCases } from '@/lib/api/testcases';
 import { NestedTestCase } from '@/types/testcase';
 
