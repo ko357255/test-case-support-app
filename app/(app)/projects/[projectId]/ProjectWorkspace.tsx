@@ -5,6 +5,7 @@ import { NestedProject, NestedTestCase } from '@/types/testcase';
 // import SettingsModal from './_components/SettingsModal';
 import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
+import ProjectSettingsModal from '@/components/features/project/ProjectSettingsModal';
 
 type Props = {
   initialProject: NestedProject;
@@ -33,11 +34,11 @@ export default function ProjectWorkspace({ initialProject }: Props) {
         <TestCaseDetail testCase={selectedTestCase} />
       </main>
 
-      {/* <SettingsModal
+      <ProjectSettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         project={project}
-      /> */}
+      />
     </div>
   );
 }
