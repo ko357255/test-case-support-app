@@ -47,15 +47,6 @@ export default function TestCaseStepList({
     <div className="border-border border-b px-8 py-6">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-foreground text-lg">テストステップ</h3>
-        {isEditing && (
-          <button
-            onClick={handleStepAdd}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            <Plus className="h-4 w-4" />
-            ステップ追加
-          </button>
-        )}
       </div>
 
       <div className="space-y-4">
@@ -68,6 +59,16 @@ export default function TestCaseStepList({
             onDelete={handleStepDelete}
           />
         ))}
+
+        {isEditing && (
+          <button
+            onClick={handleStepAdd}
+            className="border-primary/50 text-primary hover:bg-primary/5 hover:border-primary ring-offset-background focus-visible:ring-ring flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed py-3 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            <Plus className="h-4 w-4" />
+            ステップを追加
+          </button>
+        )}
       </div>
     </div>
   );

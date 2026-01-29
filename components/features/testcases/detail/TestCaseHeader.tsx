@@ -1,4 +1,3 @@
-import { Edit2, Save } from 'lucide-react';
 import { NestedTestCase } from '@/types/testcase';
 import { statusConfig } from '@/config/testcase';
 
@@ -9,21 +8,15 @@ type Props = {
   editedTestCase: NestedTestCase;
   /** テストケース更新時のコールバック */
   setTestCase: (tc: NestedTestCase) => void;
-  /** 編集モードに切り替えるための関数 */
-  onEdit: () => void;
-  /** キャンセル時のコールバック */
-  onCancel: () => void;
-  /** 保存時のコールバック */
-  onSave?: () => void;
+  /** ヘッダー右側に表示するアクション要素 */
+  actions?: React.ReactNode;
 };
 
 export default function TestCaseHeader({
   isEditing,
   editedTestCase,
   setTestCase,
-  onEdit,
-  onCancel,
-  onSave,
+  actions,
 }: Props) {
   const StatusIcon = statusConfig[editedTestCase.status].icon;
 
@@ -38,40 +31,14 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, title: e.target.value })
               }
-              className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-2xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background text-foreground placeholder:text-muted-foreground flex w-full rounded-md border px-3 py-2 text-2xl focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
             <h2 className="text-foreground text-2xl">{editedTestCase.title}</h2>
           )}
         </div>
 
-        <div className="ml-4 flex gap-2">
-          {isEditing ? (
-            <>
-              <button
-                onClick={onSave}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <Save className="h-4 w-4" />
-                保存
-              </button>
-              <button
-                onClick={onCancel}
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                キャンセル
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={onEdit}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              <Edit2 className="h-4 w-4" />
-              編集
-            </button>
-          )}
-        </div>
+        {actions && <div className="ml-4">{actions}</div>}
       </div>
 
       {isEditing ? (
@@ -80,7 +47,7 @@ export default function TestCaseHeader({
           onChange={(e) =>
             setTestCase({ ...editedTestCase, description: e.target.value })
           }
-          className="border-input bg-background text-muted-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-20 w-full rounded-md border px-3 py-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="border-input bg-background text-foreground placeholder:text-muted-foreground flex min-h-20 w-full rounded-md border px-3 py-2 focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
           rows={2}
         />
       ) : (
@@ -99,7 +66,7 @@ export default function TestCaseHeader({
                   status: e.target.value as NestedTestCase['status'],
                 })
               }
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background ml-2 rounded-md border px-2 py-1 focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="not_started">未実施</option>
               <option value="in_progress">実施中</option>
@@ -125,7 +92,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, category: e.target.value })
               }
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring ml-2 w-32 rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background placeholder:text-muted-foreground ml-2 w-32 rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
             <span className="text-foreground ml-2">
@@ -145,7 +112,7 @@ export default function TestCaseHeader({
                   priority: e.target.value as NestedTestCase['priority'],
                 })
               }
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring ml-2 rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background ml-2 rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="high">高</option>
               <option value="medium">中</option>

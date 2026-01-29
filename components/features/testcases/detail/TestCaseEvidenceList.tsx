@@ -69,7 +69,7 @@ export default function TestCaseEvidenceList({
                             )
                           }
                           placeholder="エビデンス名"
-                          className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-md border px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                          className="border-input bg-background text-foreground placeholder:text-muted-foreground w-full rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                         />
                         {evidence.type === 'text' ? (
                           <textarea
@@ -82,7 +82,7 @@ export default function TestCaseEvidenceList({
                               )
                             }
                             placeholder="テキスト内容"
-                            className="border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring min-h-20 w-full rounded-md border px-2 py-1 text-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                            className="border-input bg-background text-foreground placeholder:text-muted-foreground min-h-20 w-full rounded-md border px-2 py-1 text-xs focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                           />
                         ) : evidence.url ? (
                           <div className="text-xs">

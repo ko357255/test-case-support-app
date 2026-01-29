@@ -1,5 +1,6 @@
 'use client';
 
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import BackButton from '../detail/BackButton';
@@ -50,9 +51,23 @@ export default function TestCaseCreate() {
           isEditing={true}
           editedTestCase={newTestCase}
           setTestCase={setNewTestCase}
-          onEdit={() => {}} // 作成時は使用しない
-          onCancel={handleCancel}
-          onSave={handleSave}
+          actions={
+            <div className="flex gap-2">
+              <button
+                onClick={handleSave}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <Save className="h-4 w-4" />
+                保存
+              </button>
+              <button
+                onClick={handleCancel}
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                キャンセル
+              </button>
+            </div>
+          }
         />
 
         <TestCaseStepList

@@ -1,5 +1,6 @@
 'use client';
 
+import { Edit2, Eye } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
@@ -20,33 +21,23 @@ export default function TestCaseDetail({ testCase }: Props) {
   const currentTestCase = isEditing ? editedTestCase : testCase;
 
   /**
-   * 編集開始
+   * モード切替処理
    */
-  const handleEdit = () => {
-    if (!testCase) return;
-    setEditedTestCase(testCase); // 親の最新をコピー
-    setIsEditing(true);
-  };
-
-  /**
-   * 編集キャンセル
-   */
-  const handleCancel = () => {
-    setEditedTestCase(null); // 編集内容を破棄
-    setIsEditing(false);
-  };
-
-  /**
-   * 保存処理
-   */
-  const handleSave = async () => {
-    if (!editedTestCase) return;
-
-    // ここで DB 保存処理などを行う
-    // await saveTestCase(editedTestCase);
-
-    setIsEditing(false);
-    setEditedTestCase(null); // 編集用ローカルコピー破棄
+  const handleModeChange = (nextIsEditing: boolean) => {
+    if (nextIsEditing) {
+      // 編集モードへ: 現在の testCase をコピー
+      if (testCase) {
+        setEditedTestCase(testCase);
+        setIsEditing(true);
+      }
+    } else {
+      // 閲覧モードへ: 保存処理を実行して終了
+      if (editedTestCase) {
+        // TODO: ここで DB 保存処理などを行う
+      }
+      setIsEditing(false);
+      setEditedTestCase(null);
+    }
   };
 
   /**
@@ -64,37 +55,63 @@ export default function TestCaseDetail({ testCase }: Props) {
   return (
     <div className="p-8">
       {currentTestCase && (
-        <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-          {/* テストケースのヘッダー */}
-          <TestCaseHeader
-            isEditing={isEditing}
-            editedTestCase={currentTestCase}
-            setTestCase={setEditedTestCase}
-            onEdit={handleEdit}
-            onCancel={handleCancel}
-            onSave={handleSave}
-          />
+        <>
+          <div className="mb-4 flex justify-end">
+            <div className="border-border bg-background flex items-center rounded-lg border p-1 shadow-sm">
+              <button
+                onClick={() => handleModeChange(false)}
+                className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+                  !isEditing
+                    ? 'bg-muted text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Eye className="h-4 w-4" />
+                <span>閲覧</span>
+              </button>
+              <button
+                onClick={() => handleModeChange(true)}
+                className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+                  isEditing
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Edit2 className="h-4 w-4" />
+                <span>編集</span>
+              </button>
+            </div>
+          </div>
 
-          {/* テストステップ一覧 */}
-          <TestCaseStepList
-            isEditing={isEditing}
-            steps={currentTestCase.steps}
-            onStepsChange={(steps) =>
-              setEditedTestCase((prev) => (prev ? { ...prev, steps } : prev))
-            }
-          />
+          <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+            {/* テストケースのヘッダー */}
+            <TestCaseHeader
+              isEditing={isEditing}
+              editedTestCase={currentTestCase}
+              setTestCase={setEditedTestCase}
+            />
 
-          {/* エビデンス一覧 */}
-          <TestCaseEvidenceList
-            isEditing={isEditing}
-            evidences={currentTestCase.evidences}
-            onChange={(evidences) =>
-              setEditedTestCase((prev) =>
-                prev ? { ...prev, evidences } : prev,
-              )
-            }
-          />
-        </div>
+            {/* テストステップ一覧 */}
+            <TestCaseStepList
+              isEditing={isEditing}
+              steps={currentTestCase.steps}
+              onStepsChange={(steps) =>
+                setEditedTestCase((prev) => (prev ? { ...prev, steps } : prev))
+              }
+            />
+
+            {/* エビデンス一覧 */}
+            <TestCaseEvidenceList
+              isEditing={isEditing}
+              evidences={currentTestCase.evidences}
+              onChange={(evidences) =>
+                setEditedTestCase((prev) =>
+                  prev ? { ...prev, evidences } : prev,
+                )
+              }
+            />
+          </div>
+        </>
       )}
     </div>
   );

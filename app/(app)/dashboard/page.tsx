@@ -77,7 +77,7 @@ const SettingsModal: React.FC<{
                   </label>
                   <input
                     type="text"
-                    className="border-input bg-background focus:ring-ring mt-1 w-full rounded-lg border p-2 text-sm focus:ring-2 focus:outline-none"
+                    className="border-input bg-background mt-1 w-full rounded-lg border p-2 text-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
                     defaultValue={project.name}
                   />
                 </div>
@@ -86,7 +86,7 @@ const SettingsModal: React.FC<{
                     説明
                   </label>
                   <textarea
-                    className="border-input bg-background focus:ring-ring mt-1 w-full rounded-lg border p-2 text-sm focus:ring-2 focus:outline-none"
+                    className="border-input bg-background mt-1 w-full rounded-lg border p-2 text-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
                     rows={4}
                     defaultValue={project.description}
                   />
@@ -231,7 +231,7 @@ export default function App() {
               placeholder="タイトルで検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-muted focus:border-primary focus:ring-ring w-full rounded-lg border border-transparent py-2.5 pl-10 text-sm outline-none focus:ring-2"
+              className="bg-muted w-full rounded-lg border border-transparent py-2.5 pl-10 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
             />
           </div>
 

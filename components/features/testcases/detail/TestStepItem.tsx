@@ -64,7 +64,7 @@ export default function TestStepItem({
               type="text"
               value={step.action}
               onChange={(e) => handleChange('action', e.target.value)}
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
             <p className="text-foreground text-sm">{step.action}</p>
@@ -81,7 +81,7 @@ export default function TestStepItem({
               type="text"
               value={step.expected}
               onChange={(e) => handleChange('expected', e.target.value)}
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
             <p className="text-foreground text-sm">{step.expected}</p>
@@ -99,7 +99,7 @@ export default function TestStepItem({
                 type="text"
                 value={step.actual}
                 onChange={(e) => handleChange('actual', e.target.value)}
-                className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
               />
             ) : (
               <p className="text-foreground text-sm">{step.actual}</p>
@@ -115,7 +115,7 @@ export default function TestStepItem({
             <select
               value={step.status || ''}
               onChange={(e) => handleChange('status', e.target.value)}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="border-input bg-background flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="not_started">未実施</option>
               <option value="in_progress">実施中</option>
