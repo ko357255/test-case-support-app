@@ -10,6 +10,8 @@ type Props = {
   setTestCase: (tc: NestedTestCase) => void;
   /** ヘッダー右側に表示するアクション要素 */
   actions?: React.ReactNode;
+  /** フォーカスが外れた時のコールバック（自動保存用） */
+  onBlur?: () => void;
 };
 
 export default function TestCaseHeader({
@@ -17,6 +19,7 @@ export default function TestCaseHeader({
   editedTestCase,
   setTestCase,
   actions,
+  onBlur,
 }: Props) {
   const StatusIcon = statusConfig[editedTestCase.status].icon;
 
@@ -31,6 +34,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, title: e.target.value })
               }
+              onBlur={onBlur}
               className="border-input bg-background text-foreground placeholder:text-muted-foreground flex w-full rounded-md border px-3 py-2 text-2xl focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
@@ -47,6 +51,7 @@ export default function TestCaseHeader({
           onChange={(e) =>
             setTestCase({ ...editedTestCase, description: e.target.value })
           }
+          onBlur={onBlur}
           className="border-input bg-background text-foreground placeholder:text-muted-foreground flex min-h-20 w-full rounded-md border px-3 py-2 focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
           rows={2}
         />
@@ -66,6 +71,7 @@ export default function TestCaseHeader({
                   status: e.target.value as NestedTestCase['status'],
                 })
               }
+              onBlur={onBlur}
               className="border-input bg-background ml-2 rounded-md border px-2 py-1 focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="not_started">未実施</option>
@@ -92,6 +98,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({ ...editedTestCase, category: e.target.value })
               }
+              onBlur={onBlur}
               className="border-input bg-background placeholder:text-muted-foreground ml-2 w-32 rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
@@ -112,6 +119,7 @@ export default function TestCaseHeader({
                   priority: e.target.value as NestedTestCase['priority'],
                 })
               }
+              onBlur={onBlur}
               className="border-input bg-background ml-2 rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="high">高</option>

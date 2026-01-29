@@ -6,6 +6,7 @@ import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
 import { NestedTestCase } from '@/types/testcase';
+import { updateTestCase } from '@/lib/api/testcases';
 
 type Props = {
   testCase: NestedTestCase | null;
@@ -23,7 +24,7 @@ export default function TestCaseDetail({ testCase }: Props) {
   /**
    * モード切替処理
    */
-  const handleModeChange = (nextIsEditing: boolean) => {
+  const handleModeChange = async (nextIsEditing: boolean) => {
     if (nextIsEditing) {
       // 編集モードへ: 現在の testCase をコピー
       if (testCase) {
@@ -33,10 +34,19 @@ export default function TestCaseDetail({ testCase }: Props) {
     } else {
       // 閲覧モードへ: 保存処理を実行して終了
       if (editedTestCase) {
-        // TODO: ここで DB 保存処理などを行う
+        await updateTestCase(editedTestCase);
       }
       setIsEditing(false);
       setEditedTestCase(null);
+    }
+  };
+
+  /**
+   * 自動保存用ハンドラ (onBlur等で呼び出し)
+   */
+  const handleAutoSave = async () => {
+    if (editedTestCase) {
+      await updateTestCase(editedTestCase);
     }
   };
 
@@ -51,6 +61,14 @@ export default function TestCaseDetail({ testCase }: Props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testCase?.id]);
+
+  if (!testCase) {
+    return (
+      <div className="text-muted-foreground flex h-full flex-col items-center justify-center p-8">
+        <p className="text-lg font-medium">テストケースを選択してください</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -89,6 +107,7 @@ export default function TestCaseDetail({ testCase }: Props) {
               isEditing={isEditing}
               editedTestCase={currentTestCase}
               setTestCase={setEditedTestCase}
+              onBlur={handleAutoSave}
             />
 
             {/* テストステップ一覧 */}
@@ -98,6 +117,7 @@ export default function TestCaseDetail({ testCase }: Props) {
               onStepsChange={(steps) =>
                 setEditedTestCase((prev) => (prev ? { ...prev, steps } : prev))
               }
+              onBlur={handleAutoSave}
             />
 
             {/* エビデンス一覧 */}
@@ -109,6 +129,7 @@ export default function TestCaseDetail({ testCase }: Props) {
                   prev ? { ...prev, evidences } : prev,
                 )
               }
+              onBlur={handleAutoSave}
             />
           </div>
         </>

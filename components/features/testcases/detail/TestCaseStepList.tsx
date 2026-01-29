@@ -9,12 +9,15 @@ type Props = {
   steps: NestedTestStep[];
   /** テストステップ配列変更時のコールバック */
   onStepsChange?: (steps: NestedTestStep[]) => void;
+  /** フォーカスが外れた時のコールバック（自動保存用） */
+  onBlur?: () => void;
 };
 
 export default function TestCaseStepList({
   isEditing,
   steps,
   onStepsChange,
+  onBlur,
 }: Props) {
   const handleStepChange = (updatedStep: NestedTestStep) => {
     const newSteps = steps.map((s) =>
@@ -57,6 +60,7 @@ export default function TestCaseStepList({
             isEditing={isEditing}
             onChange={handleStepChange}
             onDelete={handleStepDelete}
+            onBlur={onBlur}
           />
         ))}
 

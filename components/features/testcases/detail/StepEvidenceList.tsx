@@ -6,12 +6,14 @@ type Props = {
   evidences: NestedEvidence[];
   isEditing: boolean;
   onChange?: (evidences: NestedEvidence[]) => void;
+  onBlur?: () => void;
 };
 
 export default function StepEvidenceList({
   evidences: evidences,
   isEditing,
   onChange,
+  onBlur,
 }: Props) {
   const handleEvidenceChange = (
     id: string,
@@ -71,6 +73,7 @@ export default function StepEvidenceList({
                                 e.target.value,
                               )
                             }
+                            onBlur={onBlur}
                             placeholder="エビデンス名"
                             className="border-input bg-background text-foreground placeholder:text-muted-foreground w-full rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                           />
@@ -84,6 +87,7 @@ export default function StepEvidenceList({
                                   e.target.value,
                                 )
                               }
+                              onBlur={onBlur}
                               placeholder="テキスト内容"
                               className="border-input bg-background text-foreground placeholder:text-muted-foreground min-h-[60px] w-full rounded-md border px-2 py-1 text-xs focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                             />
