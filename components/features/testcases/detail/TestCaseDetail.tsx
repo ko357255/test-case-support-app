@@ -1,8 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import BackButton from './BackButton';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
@@ -17,8 +15,6 @@ export default function TestCaseDetail({ testCase }: Props) {
   const [editedTestCase, setEditedTestCase] = useState<NestedTestCase | null>(
     null,
   );
-
-  const router = useRouter();
 
   // 表示に使うテストケースを決定
   const currentTestCase = isEditing ? editedTestCase : testCase;
@@ -67,9 +63,6 @@ export default function TestCaseDetail({ testCase }: Props) {
 
   return (
     <div className="p-8">
-      {/* 戻るボタン */}
-      <BackButton onBack={router.back} />
-
       {currentTestCase && (
         <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
           {/* テストケースのヘッダー */}
