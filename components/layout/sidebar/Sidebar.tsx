@@ -10,6 +10,7 @@ import {
   Filter,
   Minus,
   Search,
+  User,
   Settings as SettingsIcon,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -20,6 +21,7 @@ interface ProjectSidebarProps {
   selectedTestCaseId?: string;
   onSelectTestCase: (testCase: NestedTestCase) => void;
   onOpenSettings: () => void;
+  onOpenUserSettings: () => void;
 }
 
 /**
@@ -30,6 +32,7 @@ export default function ProjectSidebar({
   selectedTestCaseId,
   onSelectTestCase,
   onOpenSettings,
+  onOpenUserSettings,
 }: ProjectSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -250,6 +253,21 @@ export default function ProjectSidebar({
           </button>
         ))}
       </nav>
+
+      {/* フッター: ユーザー情報 */}
+      <div className="border-border mt-auto border-t px-3 py-1">
+        <button
+          onClick={onOpenUserSettings}
+          className="hover:bg-accent flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors"
+        >
+          <div className="bg-muted text-muted-foreground flex h-9 w-9 items-center justify-center rounded-full">
+            <User size={20} />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="truncate text-sm font-bold">デモユーザー</p>
+          </div>
+        </button>
+      </div>
     </aside>
   );
 }

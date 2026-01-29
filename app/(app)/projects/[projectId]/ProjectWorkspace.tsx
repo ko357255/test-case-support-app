@@ -6,6 +6,7 @@ import { NestedProject, NestedTestCase } from '@/types/testcase';
 import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import ProjectSettingsModal from '@/components/features/project/ProjectSettingsModal';
+import UserSettingsModal from '@/components/features/user/UserSettingsModal';
 
 type Props = {
   initialProject: NestedProject;
@@ -20,6 +21,7 @@ export default function ProjectWorkspace({ initialProject }: Props) {
     useState<NestedTestCase | null>(null);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
 
   /**
    * テストケースが更新されたときに呼ばれるハンドラ
@@ -45,6 +47,7 @@ export default function ProjectWorkspace({ initialProject }: Props) {
         selectedTestCaseId={selectedTestCase?.id}
         onSelectTestCase={setSelectedTestCase}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenUserSettings={() => setIsUserSettingsOpen(true)}
       />
 
       <main className="flex-1 overflow-y-auto">
@@ -58,6 +61,11 @@ export default function ProjectWorkspace({ initialProject }: Props) {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         project={project}
+      />
+
+      <UserSettingsModal
+        isOpen={isUserSettingsOpen}
+        onClose={() => setIsUserSettingsOpen(false)}
       />
     </div>
   );
