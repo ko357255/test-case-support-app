@@ -2,73 +2,19 @@
 
 import React, { useState, useMemo } from 'react';
 import {
-  Plus,
   ArrowLeft,
   Settings,
-  CheckCircle,
-  AlertCircle,
-  Clock,
   Search,
   ChevronRight,
   Layers,
-  Filter,
   X,
   Users,
-  Eye,
-  Edit3,
 } from 'lucide-react';
 
 // --- Types ---
-import {
-  NestedEvidence,
-  NestedProject,
-  NestedTestCase,
-} from '@/types/testcase';
+import { NestedProject, NestedTestCase } from '@/types/testcase';
 import { mockData } from '@/data/mock-data';
 import TestCaseDetail from '@/components/features/testcases/detail/TestCaseDetail';
-
-// --- Sub-Components ---
-
-const StatusBadge: React.FC<{ status: string; size?: 'sm' | 'lg' }> = ({
-  status,
-  size = 'sm',
-}) => {
-  const configs: Record<
-    string,
-    { className: string; label: string; icon: React.ReactElement }
-  > = {
-    passed: {
-      className: 'text-passed bg-passed-bg border-passed-border',
-      label: '成功',
-      icon: <CheckCircle size={size === 'lg' ? 20 : 16} />,
-    },
-    failed: {
-      className: 'text-failed bg-failed-bg border-failed-border',
-      label: '失敗',
-      icon: <AlertCircle size={size === 'lg' ? 20 : 16} />,
-    },
-    in_progress: {
-      className: 'text-in-progress bg-in-progress-bg border-in-progress-border',
-      label: '実施中',
-      icon: <Clock size={size === 'lg' ? 20 : 16} />,
-    },
-    not_started: {
-      className: 'text-muted-foreground bg-muted border-border',
-      label: '未実施',
-      icon: <Clock size={size === 'lg' ? 20 : 16} />,
-    },
-  };
-  const config = configs[status] || configs.not_started;
-  return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 font-bold ${
-        size === 'lg' ? 'px-4 py-1.5 text-base' : 'text-xs'
-      } ${config.className}`}
-    >
-      {config.icon} {config.label}
-    </span>
-  );
-};
 
 const SettingsModal: React.FC<{
   isOpen: boolean;
@@ -80,7 +26,7 @@ const SettingsModal: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <div className="animate-in fade-in zoom-in bg-card text-card-foreground border-border flex h-[550px] w-full max-w-3xl overflow-hidden rounded-2xl border shadow-2xl duration-200">
         <aside className="border-border bg-muted/30 w-50 border-r p-4">
           <nav className="space-y-1">
@@ -175,27 +121,6 @@ const SettingsModal: React.FC<{
   );
 };
 
-const EvidenceItem: React.FC<{ e: NestedEvidence }> = ({ e }) => {
-  if (e.type === 'text') {
-    return (
-      <pre className="bg-muted rounded-xl p-4 text-sm whitespace-pre-wrap">
-        {e.textContent}
-      </pre>
-    );
-  }
-
-  return (
-    <a
-      href={e.url}
-      target="_blank"
-      rel="noreferrer"
-      className="border-border hover:bg-accent block rounded-xl border p-4 text-sm font-bold transition-colors"
-    >
-      {e.name}
-    </a>
-  );
-};
-
 export default function App() {
   const [viewMode, setViewMode] = useState<'portal' | 'workspace'>('portal');
   const [currentProject, setCurrentProject] = useState<NestedProject | null>(
@@ -205,7 +130,6 @@ export default function App() {
     useState<NestedTestCase | null>(null);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null); // カテゴリ用
@@ -279,7 +203,6 @@ export default function App() {
             onClick={() => {
               setViewMode('portal');
               setSelectedTestCase(null);
-              setIsEditMode(false);
             }}
             className="text-muted-foreground hover:text-foreground mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
           >
@@ -373,7 +296,7 @@ export default function App() {
           </div>
         </div>
 
-        <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-4">
+        <nav className="no-scrollbar flex-1 space-y-2 overflow-y-auto px-3 py-4">
           <div className="text-muted-foreground mb-2 flex items-center justify-between px-3 text-xs font-black uppercase">
             <span>{filteredTestCases.length} 件のケース</span>
           </div>
@@ -382,7 +305,6 @@ export default function App() {
               key={tc.id}
               onClick={() => {
                 setSelectedTestCase(tc);
-                setIsEditMode(false);
               }}
               className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
                 selectedTestCase?.id === tc.id
@@ -406,7 +328,7 @@ export default function App() {
         </nav>
       </aside>
 
-      <main>
+      <main className="flex-1 overflow-y-auto">
         <TestCaseDetail testCase={selectedTestCase} />
       </main>
 
