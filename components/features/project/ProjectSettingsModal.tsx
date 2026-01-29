@@ -11,7 +11,7 @@ interface Props {
 }
 
 /**
- * プロジェクト設定モーダルコンポーネント
+ * プロジェクト設定モーダル
  */
 export default function ProjectSettingsModal({
   isOpen,
@@ -20,12 +20,18 @@ export default function ProjectSettingsModal({
 }: Props) {
   const [activeTab, setActiveTab] = useState<'project' | 'members'>('project');
 
-  // モーダルが閉じているときは何もレンダリングしない
+  // モーダルが閉じているときは何も表示しない
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="animate-in fade-in zoom-in bg-card text-card-foreground border-border flex h-[550px] w-full max-w-3xl overflow-hidden rounded-2xl border shadow-2xl duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+      onClick={onClose} // 背景クリック時にモーダルを閉じる
+    >
+      <div
+        className="animate-in fade-in bg-card text-card-foreground border-border flex h-[550px] w-full max-w-3xl overflow-hidden rounded-2xl border shadow-2xl duration-200"
+        onClick={(e) => e.stopPropagation()} // 親コンポーネントにクリックを伝達させない
+      >
         {/* サイドメニュー */}
         <aside className="border-border bg-muted/30 w-52 border-r p-4">
           <nav className="space-y-1">
