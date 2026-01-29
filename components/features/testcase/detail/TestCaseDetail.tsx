@@ -77,8 +77,8 @@ export default function TestCaseDetail({ testCase, onUpdate }: Props) {
     <div className="p-8">
       {currentTestCase && (
         <>
-          <div className="mb-4 flex justify-end">
-            <div className="border-border bg-background flex items-center rounded-lg border p-1 shadow-sm">
+          <div className="pointer-events-none sticky top-8 z-10 mb-4 flex justify-end">
+            <div className="border-border bg-background pointer-events-auto flex items-center rounded-lg border p-1 shadow-sm">
               <button
                 onClick={() => handleModeChange(false)}
                 className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
