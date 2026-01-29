@@ -10,9 +10,10 @@ import { updateTestCase } from '@/lib/api/testcases';
 
 type Props = {
   testCase: NestedTestCase | null;
+  onUpdate: (updatedTestCase: NestedTestCase) => void;
 };
 
-export default function TestCaseDetail({ testCase }: Props) {
+export default function TestCaseDetail({ testCase, onUpdate }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTestCase, setEditedTestCase] = useState<NestedTestCase | null>(
     null,
@@ -35,6 +36,7 @@ export default function TestCaseDetail({ testCase }: Props) {
       // 閲覧モードへ: 保存処理を実行して終了
       if (editedTestCase) {
         await updateTestCase(editedTestCase);
+        onUpdate(editedTestCase);
       }
       setIsEditing(false);
       setEditedTestCase(null);
@@ -47,6 +49,7 @@ export default function TestCaseDetail({ testCase }: Props) {
   const handleAutoSave = async () => {
     if (editedTestCase) {
       await updateTestCase(editedTestCase);
+      onUpdate(editedTestCase);
     }
   };
 

@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ArrowLeft, Search, Settings as SettingsIcon } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ChevronDown,
+  ChevronUp,
+  Filter,
+  Minus,
+  Search,
+  Settings as SettingsIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import { NestedProject, NestedTestCase } from '@/types/testcase';
 
@@ -24,13 +34,15 @@ export default function ProjectSidebar({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // カテゴリ一覧を抽出
   const categories = useMemo(() => {
     return Array.from(new Set(project.testCases.map((tc) => tc.category)));
   }, [project]);
 
-  // フィルタリングロジック
+  // フィルタリング処理
   const filteredTestCases = useMemo(() => {
     return project.testCases.filter((tc) => {
       const matchesSearch = tc.title
@@ -38,9 +50,12 @@ export default function ProjectSidebar({
         .includes(searchQuery.toLowerCase());
       const matchesStatus = !statusFilter || tc.status === statusFilter;
       const matchesCategory = !categoryFilter || tc.category === categoryFilter;
-      return matchesSearch && matchesStatus && matchesCategory;
+      const matchesPriority = !priorityFilter || tc.priority === priorityFilter;
+      return (
+        matchesSearch && matchesStatus && matchesCategory && matchesPriority
+      );
     });
-  }, [project, searchQuery, statusFilter, categoryFilter]);
+  }, [project, searchQuery, statusFilter, categoryFilter, priorityFilter]);
 
   return (
     <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-80 flex-col border-r">
@@ -65,8 +80,8 @@ export default function ProjectSidebar({
       </div>
 
       {/* 検索・フィルタセクション */}
-      <div className="border-border bg-card/50 space-y-4 border-b p-5">
-        <div className="relative">
+      <div className="border-border bg-card/50 border-b p-5">
+        <div className="relative mb-4">
           <Search
             className="text-muted-foreground absolute top-3 left-3"
             size={16}
@@ -80,66 +95,113 @@ export default function ProjectSidebar({
           />
         </div>
 
-        {/* カテゴリフィルタ */}
-        <div className="space-y-2">
-          <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
-            カテゴリ
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            <button
-              onClick={() => setCategoryFilter(null)}
-              className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
-                !categoryFilter
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'bg-muted text-muted-foreground hover:bg-accent'
-              }`}
-            >
-              すべて
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategoryFilter(cat)}
-                className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
-                  categoryFilter === cat
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'bg-muted text-muted-foreground hover:bg-accent'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+        {/* フィルター */}
+        <button
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          className="text-muted-foreground hover:text-foreground flex w-full items-center justify-between text-xs font-bold tracking-widest uppercase transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Filter size={12} />
+            <span>フィルター</span>
+            {(categoryFilter || priorityFilter || statusFilter) && (
+              <span className="bg-primary h-2 w-2 rounded-full" />
+            )}
           </div>
-        </div>
+          {isFilterOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
 
-        {/* ステータスフィルタ */}
-        <div className="space-y-2">
-          <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
-            ステータス
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: 'passed', label: '成功' },
-              { id: 'failed', label: '失敗' },
-              { id: 'in_progress', label: '実施中' },
-              { id: 'not_started', label: '未実施' },
-            ].map((s) => (
-              <button
-                key={s.id}
-                onClick={() =>
-                  setStatusFilter(statusFilter === s.id ? null : s.id)
-                }
-                className={`rounded-lg border px-3 py-1.5 text-sm font-black transition-all ${
-                  statusFilter === s.id
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border bg-background text-muted-foreground'
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
+        {isFilterOpen && (
+          <div className="animate-in slide-in-from-top-2 fade-in mt-4 space-y-4 duration-200">
+            {/* カテゴリフィルタ */}
+            <div className="space-y-2">
+              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
+                カテゴリ
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setCategoryFilter(null)}
+                  className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
+                    !categoryFilter
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'bg-muted text-muted-foreground hover:bg-accent'
+                  }`}
+                >
+                  すべて
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategoryFilter(cat)}
+                    className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
+                      categoryFilter === cat
+                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-muted text-muted-foreground hover:bg-accent'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 優先度フィルタ */}
+            <div className="space-y-2">
+              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
+                優先度
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'high', label: '高' },
+                  { id: 'medium', label: '中' },
+                  { id: 'low', label: '低' },
+                ].map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() =>
+                      setPriorityFilter(priorityFilter === p.id ? null : p.id)
+                    }
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-black transition-all ${
+                      priorityFilter === p.id
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-border bg-background text-muted-foreground'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ステータスフィルタ */}
+            <div className="space-y-2">
+              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
+                ステータス
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'passed', label: '成功' },
+                  { id: 'failed', label: '失敗' },
+                  { id: 'in_progress', label: '実施中' },
+                  { id: 'not_started', label: '未実施' },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() =>
+                      setStatusFilter(statusFilter === s.id ? null : s.id)
+                    }
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-black transition-all ${
+                      statusFilter === s.id
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-border bg-background text-muted-foreground'
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* テストケースリスト */}
@@ -153,23 +215,34 @@ export default function ProjectSidebar({
             onClick={() => onSelectTestCase(tc)}
             className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
               selectedTestCaseId === tc.id
-                ? 'border-primary bg-card'
+                ? 'bg-primary/10 border-transparent'
                 : 'hover:bg-accent/50 border-transparent'
             }`}
           >
-            <div className="mb-2 flex w-full items-center justify-between gap-2">
+            <div className="mb-2 flex w-full items-start justify-between gap-2">
               <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
                 {tc.category}
               </span>
-              <div
-                className={`h-2 w-2 shrink-0 rounded-full ${
-                  tc.status === 'passed'
-                    ? 'bg-passed'
-                    : tc.status === 'failed'
-                      ? 'bg-failed'
-                      : 'bg-muted-foreground'
-                }`}
-              />
+              <div className="flex items-center gap-1.5">
+                {tc.priority === 'high' && (
+                  <ArrowUp className="text-destructive h-3.5 w-3.5 shrink-0" />
+                )}
+                {tc.priority === 'medium' && (
+                  <Minus className="h-3.5 w-3.5 shrink-0 text-yellow-500" />
+                )}
+                {tc.priority === 'low' && (
+                  <ArrowDown className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                )}
+                <div
+                  className={`h-2 w-2 shrink-0 rounded-full ${
+                    tc.status === 'passed'
+                      ? 'bg-passed'
+                      : tc.status === 'failed'
+                        ? 'bg-failed'
+                        : 'bg-muted-foreground'
+                  }`}
+                />
+              </div>
             </div>
             <span className="text-left text-sm leading-snug font-bold">
               {tc.title}

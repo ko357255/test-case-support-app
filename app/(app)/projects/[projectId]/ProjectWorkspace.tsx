@@ -15,11 +15,28 @@ type Props = {
  * プロジェクトスペース（クライアント）
  */
 export default function ProjectWorkspace({ initialProject }: Props) {
-  const [project] = useState(initialProject);
+  const [project, setProject] = useState(initialProject);
   const [selectedTestCase, setSelectedTestCase] =
     useState<NestedTestCase | null>(null);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  /**
+   * テストケースが更新されたときに呼ばれるハンドラ
+   * @param updatedTestCase 更新されたテストケース
+   */
+  const handleTestCaseUpdate = (updatedTestCase: NestedTestCase) => {
+    // プロジェクト内のテストケースリストを更新
+    const updatedTestCases = project.testCases.map((tc) =>
+      tc.id === updatedTestCase.id ? updatedTestCase : tc,
+    );
+    setProject({ ...project, testCases: updatedTestCases });
+
+    // 選択中のテストケースも更新
+    if (selectedTestCase?.id === updatedTestCase.id) {
+      setSelectedTestCase(updatedTestCase);
+    }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -31,7 +48,10 @@ export default function ProjectWorkspace({ initialProject }: Props) {
       />
 
       <main className="flex-1 overflow-y-auto">
-        <TestCaseDetail testCase={selectedTestCase} />
+        <TestCaseDetail
+          testCase={selectedTestCase}
+          onUpdate={handleTestCaseUpdate}
+        />
       </main>
 
       <ProjectSettingsModal
