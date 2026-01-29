@@ -205,12 +205,14 @@
   }
 }
 
-/* ===== スクロールバー非表示 ===== */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-}
+@layer utilities {
+  /* ===== スクロールバー非表示 ===== */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 }
