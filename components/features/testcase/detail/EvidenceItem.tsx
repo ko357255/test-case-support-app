@@ -48,7 +48,7 @@ export default function EvidenceItem({
                 placeholder="エビデンス名"
                 className="border-input bg-background text-foreground placeholder:text-muted-foreground w-full rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
               />
-              {evidence.type === 'text' ? (
+              {evidence.type === 'text' && (
                 <textarea
                   value={evidence.textContent || ''}
                   onChange={(e) =>
@@ -58,18 +58,7 @@ export default function EvidenceItem({
                   placeholder="テキスト内容"
                   className="border-input bg-background text-foreground placeholder:text-muted-foreground min-h-20 w-full rounded-md border px-2 py-1 text-xs focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                 />
-              ) : evidence.url ? (
-                <div className="text-xs">
-                  <a
-                    href={evidence.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    添付ファイルを確認
-                  </a>
-                </div>
-              ) : null}
+              )}
             </>
           ) : (
             <>
