@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
 import { NestedEvidence } from '@/types/testcase';
@@ -15,6 +16,23 @@ export default function TestCaseEvidenceList({
   onChange,
   onBlur,
 }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onChange) return;
+
+    const newEvidence: NestedEvidence = {
+      id: crypto.randomUUID(),
+      name: file.name,
+      type: 'screenshot',
+      url: URL.createObjectURL(file),
+      createdAt: new Date(),
+    };
+    onChange([...evidences, newEvidence]);
+    e.target.value = '';
+  };
+
   const handleEvidenceChange = (
     id: string,
     field: keyof NestedEvidence,
@@ -27,12 +45,28 @@ export default function TestCaseEvidenceList({
     onChange(newEvidences);
   };
 
+  const handleEvidenceDelete = (id: string) => {
+    if (!onChange) return;
+    const newEvidences = evidences.filter((e) => e.id !== id);
+    onChange(newEvidences);
+  };
+
   return (
     <div className="px-8 py-6">
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-foreground text-lg">全体エビデンス</h3>
         {isEditing && (
-          <button className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-md px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
             <Upload className="h-4 w-4" />
             エビデンス追加
           </button>
@@ -122,7 +156,10 @@ export default function TestCaseEvidenceList({
                   </div>
 
                   {isEditing && (
-                    <button className="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors">
+                    <button
+                      onClick={() => handleEvidenceDelete(evidence.id)}
+                      className="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors"
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   )}

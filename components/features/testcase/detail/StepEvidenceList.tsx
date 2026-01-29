@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Paperclip, Trash2, Upload } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
 import { NestedEvidence } from '@/types/testcase';
@@ -15,6 +16,24 @@ export default function StepEvidenceList({
   onChange,
   onBlur,
 }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onChange) return;
+
+    const currentEvidences = evidences || [];
+    const newEvidence: NestedEvidence = {
+      id: crypto.randomUUID(),
+      name: file.name,
+      type: 'screenshot',
+      url: URL.createObjectURL(file),
+      createdAt: new Date(),
+    };
+    onChange([...currentEvidences, newEvidence]);
+    e.target.value = '';
+  };
+
   const handleEvidenceChange = (
     id: string,
     field: keyof NestedEvidence,
@@ -27,8 +46,21 @@ export default function StepEvidenceList({
     onChange(newEvidences);
   };
 
+  const handleEvidenceDelete = (id: string) => {
+    if (!onChange || !evidences) return;
+    const newEvidences = evidences.filter((e) => e.id !== id);
+    onChange(newEvidences);
+  };
+
   return (
     <div className="border-border mt-4 border-t pt-4">
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Paperclip className="text-muted-foreground h-4 w-4" />
@@ -38,7 +70,10 @@ export default function StepEvidenceList({
         </div>
 
         {isEditing && (
-          <button className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
             <Upload className="h-3 w-3" />
             追加
           </button>
@@ -136,7 +171,10 @@ export default function StepEvidenceList({
                   </div>
 
                   {isEditing && (
-                    <button className="text-destructive hover:bg-destructive/10 ml-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors">
+                    <button
+                      onClick={() => handleEvidenceDelete(evidence.id)}
+                      className="text-destructive hover:bg-destructive/10 ml-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors"
+                    >
                       <Trash2 className="h-3 w-3" />
                     </button>
                   )}
