@@ -61,7 +61,7 @@ export default function ProjectSidebar({
   }, [project, searchQuery, statusFilter, categoryFilter, priorityFilter]);
 
   return (
-    <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-80 flex-col border-r">
+    <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-100 flex-col border-r">
       {/* プロジェクトヘッダー */}
       <div className="border-border bg-card border-b p-5">
         <Link
@@ -219,7 +219,7 @@ export default function ProjectSidebar({
             className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
               selectedTestCaseId === tc.id
                 ? 'bg-primary/10 border-transparent'
-                : 'hover:bg-accent/50 border-transparent'
+                : 'hover:bg-primary/10 border-transparent'
             }`}
           >
             <div className="mb-2 flex w-full items-start justify-between gap-2">
