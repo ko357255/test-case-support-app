@@ -1,5 +1,6 @@
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 
 if (getApps().length === 0) {
   // Firebase Admin SDK の初期化
@@ -13,3 +14,4 @@ if (getApps().length === 0) {
 }
 
 export const adminAuth = getAuth();
+export const adminDb = getFirestore();
