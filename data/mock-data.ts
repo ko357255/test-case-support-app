@@ -216,6 +216,240 @@ export const mockData: NestedProject[] = [
   },
   /**
    * ==========================================
+   * プロジェクト: proj-8bb2f1a
+   * ==========================================
+   */
+  {
+    id: 'proj-8bb2f1a',
+    name: 'テストケース作成支援WEBアプリ開発',
+    description: 'テストケースを作成を支援するWEBアプリケーション開発',
+    ownerId: 'user-admin-01',
+    memberIds: ['user-admin-01', 'user-qa-01'],
+    createdAt: new Date('2026-01-10T09:00:00'),
+    updatedAt: new Date('2026-01-20T15:00:00'),
+    testCases: [
+      {
+        /**
+         * テストケース 1: ログイン
+         */
+        id: 'tc-a3f9e2b',
+        title: 'メールアドレス/パスワードによるログイン',
+        description:
+          '登録済みのユーザーがシステムにログインできることを確認する',
+        category: '認証',
+        priority: 'high',
+        status: 'passed',
+        groupId: 'grp-auth-001',
+        createdAt: new Date('2026-01-15T10:00:00'),
+        updatedAt: new Date('2026-01-20T11:00:00'),
+        steps: [
+          {
+            id: 'step-f4d5s6a',
+            stepNumber: 1,
+            action:
+              'ログイン画面で正しいメールアドレスと誤ったパスワードを入力して実行',
+            expected:
+              '「ログインに失敗しました。メールアドレスとパスワードを確認してください。」というエラーが表示され、ログインできないこと',
+            actual:
+              '期待通りのエラーメッセージが表示され、画面は遷移しなかった',
+            status: 'passed',
+            createdAt: new Date('2026-01-20T10:45:00'),
+            updatedAt: new Date('2026-01-20T10:45:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+      {
+        /**
+         * テストケース 2: キーワード検索
+         */
+        id: 'tc-b4c5d6e',
+        title: 'キーワードによるデータ検索',
+        description:
+          '検索窓に入力した文字列に合致する結果が表示されることを確認する',
+        category: '検索',
+        priority: 'medium',
+        status: 'failed',
+        groupId: 'grp-search-002',
+        createdAt: new Date('2026-01-15T13:00:00'),
+        updatedAt: new Date('2026-01-20T14:30:00'),
+        steps: [
+          {
+            id: 'step-f1g2h3i',
+            stepNumber: 1,
+            action: '検索窓に任意のキーワードを入力して検索ボタンを押下',
+            expected: '該当する一覧が表示される',
+            actual:
+              '検索結果が0件の場合にエラーメッセージが表示されず、無限読み込みになる',
+            status: 'failed',
+            createdAt: new Date('2026-01-20T14:00:00'),
+            updatedAt: new Date('2026-01-20T14:00:00'),
+            evidences: [
+              {
+                id: 'ev-d9e8f7g',
+                name: '読み込み中画面のままフリーズ',
+                type: 'screenshot',
+                url: '/mock/error-loading.png',
+                createdAt: new Date('2026-01-20T14:05:00'),
+              },
+            ],
+          },
+        ],
+        evidences: [],
+      },
+      {
+        /**
+         * テストケース 3: 情報変更
+         */
+        id: 'tc-e7f8g9h',
+        title: 'ユーザープロフィールの更新',
+        description:
+          'ユーザー名やメールアドレスの変更が保存されることを確認する',
+        category: 'ユーザー管理',
+        priority: 'medium',
+        status: 'in_progress',
+        groupId: 'grp-user-003',
+        createdAt: new Date('2026-01-16T10:00:00'),
+        updatedAt: new Date('2026-01-20T15:00:00'),
+        steps: [
+          {
+            id: 'step-j4k5l6m',
+            stepNumber: 1,
+            action: '設定画面から名前を変更して保存ボタンを押下',
+            expected: '変更が完了し、新しい名前が表示される',
+            actual: '',
+            status: 'in_progress',
+            createdAt: new Date('2026-01-20T15:00:00'),
+            updatedAt: new Date('2026-01-20T15:00:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+      /**
+       * 既存のログイン（tc-a3f9e2b）に続くテストケース
+       */
+      {
+        /**
+         * テストケース 2: パスワードリセット（認証カテゴリ）
+         */
+        id: 'tc-f2d4s6a',
+        title: 'パスワード再設定機能の確認',
+        description:
+          '登録済みメールアドレスに再設定用リンクが送信されることを確認する',
+        category: '認証',
+        priority: 'medium',
+        status: 'not_started',
+        groupId: 'grp-auth-001',
+        createdAt: new Date('2026-01-21T10:00:00'),
+        updatedAt: new Date('2026-01-21T10:00:00'),
+        steps: [
+          {
+            id: 'step-m1n2b3v',
+            stepNumber: 1,
+            action: 'パスワード忘却ページでメールアドレスを入力し送信',
+            expected: '送信完了メッセージが表示されること',
+            actual: '',
+            status: 'not_started',
+            createdAt: new Date('2026-01-21T10:00:00'),
+            updatedAt: new Date('2026-01-21T10:00:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+      {
+        /**
+         * テストケース 3: アカウントロック（認証カテゴリ）
+         */
+        id: 'tc-k9l8j7h',
+        title: '連続ログイン失敗によるアカウントロック',
+        description:
+          '5回連続で失敗した際にアカウントが一時ロックされることを確認する',
+        category: '認証',
+        priority: 'high',
+        status: 'failed',
+        groupId: 'grp-auth-001',
+        createdAt: new Date('2026-01-22T09:00:00'),
+        updatedAt: new Date('2026-01-22T11:00:00'),
+        steps: [
+          {
+            id: 'step-p5o4i3u',
+            stepNumber: 1,
+            action: '誤ったパスワードを5回連続で入力する',
+            expected:
+              '「アカウントがロックされました」というメッセージが表示されること',
+            actual: '6回目も入力が可能で、ロックがかからなかった',
+            status: 'failed',
+            createdAt: new Date('2026-01-22T11:00:00'),
+            updatedAt: new Date('2026-01-22T11:00:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+      {
+        /**
+         * テストケース 4: 新規ユーザー招待（ユーザー管理カテゴリ）
+         */
+        id: 'tc-x1y2z3w',
+        title: '管理者による新規ユーザー招待',
+        description: '管理者が新しいユーザーをメールアドレスで招待できること',
+        category: 'ユーザー管理',
+        priority: 'medium',
+        status: 'passed',
+        groupId: 'grp-user-003',
+        createdAt: new Date('2026-01-23T14:00:00'),
+        updatedAt: new Date('2026-01-24T10:00:00'),
+        steps: [
+          {
+            id: 'step-q8w7e6r',
+            stepNumber: 1,
+            action: 'ユーザー管理画面で招待メールを送信',
+            expected: '招待中ユーザーの一覧に表示されること',
+            actual: '正常に表示された',
+            status: 'passed',
+            createdAt: new Date('2026-01-24T10:00:00'),
+            updatedAt: new Date('2026-01-24T10:00:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+      {
+        /**
+         * テストケース 5: 権限変更（ユーザー管理カテゴリ）
+         */
+        id: 'tc-v4b5n6m',
+        title: 'ユーザー権限の変更確認',
+        description:
+          '一般ユーザーを管理者に昇格させた際、管理機能が使えるようになること',
+        category: 'ユーザー管理',
+        priority: 'high',
+        status: 'in_progress',
+        groupId: 'grp-user-003',
+        createdAt: new Date('2026-01-25T13:00:00'),
+        updatedAt: new Date('2026-01-25T15:00:00'),
+        steps: [
+          {
+            id: 'step-t1y2u3i',
+            stepNumber: 1,
+            action: '編集画面でロールを「管理者」に変更し保存',
+            expected: '画面上に「管理者」と反映されること',
+            actual: '',
+            status: 'in_progress',
+            createdAt: new Date('2026-01-25T15:00:00'),
+            updatedAt: new Date('2026-01-25T15:00:00'),
+            evidences: [],
+          },
+        ],
+        evidences: [],
+      },
+    ],
+  },
+  /**
+   * ==========================================
    * プロジェクト: proj-002 (勤怠管理)
    * ==========================================
    */
@@ -242,21 +476,6 @@ export const mockData: NestedProject[] = [
     memberIds: ['user-admin-01', 'user-designer-01'],
     createdAt: new Date('2025-09-20T13:00:00'),
     updatedAt: new Date('2025-10-05T18:00:00'),
-    testCases: [],
-  },
-  /**
-   * ==========================================
-   * プロジェクト: proj-004 (API基盤)
-   * ==========================================
-   */
-  {
-    id: 'proj-004',
-    name: 'API基盤リプレイス',
-    description: 'バックエンドAPIの結合テスト',
-    ownerId: 'user-admin-01',
-    memberIds: ['user-admin-01', 'user-dev-02'],
-    createdAt: new Date('2025-08-01T09:00:00'),
-    updatedAt: new Date('2025-09-15T17:00:00'),
     testCases: [],
   },
   /**
