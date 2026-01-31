@@ -1,5 +1,5 @@
 import TestCaseTable from '@/components/features/testcase/table/TestCaseTable';
-import { getTestCases } from '@/lib/api/testcases';
+import { getTestCases } from '@/lib/api/mock/testcases';
 import { NestedTestCase } from '@/types/testcase';
 
 /**

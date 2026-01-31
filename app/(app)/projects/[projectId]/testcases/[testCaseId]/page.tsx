@@ -1,5 +1,5 @@
 import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
-import { getTestCase } from '@/lib/api/testcases';
+import { getTestCase } from '@/lib/api/mock/testcases';
 
 /**
  * テストケース詳細（サーバー）

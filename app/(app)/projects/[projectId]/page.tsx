@@ -1,7 +1,7 @@
 // app/projects/[projectId]/page.tsx
 import { notFound } from 'next/navigation';
 import ProjectWorkspace from './ProjectWorkspace';
-import { getProject } from '@/lib/api/testcases';
+import { getProject } from '@/lib/api/mock/testcases';
 import { Metadata } from 'next';
 
 type Props = {

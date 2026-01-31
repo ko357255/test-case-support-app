@@ -6,7 +6,7 @@ import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
 import { NestedTestCase } from '@/types/testcase';
-import { updateTestCase } from '@/lib/api/testcases';
+import { updateTestCase } from '@/lib/api/mock/testcases';
 
 type Props = {
   testCase: NestedTestCase | null;

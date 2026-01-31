@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getMyProjects } from '@/lib/api/testcases';
+import { getMyProjects } from '@/lib/api/mock/testcases';
 import ProjectListPage from './ProjectListPage';
 
 export const metadata: Metadata = {
