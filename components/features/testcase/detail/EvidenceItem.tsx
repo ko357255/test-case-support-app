@@ -1,12 +1,16 @@
 import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { evidenceTypeConfig } from '@/config/testcase';
 import { EvidenceDTO } from '@/types/firestore';
 
 type Props = {
   evidence: EvidenceDTO;
   isEditing: boolean;
-  // onChange?: (id: string, field: keyof EvidenceDTO, value: string) => void;
-  // onDelete?: (id: string) => void;
+  onChange?: (
+    id: string,
+    patch: { name?: string; textContent?: string },
+  ) => Promise<void> | void;
+  onDelete?: (id: string) => Promise<void> | void;
   onBlur?: () => void;
   className?: string;
   compact?: boolean;
@@ -15,8 +19,8 @@ type Props = {
 export default function EvidenceItem({
   evidence,
   isEditing,
-  // onChange,
-  // onDelete,
+  onChange,
+  onDelete,
   onBlur,
   className = '',
   compact = false,
@@ -25,6 +29,25 @@ export default function EvidenceItem({
   const iconSize = compact ? 'h-4 w-4' : 'h-5 w-5';
   const deleteBtnClass = compact ? 'h-6 w-6' : 'h-8 w-8';
   const deleteIconSize = compact ? 'h-3 w-3' : 'h-4 w-4';
+
+  const [localName, setLocalName] = useState(evidence.name);
+  const [localText, setLocalText] = useState(evidence.textContent ?? '');
+
+  const handleBlur = async () => {
+    const patch: { name?: string; textContent?: string } = {};
+    if (localName !== evidence.name) patch.name = localName;
+    if (
+      evidence.type === 'text' &&
+      localText !== (evidence.textContent || '')
+    ) {
+      patch.textContent = localText;
+    }
+
+    if (Object.keys(patch).length > 0) {
+      await onChange?.(evidence.id, patch);
+    }
+    onBlur?.();
+  };
 
   return (
     <div className={`border-border rounded-lg border p-3 ${className}`}>
@@ -40,21 +63,17 @@ export default function EvidenceItem({
             <>
               <input
                 type="text"
-                value={evidence.name}
-                // onChange={(e) =>
-                //   onChange?.(evidence.id, 'name', e.target.value)
-                // }
-                onBlur={onBlur}
+                value={localName}
+                onChange={(e) => setLocalName(e.target.value)}
+                onBlur={handleBlur}
                 placeholder="エビデンス名"
                 className="border-input bg-background text-foreground placeholder:text-muted-foreground w-full rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
               />
               {evidence.type === 'text' && (
                 <textarea
-                  value={evidence.textContent || ''}
-                  // onChange={(e) =>
-                  //   onChange?.(evidence.id, 'textContent', e.target.value)
-                  // }
-                  onBlur={onBlur}
+                  value={localText}
+                  onChange={(e) => setLocalText(e.target.value)}
+                  onBlur={handleBlur}
                   placeholder="テキスト内容"
                   className="border-input bg-background text-foreground placeholder:text-muted-foreground min-h-20 w-full rounded-md border px-2 py-1 text-xs focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
                 />
@@ -105,7 +124,7 @@ export default function EvidenceItem({
         {/* Delete Button */}
         {isEditing && (
           <button
-            // onClick={() => onDelete?.(evidence.id)}
+            onClick={() => onDelete?.(evidence.id)}
             className={`text-destructive hover:bg-destructive/10 -mt-1 -mr-1 inline-flex shrink-0 items-center justify-center rounded-md transition-colors ${deleteBtnClass}`}
           >
             <Trash2 className={deleteIconSize} />

@@ -23,7 +23,13 @@ interface Props {
   selectedTestCaseId: string | null;
   onSelectTestCaseId: (testCaseId: string) => void;
   onOpenSettings: () => void;
-  // onAddTestCase: () => void;
+  onAddTestCase?: (payload: {
+    title: string;
+    category?: string;
+    priority?: 'high' | 'medium' | 'low';
+  }) => Promise<void>;
+  isLoading?: boolean;
+  isSavingNewTestCase?: boolean;
   onOpenUserSettings: () => void;
 }
 
@@ -36,7 +42,9 @@ export default function ProjectSidebar({
   selectedTestCaseId,
   onSelectTestCaseId,
   onOpenSettings,
-  // onAddTestCase,
+  onAddTestCase,
+  isLoading = false,
+  isSavingNewTestCase = false,
   onOpenUserSettings,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,9 +53,13 @@ export default function ProjectSidebar({
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // カテゴリ一覧を抽出
+  // カテゴリ一覧を抽出（空文字・空白のみのカテゴリは除外）
   const categories = useMemo(() => {
-    return Array.from(new Set(testCases.map((tc) => tc.category)));
+    return Array.from(
+      new Set(
+        testCases.map((tc) => tc.category).filter((c) => c.trim() !== ''),
+      ),
+    );
   }, [testCases]);
 
   // フィルタリング処理
@@ -64,6 +76,38 @@ export default function ProjectSidebar({
       );
     });
   }, [testCases, searchQuery, statusFilter, categoryFilter, priorityFilter]);
+
+  const [isAdding, setIsAdding] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+  const [newPriority, setNewPriority] = useState<'high' | 'medium' | 'low'>(
+    'medium',
+  );
+
+  const handleStartAdd = () => {
+    setIsAdding(true);
+    setNewTitle('');
+    setNewCategory('');
+    setNewPriority('medium');
+  };
+
+  const handleCancelAdd = () => {
+    setIsAdding(false);
+  };
+
+  const handleSaveAdd = async () => {
+    if (!newTitle.trim()) {
+      alert('タイトルを入力してください。');
+      return;
+    }
+    if (!onAddTestCase) return;
+    await onAddTestCase({
+      title: newTitle.trim(),
+      category: newCategory.trim(),
+      priority: newPriority,
+    });
+    setIsAdding(false);
+  };
 
   return (
     <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-100 flex-col border-r">
@@ -216,54 +260,125 @@ export default function ProjectSidebar({
       <nav className="no-scrollbar flex-1 space-y-2 overflow-y-auto px-3 py-4">
         <div className="text-muted-foreground mb-2 flex items-center justify-between px-3 text-xs font-black uppercase">
           <span>{filteredTestCases.length} 件のケース</span>
-          <button
-            // onClick={onAddTestCase}
-            className="hover:text-foreground flex items-center gap-1 transition-colors"
-          >
-            <Plus size={14} />
-            <span>追加</span>
-          </button>
+          {!isAdding ? (
+            <button
+              onClick={handleStartAdd}
+              className="hover:text-foreground flex items-center gap-1 transition-colors"
+              disabled={isLoading || isSavingNewTestCase}
+            >
+              <Plus size={14} />
+              <span>{isSavingNewTestCase ? '作成中...' : '追加'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleCancelAdd}
+              className="text-muted-foreground hover:text-foreground text-sm"
+              disabled={isSavingNewTestCase}
+            >
+              キャンセル
+            </button>
+          )}
         </div>
-        {filteredTestCases.map((tc) => (
-          <button
-            key={tc.id}
-            onClick={() => onSelectTestCaseId(tc.id)}
-            className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
-              selectedTestCaseId === tc.id
-                ? 'bg-primary/10 border-transparent'
-                : 'hover:bg-primary/10 border-transparent'
-            }`}
-          >
-            <div className="mb-2 flex w-full items-start justify-between gap-2">
-              <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
-                {tc.category}
-              </span>
-              <div className="flex items-center gap-1.5">
-                {tc.priority === 'high' && (
-                  <ArrowUp className="text-destructive h-3.5 w-3.5 shrink-0" />
-                )}
-                {tc.priority === 'medium' && (
-                  <Minus className="h-3.5 w-3.5 shrink-0 text-yellow-500" />
-                )}
-                {tc.priority === 'low' && (
-                  <ArrowDown className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-                )}
-                <div
-                  className={`h-2 w-2 shrink-0 rounded-full ${
-                    tc.status === 'passed'
-                      ? 'bg-passed'
-                      : tc.status === 'failed'
-                        ? 'bg-failed'
-                        : 'bg-muted-foreground'
-                  }`}
-                />
-              </div>
+
+        {isAdding && (
+          <div className="mb-3 px-3">
+            <div className="flex w-full items-center gap-2">
+              <input
+                type="text"
+                placeholder="タイトル"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                className="flex-1 rounded-md border px-3 py-2 text-sm"
+              />
+              <select
+                value={newPriority}
+                onChange={(e) =>
+                  setNewPriority(e.target.value as TestCaseDTO['priority'])
+                }
+                className="bg-background text-foreground rounded-md border px-3 py-2 text-sm"
+              >
+                <option value="high">高</option>
+                <option value="medium">中</option>
+                <option value="low">低</option>
+              </select>
+              <button
+                onClick={handleSaveAdd}
+                disabled={isSavingNewTestCase}
+                className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm"
+              >
+                保存
+              </button>
             </div>
-            <span className="text-left text-sm leading-snug font-bold">
-              {tc.title}
-            </span>
-          </button>
-        ))}
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="カテゴリ（省略可）"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="flex-1 rounded-md border px-3 py-2 text-sm"
+              />
+              <button
+                onClick={handleCancelAdd}
+                disabled={isSavingNewTestCase}
+                className="rounded-md border px-3 py-2 text-sm"
+              >
+                キャンセル
+              </button>
+            </div>
+          </div>
+        )}
+        {isLoading ? (
+          // Loading skeleton
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-muted/50 animate-pulse rounded-xl px-4 py-4"
+              />
+            ))}
+          </div>
+        ) : (
+          filteredTestCases.map((tc) => (
+            <button
+              key={tc.id}
+              onClick={() => onSelectTestCaseId(tc.id)}
+              className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
+                selectedTestCaseId === tc.id
+                  ? 'bg-primary/10 border-transparent'
+                  : 'hover:bg-primary/10 border-transparent'
+              }`}
+            >
+              <div className="mb-2 flex w-full items-start justify-between gap-2">
+                <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
+                  {tc.category}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {tc.priority === 'high' && (
+                    <ArrowUp className="text-destructive h-3.5 w-3.5 shrink-0" />
+                  )}
+                  {tc.priority === 'medium' && (
+                    <Minus className="h-3.5 w-3.5 shrink-0 text-yellow-500" />
+                  )}
+                  {tc.priority === 'low' && (
+                    <ArrowDown className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                  )}
+                  <div
+                    className={`h-2 w-2 shrink-0 rounded-full ${
+                      tc.status === 'passed'
+                        ? 'bg-passed'
+                        : tc.status === 'failed'
+                          ? 'bg-failed'
+                          : 'bg-muted-foreground'
+                    }`}
+                  />
+                </div>
+              </div>
+              <span className="text-left text-sm leading-snug font-bold">
+                {tc.title}
+              </span>
+            </button>
+          ))
+        )}
       </nav>
 
       {/* フッター: ユーザー情報 */}

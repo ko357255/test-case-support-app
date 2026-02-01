@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import ProjectWorkspace from './ProjectWorkspace';
 import { Metadata } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
-import { ProjectDoc, TestCaseDoc } from '@/types/firestore';
+import { ProjectDoc } from '@/types/firestore';
 import { cache } from 'react';
 
 type Props = {

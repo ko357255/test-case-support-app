@@ -23,6 +23,8 @@ export default function ProjectWorkspace({ project }: Props) {
     null,
   );
   const [isCreating, setIsCreating] = useState(false);
+  const [isLoadingTestCases, setIsLoadingTestCases] = useState(true);
+  const [isSavingNewTestCase, setIsSavingNewTestCase] = useState(false);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
@@ -33,20 +35,32 @@ export default function ProjectWorkspace({ project }: Props) {
       orderBy('createdAt'),
     );
 
-    const unsub = onSnapshot(q, (snap) => {
-      console.log('onSnapshot: testCases');
-      setTestCases(
-        snap.docs.map((doc) => {
-          const data = doc.data() as TestCaseDoc;
-          return {
-            id: doc.id,
-            ...data,
-            createdAt: data.createdAt.toMillis(),
-            updatedAt: data.updatedAt.toMillis(),
-          };
-        }),
-      );
-    });
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        console.log('onSnapshot: testCases');
+        setTestCases(
+          snap.docs.map((doc) => {
+            const data = doc.data() as TestCaseDoc;
+            return {
+              id: doc.id,
+              ...data,
+              createdAt: data.createdAt.toMillis(),
+              updatedAt: data.updatedAt.toMillis(),
+            };
+          }),
+        );
+        setIsLoadingTestCases(false);
+      },
+      (err) => {
+        // Permission denied can occur during sign-out when the user loses access
+        if ((err as { code?: string })?.code === 'permission-denied') {
+          console.warn('Snapshot listener permission-denied after sign-out');
+          return;
+        }
+        console.error('Snapshot listener error (testCases):', err);
+      },
+    );
 
     return () => unsub();
   }, [project.id]);
@@ -100,6 +114,31 @@ export default function ProjectWorkspace({ project }: Props) {
   //   }
   // };
 
+  const handleAddTestCase = async (payload: {
+    title: string;
+    category?: string;
+    priority?: 'high' | 'medium' | 'low';
+  }) => {
+    setIsSavingNewTestCase(true);
+    try {
+      const { createTestCase } = await import('@/lib/firestore/testCases');
+      const ref = await createTestCase(project.id, {
+        title: payload.title,
+        description: '',
+        category: payload.category ?? '',
+        priority: payload.priority ?? 'medium',
+        status: 'not_started',
+      });
+      setSelectedTestCaseId(ref.id);
+      setIsCreating(false);
+    } catch (err) {
+      console.error('Failed to create test case', err);
+      alert('テストケースの作成に失敗しました。');
+    } finally {
+      setIsSavingNewTestCase(false);
+    }
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
@@ -111,10 +150,9 @@ export default function ProjectWorkspace({ project }: Props) {
           setIsCreating(false);
         }}
         onOpenSettings={() => setIsSettingsOpen(true)}
-        // onAddTestCase={() => {
-        //   setIsCreating(true);
-        //   setSelectedTestCase(null);
-        // }}
+        onAddTestCase={handleAddTestCase}
+        isLoading={isLoadingTestCases}
+        isSavingNewTestCase={isSavingNewTestCase}
         onOpenUserSettings={() => setIsUserSettingsOpen(true)}
       />
 

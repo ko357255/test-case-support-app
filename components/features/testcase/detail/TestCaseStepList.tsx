@@ -1,6 +1,13 @@
 import { Plus } from 'lucide-react';
 import TestStepItem from './TestStepItem';
 import { TestStepDTO } from '@/types/firestore';
+import {
+  createTestStep,
+  updateTestStep,
+  deleteTestStep,
+} from '@/lib/firestore/testSteps';
+
+import { useCallback } from 'react';
 
 type Props = {
   /** プロジェクトID */
@@ -25,33 +32,51 @@ export default function TestCaseStepList({
   // onStepsChange,
   onBlur,
 }: Props) {
-  // const handleStepChange = (updatedStep: NestedTestStep) => {
-  //   const newSteps = steps.map((s) =>
-  //     s.id === updatedStep.id ? updatedStep : s,
-  //   );
-  //   onStepsChange?.(newSteps);
-  // };
+  const handleStepChange = useCallback(
+    async (updatedStep: TestStepDTO) => {
+      try {
+        const { id, ...rest } = updatedStep;
+        const data = rest as Partial<Omit<TestStepDTO, 'id'>>;
+        delete (data as Partial<TestStepDTO>).createdAt;
+        delete (data as Partial<TestStepDTO>).updatedAt;
+        await updateTestStep(projectId, testCaseId, id, data);
+      } catch (e) {
+        console.error('Failed to update step', e);
+        alert('ステップの保存に失敗しました。');
+      }
+    },
+    [projectId, testCaseId],
+  );
 
-  // const handleStepDelete = (id: string) => {
-  //   const newSteps = steps.filter((s) => s.id !== id);
-  //   onStepsChange?.(newSteps);
-  // };
+  const handleStepDelete = useCallback(
+    async (id: string) => {
+      if (!confirm('このステップを削除してもよろしいですか？')) return;
+      try {
+        await deleteTestStep(projectId, testCaseId, id);
+      } catch (e) {
+        console.error('Failed to delete step', e);
+        alert('ステップの削除に失敗しました。');
+      }
+    },
+    [projectId, testCaseId],
+  );
 
-  // const handleStepAdd = () => {
-  //   // ステップの初期値を設定
-  //   const newStep: NestedTestStep = {
-  //     id: crypto.randomUUID(),
-  //     stepNumber: steps.length + 1,
-  //     action: '',
-  //     expected: '',
-  //     status: 'not_started' as const,
-  //     evidences: [],
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   };
-  //   onStepsChange?.([...steps, newStep]);
-  // };
-
+  const handleStepAdd = useCallback(async () => {
+    try {
+      const nextNumber =
+        steps.length > 0 ? Math.max(...steps.map((s) => s.stepNumber)) + 1 : 1;
+      await createTestStep(projectId, testCaseId, {
+        testCaseId,
+        stepNumber: nextNumber,
+        action: '',
+        expected: '',
+        status: 'not_started',
+      });
+    } catch (e) {
+      console.error('Failed to create step', e);
+      alert('ステップの作成に失敗しました。');
+    }
+  }, [projectId, testCaseId, steps]);
   return (
     <div className="border-border border-b px-8 py-6">
       <div className="mb-4 flex items-center justify-between">
@@ -66,15 +91,15 @@ export default function TestCaseStepList({
             key={step.id}
             step={step}
             isEditing={isEditing}
-            // onChange={handleStepChange}
-            // onDelete={handleStepDelete}
+            onChange={handleStepChange}
+            onDelete={handleStepDelete}
             onBlur={onBlur}
           />
         ))}
 
         {isEditing && (
           <button
-            // onClick={handleStepAdd}
+            onClick={handleStepAdd}
             className="border-primary/50 text-primary hover:bg-primary/5 hover:border-primary ring-offset-background focus-visible:ring-ring flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed py-3 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             <Plus className="h-4 w-4" />

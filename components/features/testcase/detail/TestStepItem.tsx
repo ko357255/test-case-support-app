@@ -33,10 +33,29 @@ export default function TestStepItem({
   onBlur,
 }: Props) {
   const [evidences, setEvidences] = useState<EvidenceDTO[]>([]);
-  const handleChange = (field: keyof typeof step, value: unknown) => {
-    if (onChange) {
-      // onChange({ ...step, [field]: value });
+  const [localStep, setLocalStep] = useState<TestStepDTO>(step);
+
+  useEffect(() => {
+    setLocalStep(step);
+  }, [step]);
+
+  const handleChange = (field: keyof TestStepDTO, value: unknown) => {
+    const next = { ...localStep, [field]: value } as TestStepDTO;
+    setLocalStep(next);
+  };
+
+  const handleFieldBlur = () => {
+    // Only notify parent when there is an actual change
+    if (!onChange) {
+      onBlur?.();
+      return;
     }
+
+    const changed = JSON.stringify(localStep) !== JSON.stringify(step);
+    if (changed) {
+      onChange(localStep);
+    }
+    onBlur?.();
   };
 
   useEffect(() => {
@@ -60,6 +79,13 @@ export default function TestStepItem({
             createdAt: doc.data().createdAt.toMillis(),
           })),
         );
+      },
+      (err) => {
+        if ((err as { code?: string })?.code === 'permission-denied') {
+          console.warn('Snapshot listener permission-denied on step evidences');
+          return;
+        }
+        console.error('Snapshot listener error (step evidences):', err);
       },
     );
     return () => unsub();
@@ -101,9 +127,9 @@ export default function TestStepItem({
           {isEditing ? (
             <input
               type="text"
-              value={step.action}
+              value={localStep.action}
               onChange={(e) => handleChange('action', e.target.value)}
-              onBlur={onBlur}
+              onBlur={handleFieldBlur}
               className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
@@ -119,9 +145,9 @@ export default function TestStepItem({
           {isEditing ? (
             <input
               type="text"
-              value={step.expected}
+              value={localStep.expected}
               onChange={(e) => handleChange('expected', e.target.value)}
-              onBlur={onBlur}
+              onBlur={handleFieldBlur}
               className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             />
           ) : (
@@ -138,9 +164,9 @@ export default function TestStepItem({
             {isEditing ? (
               <input
                 type="text"
-                value={step.actual}
+                value={localStep.actual ?? ''}
                 onChange={(e) => handleChange('actual', e.target.value)}
-                onBlur={onBlur}
+                onBlur={handleFieldBlur}
                 className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
               />
             ) : (
@@ -155,9 +181,11 @@ export default function TestStepItem({
               ステップステータス
             </label>
             <select
-              value={step.status || ''}
-              onChange={(e) => handleChange('status', e.target.value)}
-              onBlur={onBlur}
+              value={localStep.status || ''}
+              onChange={(e) =>
+                handleChange('status', e.target.value as TestStepDTO['status'])
+              }
+              onBlur={handleFieldBlur}
               className="border-input bg-background flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
             >
               <option value="not_started">未実施</option>
@@ -173,6 +201,9 @@ export default function TestStepItem({
       <StepEvidenceList
         evidences={evidences}
         isEditing={isEditing}
+        projectId={projectId}
+        testCaseId={testCaseId}
+        stepId={step.id}
         // onChange={(evidences) => handleChange('evidences', evidences)}
         onBlur={onBlur}
       />

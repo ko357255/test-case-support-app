@@ -21,6 +21,8 @@ import {
   query,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { updateTestCase, deleteTestCase } from '@/lib/firestore/testCases';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   projectId: string;
@@ -43,6 +45,8 @@ export default function TestCaseDetail({
     null,
   );
 
+  const router = useRouter();
+
   // テストケースの読み込み
   useEffect(() => {
     // テストケースの変更を監視
@@ -62,6 +66,13 @@ export default function TestCaseDetail({
           });
         }
       },
+      (err) => {
+        if ((err as { code?: string })?.code === 'permission-denied') {
+          console.warn('Snapshot listener permission-denied on testcase doc');
+          return;
+        }
+        console.error('Snapshot listener error (testcase doc):', err);
+      },
     );
     return () => unsub();
   }, [projectId, testCaseId]);
@@ -80,20 +91,30 @@ export default function TestCaseDetail({
       orderBy('stepNumber'),
     );
 
-    const unsub = onSnapshot(q, (snap) => {
-      console.log('onSnapshot: testSteps');
-      setTestSteps(
-        snap.docs.map((doc) => {
-          const data = doc.data() as TestStepDoc;
-          return {
-            id: doc.id,
-            ...data,
-            createdAt: data.createdAt.toMillis(),
-            updatedAt: data.updatedAt.toMillis(),
-          };
-        }),
-      );
-    });
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        console.log('onSnapshot: testSteps');
+        setTestSteps(
+          snap.docs.map((doc) => {
+            const data = doc.data() as TestStepDoc;
+            return {
+              id: doc.id,
+              ...data,
+              createdAt: data.createdAt.toMillis(),
+              updatedAt: data.updatedAt.toMillis(),
+            };
+          }),
+        );
+      },
+      (err) => {
+        if ((err as { code?: string })?.code === 'permission-denied') {
+          console.warn('Snapshot listener permission-denied on testSteps');
+          return;
+        }
+        console.error('Snapshot listener error (testSteps):', err);
+      },
+    );
 
     return () => unsub();
   }, [projectId, testCaseId]);
@@ -110,7 +131,7 @@ export default function TestCaseDetail({
         'evidences',
       ),
       (snap) => {
-        console.log('onSnapshot: testSteps');
+        console.log('onSnapshot: all evidences');
         setEvidences(
           snap.docs.map((doc) => {
             const data = doc.data() as EvidenceDoc;
@@ -122,12 +143,42 @@ export default function TestCaseDetail({
           }),
         );
       },
+      (err) => {
+        if ((err as { code?: string })?.code === 'permission-denied') {
+          console.warn('Snapshot listener permission-denied on evidences');
+          return;
+        }
+        console.error('Snapshot listener error (evidences):', err);
+      },
     );
     return () => unsub();
   }, [projectId, testCaseId]);
 
   // 表示に使うテストケースを決定
   // const currentTestCase = isEditing ? editedTestCase : testCase;
+
+  /**
+   * 編集内容に差分があるか判定
+   */
+  const isTestCaseChanged = (
+    edited?: TestCaseDTO | null,
+    original?: TestCaseDTO | null,
+  ) => {
+    if (!edited) return false; // 編集がないなら変更なし
+    if (!original) return true; // 元がない場合は変更ありとみなす
+
+    const rest1 = { ...edited } as Record<string, unknown>;
+    delete rest1.id;
+    delete rest1.createdAt;
+    delete rest1.updatedAt;
+
+    const rest2 = { ...original } as Record<string, unknown>;
+    delete rest2.id;
+    delete rest2.createdAt;
+    delete rest2.updatedAt;
+
+    return JSON.stringify(rest1) !== JSON.stringify(rest2);
+  };
 
   /**
    * モード切替処理
@@ -141,9 +192,17 @@ export default function TestCaseDetail({
       }
     } else {
       // 閲覧モードへ: 保存処理を実行して終了
-      if (editedTestCase) {
-        // await updateTestCase(editedTestCase);
-        // onUpdate(editedTestCase);
+      if (editedTestCase && isTestCaseChanged(editedTestCase, testCase)) {
+        try {
+          const { id, ...rest } = editedTestCase;
+          const data = rest as Partial<Omit<TestCaseDTO, 'id'>>;
+          delete data.createdAt;
+          delete data.updatedAt;
+          await updateTestCase(projectId, id, data);
+        } catch (e) {
+          console.error('Failed to update test case', e);
+          alert('テストケースの保存に失敗しました。');
+        }
       }
       setIsEditing(false);
       setEditedTestCase(null);
@@ -154,19 +213,34 @@ export default function TestCaseDetail({
    * 自動保存用ハンドラ (onBlur等で呼び出し)
    */
   const handleAutoSave = async () => {
-    if (editedTestCase) {
-      // await updateTestCase(editedTestCase);
-      // onUpdate(editedTestCase);
+    if (!editedTestCase || !testCase) return;
+    if (!isTestCaseChanged(editedTestCase, testCase)) return;
+
+    try {
+      const { id, ...rest } = editedTestCase;
+      const data = rest as Partial<Omit<TestCaseDTO, 'id'>>;
+      delete data.createdAt;
+      delete data.updatedAt;
+      await updateTestCase(projectId, id, data);
+    } catch (e) {
+      console.error('Failed to autosave test case', e);
     }
   };
 
   /**
    * 削除処理
    */
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!testCase) return;
     if (window.confirm('このテストケースを削除してもよろしいですか？')) {
-      // onDelete(testCase.id);
+      try {
+        await deleteTestCase(projectId, testCase.id);
+        // navigate back to project page
+        router.push(`/projects/${projectId}`);
+      } catch (e) {
+        console.error('Failed to delete test case', e);
+        alert('テストケースの削除に失敗しました。');
+      }
     }
   };
 
@@ -217,7 +291,7 @@ export default function TestCaseDetail({
         {/* テストケースのヘッダー */}
         <TestCaseHeader
           isEditing={isEditing}
-          editedTestCase={testCase}
+          editedTestCase={isEditing ? (editedTestCase ?? testCase) : testCase}
           setTestCase={setEditedTestCase}
           onBlur={handleAutoSave}
           actions={
@@ -250,6 +324,8 @@ export default function TestCaseDetail({
         <TestCaseEvidenceList
           isEditing={isEditing}
           evidences={evidences}
+          projectId={projectId}
+          testCaseId={testCaseId}
           onChange={(evidences) =>
             setEditedTestCase((prev) => (prev ? { ...prev, evidences } : prev))
           }

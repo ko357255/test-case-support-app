@@ -3,9 +3,9 @@
 import { Save } from 'lucide-react';
 import { useState } from 'react';
 import TestCaseHeader from './TestCaseHeader';
-import TestCaseStepList from './TestCaseStepList';
-import TestCaseEvidenceList from './TestCaseEvidenceList';
-import { TestCaseDTO } from '@/types/firestore';
+// NOTE: Creating a new test case doesn't yet have project/testCase IDs
+// so we avoid using TestCaseStepList/TestCaseEvidenceList which expect those.
+import { TestCaseWithStepsAndEvidencesDTO } from '@/types/firestore';
 
 // type Props = {
 //   onSave: (testCase: NestedTestCase) => void;
@@ -16,21 +16,23 @@ export default function TestCaseCreate() {
   // {
   //  onSave, onCancel
   // }: Props
-  const [newTestCase, setNewTestCase] = useState<TestCaseDTO>(
-    // テストケースの初期値を設定
-    {
-      id: '',
-      title: '',
-      description: '',
-      status: 'not_started',
-      priority: 'medium',
-      category: '',
-      steps: [],
-      evidences: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  );
+  const [newTestCase, setNewTestCase] =
+    useState<TestCaseWithStepsAndEvidencesDTO>(
+      // テストケースの初期値を設定
+      {
+        id: '',
+        title: '',
+        description: '',
+        status: 'not_started',
+        priority: 'medium',
+        category: '',
+        steps: [],
+        evidences: [],
+        // DTO uses numeric timestamps (placeholder until saved)
+        createdAt: 0,
+        updatedAt: 0,
+      },
+    );
 
   /**
    * 保存処理
@@ -49,7 +51,9 @@ export default function TestCaseCreate() {
         <TestCaseHeader
           isEditing={true}
           editedTestCase={newTestCase}
-          setTestCase={setNewTestCase}
+          setTestCase={(tc) => {
+            if (tc) setNewTestCase(tc as TestCaseWithStepsAndEvidencesDTO);
+          }}
           actions={
             <div className="flex gap-2">
               <button
@@ -69,19 +73,10 @@ export default function TestCaseCreate() {
           }
         />
 
-        <TestCaseStepList
-          isEditing={true}
-          steps={newTestCase.steps}
-          onStepsChange={(steps) => setNewTestCase({ ...newTestCase, steps })}
-        />
-
-        <TestCaseEvidenceList
-          isEditing={true}
-          evidences={newTestCase.evidences}
-          onChange={(evidences) =>
-            setNewTestCase({ ...newTestCase, evidences })
-          }
-        />
+        {/* ステップ・エビデンスは保存後に追加可能。プロジェクト/ケースIDが必要なため作成後のUIで扱います。 */}
+        <div className="text-muted-foreground px-8 py-4 text-sm">
+          ※ ステップ・エビデンスは保存後に追加できます。
+        </div>
       </div>
     </div>
   );

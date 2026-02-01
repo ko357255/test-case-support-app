@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Paperclip, Upload } from 'lucide-react';
 import EvidenceItem from './EvidenceItem';
 import { EvidenceDTO } from '@/types/firestore';
@@ -6,6 +6,9 @@ import { EvidenceDTO } from '@/types/firestore';
 type Props = {
   evidences: EvidenceDTO[];
   isEditing: boolean;
+  projectId: string;
+  testCaseId: string;
+  stepId?: string;
   // onChange?: (evidences: EvidenceDTO[]) => void;
   onBlur?: () => void;
 };
@@ -13,44 +16,37 @@ type Props = {
 export default function StepEvidenceList({
   evidences: evidences,
   isEditing,
+  projectId,
+  testCaseId,
+  stepId,
   // onChange,
   onBlur,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file || !onChange) return;
-
-  //   const currentEvidences = evidences || [];
-  //   const newEvidence: NestedEvidence = {
-  //     id: crypto.randomUUID(),
-  //     name: '',
-  //     type: 'screenshot',
-  //     url: URL.createObjectURL(file),
-  //     createdAt: new Date(),
-  //   };
-  //   onChange([...currentEvidences, newEvidence]);
-  //   e.target.value = '';
-  // };
-
-  // const handleEvidenceChange = (
-  //   id: string,
-  //   field: keyof NestedEvidence,
-  //   value: string,
-  // ) => {
-  //   if (!onChange || !evidences) return;
-  //   const newEvidences = evidences.map((e) =>
-  //     e.id === id ? { ...e, [field]: value } : e,
-  //   );
-  //   onChange(newEvidences);
-  // };
-
-  // const handleEvidenceDelete = (id: string) => {
-  //   if (!onChange || !evidences) return;
-  //   const newEvidences = evidences.filter((e) => e.id !== id);
-  //   onChange(newEvidences);
-  // };
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setIsUploading(true);
+      const { uploadEvidence } = await import('@/lib/storage/uploadEvidence');
+      await uploadEvidence({
+        file,
+        projectId,
+        testCaseId,
+        stepId,
+        type: 'screenshot',
+      });
+      onBlur?.();
+    } catch (err) {
+      console.error('Upload failed', err);
+      alert('エビデンスのアップロードに失敗しました。');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <div className="border-border mt-4 border-t pt-4">
@@ -59,7 +55,7 @@ export default function StepEvidenceList({
         ref={fileInputRef}
         className="hidden"
         accept="image/*"
-        // onChange={handleFileChange}
+        onChange={handleFileChange}
       />
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -72,10 +68,11 @@ export default function StepEvidenceList({
         {isEditing && (
           <button
             onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
             className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring flex items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             <Upload className="h-3 w-3" />
-            追加
+            {isUploading ? 'アップロード中...' : '追加'}
           </button>
         )}
       </div>
@@ -88,8 +85,35 @@ export default function StepEvidenceList({
                 key={evidence.id}
                 evidence={evidence}
                 isEditing={isEditing}
-                // onChange={handleEvidenceChange}
-                // onDelete={handleEvidenceDelete}
+                onChange={async (id, patch) => {
+                  try {
+                    const { updateEvidence } =
+                      await import('@/lib/firestore/evidences');
+                    await updateEvidence(
+                      projectId,
+                      testCaseId,
+                      id,
+                      patch,
+                      stepId,
+                    );
+                  } catch (err) {
+                    console.error('Failed to update evidence', err);
+                    alert('エビデンスの保存に失敗しました。');
+                  }
+                }}
+                onDelete={async (id) => {
+                  if (!confirm('このエビデンスを削除してもよろしいですか？'))
+                    return;
+                  try {
+                    const { deleteEvidence } =
+                      await import('@/lib/firestore/evidences');
+                    await deleteEvidence(projectId, testCaseId, id, stepId);
+                    onBlur?.();
+                  } catch (err) {
+                    console.error('Failed to delete evidence', err);
+                    alert('エビデンスの削除に失敗しました。');
+                  }
+                }}
                 onBlur={onBlur}
                 className="bg-background"
                 compact={true}

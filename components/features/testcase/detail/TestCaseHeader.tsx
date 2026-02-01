@@ -7,7 +7,7 @@ type Props = {
   /** 編集中のテストケース */
   editedTestCase: TestCaseDTO;
   /** テストケース更新時のコールバック */
-  setTestCase: (tc: TestCaseDTO) => void;
+  setTestCase: (tc: TestCaseDTO | null) => void;
   /** ヘッダー右側に表示するアクション要素 */
   actions?: React.ReactNode;
   /** フォーカスが外れた時のコールバック（自動保存用） */
