@@ -1,6 +1,4 @@
-import { NestedProject } from '@/types/testcase';
-
-export const mockData: NestedProject[] = [
+export const mockData = [
   /**
    * ==========================================
    * プロジェクト: proj-001
