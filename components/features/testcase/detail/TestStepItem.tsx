@@ -1,15 +1,22 @@
 import { Trash2 } from 'lucide-react';
 import { stepStatusConfig } from '@/config/testcase';
 import StepEvidenceList from './StepEvidenceList';
-import { NestedTestStep } from '@/types/testcase';
+import { EvidenceDoc, EvidenceDTO, TestStepDTO } from '@/types/firestore';
+import { useEffect, useState } from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 type Props = {
+  /** プロジェクトID */
+  projectId: string;
+  /** テストケースID */
+  testCaseId: string;
   /** テストステップ */
-  step: NestedTestStep;
+  step: TestStepDTO;
   /** 編集モードかどうか */
   isEditing: boolean;
   /** テストステップ変更時のコールバック */
-  onChange?: (step: NestedTestStep) => void;
+  onChange?: (step: TestStepDTO) => void;
   /** テストステップ削除時のコールバック */
   onDelete?: (id: string) => void;
   /** フォーカスが外れた時のコールバック（自動保存用） */
@@ -17,17 +24,46 @@ type Props = {
 };
 
 export default function TestStepItem({
+  projectId,
+  testCaseId,
   step,
   isEditing,
   onChange,
   onDelete,
   onBlur,
 }: Props) {
+  const [evidences, setEvidences] = useState<EvidenceDTO[]>([]);
   const handleChange = (field: keyof typeof step, value: unknown) => {
     if (onChange) {
-      onChange({ ...step, [field]: value });
+      // onChange({ ...step, [field]: value });
     }
   };
+
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(
+        db,
+        'projects',
+        projectId,
+        'testCases',
+        testCaseId,
+        'testSteps',
+        step.id,
+        'evidences',
+      ),
+      (snap) => {
+        console.log('onSnapshot: evidence');
+        setEvidences(
+          snap.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as EvidenceDoc),
+            createdAt: doc.data().createdAt.toMillis(),
+          })),
+        );
+      },
+    );
+    return () => unsub();
+  }, [projectId, testCaseId, step.id]);
 
   return (
     <div className="border-border bg-muted/50 rounded-lg border p-4">
@@ -135,9 +171,9 @@ export default function TestStepItem({
 
       {/* 全体エビデンス */}
       <StepEvidenceList
-        evidences={step.evidences}
+        evidences={evidences}
         isEditing={isEditing}
-        onChange={(evidences) => handleChange('evidences', evidences)}
+        // onChange={(evidences) => handleChange('evidences', evidences)}
         onBlur={onBlur}
       />
     </div>

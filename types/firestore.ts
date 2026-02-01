@@ -4,8 +4,6 @@ import { Timestamp } from 'firebase/firestore';
  * プロジェクト
  */
 export interface ProjectDoc {
-  /** ドキュメントID */
-  id: string;
   /** プロジェクト名 */
   name: string;
   /** プロジェクト概要 */
@@ -24,8 +22,6 @@ export interface ProjectDoc {
  * テストケース
  */
 export interface TestCaseDoc {
-  /** ドキュメントID */
-  id: string;
   /** テストケース名 */
   title: string;
   /** テストの目的や前提条件 */
@@ -48,8 +44,6 @@ export interface TestCaseDoc {
  * テストステップ
  */
 export interface TestStepDoc {
-  /** ドキュメントID */
-  id: string;
   /** 手順の実行順序（1始まり） */
   stepNumber: number;
   /** 操作内容 */
@@ -70,8 +64,6 @@ export interface TestStepDoc {
  * エビデンス
  */
 export interface EvidenceDoc {
-  /** ドキュメントID */
-  id: string;
   /** エビデンスの名称（例: エラー画面、疎通ログなど） */
   name: string;
   /** エビデンスの形式 */
@@ -82,4 +74,40 @@ export interface EvidenceDoc {
   textContent?: string;
   /** エビデンスの記録（アップロード）日時 */
   createdAt: Timestamp;
+}
+
+export type ProjectDTO = Omit<ProjectDoc, 'createdAt' | 'updatedAt'> & {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type TestCaseDTO = Omit<TestCaseDoc, 'createdAt' | 'updatedAt'> & {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type TestStepDTO = Omit<TestStepDoc, 'createdAt' | 'updatedAt'> & {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type EvidenceDTO = Omit<EvidenceDoc, 'createdAt'> & {
+  id: string;
+  createdAt: number;
+};
+
+export interface ProjectWithTestCasesDTO extends ProjectDTO {
+  testCases: TestCaseDTO[];
+}
+
+export interface TestCaseWithStepsAndEvidencesDTO extends TestCaseDTO {
+  steps: TestStepWithEvidencesDTO[];
+  evidences: EvidenceDTO[];
+}
+
+export interface TestStepWithEvidencesDTO extends TestStepDTO {
+  evidences: EvidenceDTO[];
 }

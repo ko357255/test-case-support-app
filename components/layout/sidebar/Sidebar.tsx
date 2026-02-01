@@ -15,14 +15,15 @@ import {
   Plus,
 } from 'lucide-react';
 import Link from 'next/link';
-import { NestedProject, NestedTestCase } from '@/types/testcase';
+import { ProjectDTO, TestCaseDTO } from '@/types/firestore';
 
-interface ProjectSidebarProps {
-  project: NestedProject;
-  selectedTestCaseId?: string;
-  onSelectTestCase: (testCase: NestedTestCase) => void;
+interface Props {
+  project: ProjectDTO;
+  testCases: TestCaseDTO[];
+  selectedTestCaseId: string | null;
+  onSelectTestCaseId: (testCaseId: string) => void;
   onOpenSettings: () => void;
-  onAddTestCase: () => void;
+  // onAddTestCase: () => void;
   onOpenUserSettings: () => void;
 }
 
@@ -31,12 +32,13 @@ interface ProjectSidebarProps {
  */
 export default function ProjectSidebar({
   project,
+  testCases,
   selectedTestCaseId,
-  onSelectTestCase,
+  onSelectTestCaseId,
   onOpenSettings,
-  onAddTestCase,
+  // onAddTestCase,
   onOpenUserSettings,
-}: ProjectSidebarProps) {
+}: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -45,12 +47,12 @@ export default function ProjectSidebar({
 
   // カテゴリ一覧を抽出
   const categories = useMemo(() => {
-    return Array.from(new Set(project.testCases.map((tc) => tc.category)));
-  }, [project]);
+    return Array.from(new Set(testCases.map((tc) => tc.category)));
+  }, [testCases]);
 
   // フィルタリング処理
   const filteredTestCases = useMemo(() => {
-    return project.testCases.filter((tc) => {
+    return testCases.filter((tc) => {
       const matchesSearch = tc.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
@@ -61,7 +63,7 @@ export default function ProjectSidebar({
         matchesSearch && matchesStatus && matchesCategory && matchesPriority
       );
     });
-  }, [project, searchQuery, statusFilter, categoryFilter, priorityFilter]);
+  }, [testCases, searchQuery, statusFilter, categoryFilter, priorityFilter]);
 
   return (
     <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-100 flex-col border-r">
@@ -215,7 +217,7 @@ export default function ProjectSidebar({
         <div className="text-muted-foreground mb-2 flex items-center justify-between px-3 text-xs font-black uppercase">
           <span>{filteredTestCases.length} 件のケース</span>
           <button
-            onClick={onAddTestCase}
+            // onClick={onAddTestCase}
             className="hover:text-foreground flex items-center gap-1 transition-colors"
           >
             <Plus size={14} />
@@ -225,7 +227,7 @@ export default function ProjectSidebar({
         {filteredTestCases.map((tc) => (
           <button
             key={tc.id}
-            onClick={() => onSelectTestCase(tc)}
+            onClick={() => onSelectTestCaseId(tc.id)}
             className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
               selectedTestCaseId === tc.id
                 ? 'bg-primary/10 border-transparent'

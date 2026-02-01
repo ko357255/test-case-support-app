@@ -1,56 +1,56 @@
 import { useRef } from 'react';
 import { Paperclip, Upload } from 'lucide-react';
-import { NestedEvidence } from '@/types/testcase';
 import EvidenceItem from './EvidenceItem';
+import { EvidenceDTO } from '@/types/firestore';
 
 type Props = {
-  evidences: NestedEvidence[];
+  evidences: EvidenceDTO[];
   isEditing: boolean;
-  onChange?: (evidences: NestedEvidence[]) => void;
+  // onChange?: (evidences: EvidenceDTO[]) => void;
   onBlur?: () => void;
 };
 
 export default function StepEvidenceList({
   evidences: evidences,
   isEditing,
-  onChange,
+  // onChange,
   onBlur,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !onChange) return;
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file || !onChange) return;
 
-    const currentEvidences = evidences || [];
-    const newEvidence: NestedEvidence = {
-      id: crypto.randomUUID(),
-      name: '',
-      type: 'screenshot',
-      url: URL.createObjectURL(file),
-      createdAt: new Date(),
-    };
-    onChange([...currentEvidences, newEvidence]);
-    e.target.value = '';
-  };
+  //   const currentEvidences = evidences || [];
+  //   const newEvidence: NestedEvidence = {
+  //     id: crypto.randomUUID(),
+  //     name: '',
+  //     type: 'screenshot',
+  //     url: URL.createObjectURL(file),
+  //     createdAt: new Date(),
+  //   };
+  //   onChange([...currentEvidences, newEvidence]);
+  //   e.target.value = '';
+  // };
 
-  const handleEvidenceChange = (
-    id: string,
-    field: keyof NestedEvidence,
-    value: string,
-  ) => {
-    if (!onChange || !evidences) return;
-    const newEvidences = evidences.map((e) =>
-      e.id === id ? { ...e, [field]: value } : e,
-    );
-    onChange(newEvidences);
-  };
+  // const handleEvidenceChange = (
+  //   id: string,
+  //   field: keyof NestedEvidence,
+  //   value: string,
+  // ) => {
+  //   if (!onChange || !evidences) return;
+  //   const newEvidences = evidences.map((e) =>
+  //     e.id === id ? { ...e, [field]: value } : e,
+  //   );
+  //   onChange(newEvidences);
+  // };
 
-  const handleEvidenceDelete = (id: string) => {
-    if (!onChange || !evidences) return;
-    const newEvidences = evidences.filter((e) => e.id !== id);
-    onChange(newEvidences);
-  };
+  // const handleEvidenceDelete = (id: string) => {
+  //   if (!onChange || !evidences) return;
+  //   const newEvidences = evidences.filter((e) => e.id !== id);
+  //   onChange(newEvidences);
+  // };
 
   return (
     <div className="border-border mt-4 border-t pt-4">
@@ -59,7 +59,7 @@ export default function StepEvidenceList({
         ref={fileInputRef}
         className="hidden"
         accept="image/*"
-        onChange={handleFileChange}
+        // onChange={handleFileChange}
       />
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -88,8 +88,8 @@ export default function StepEvidenceList({
                 key={evidence.id}
                 evidence={evidence}
                 isEditing={isEditing}
-                onChange={handleEvidenceChange}
-                onDelete={handleEvidenceDelete}
+                // onChange={handleEvidenceChange}
+                // onDelete={handleEvidenceDelete}
                 onBlur={onBlur}
                 className="bg-background"
                 compact={true}

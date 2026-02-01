@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { Settings, Users, X } from 'lucide-react';
-import { NestedProject } from '@/types/testcase';
+import { ProjectDTO } from '@/types/firestore';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  project: NestedProject;
+  project: ProjectDTO;
 }
 
 /**

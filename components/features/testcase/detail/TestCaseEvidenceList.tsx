@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 import { Upload } from 'lucide-react';
-import { NestedEvidence } from '@/types/testcase';
 import EvidenceItem from './EvidenceItem';
+import { EvidenceDTO } from '@/types/firestore';
 
 type Props = {
   isEditing: boolean;
-  evidences: NestedEvidence[];
-  onChange?: (evidences: NestedEvidence[]) => void;
+  evidences: EvidenceDTO[];
+  onChange?: (evidences: EvidenceDTO[]) => void;
   onBlur?: () => void;
 };
 
@@ -18,38 +18,38 @@ export default function TestCaseEvidenceList({
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !onChange) return;
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file || !onChange) return;
 
-    const newEvidence: NestedEvidence = {
-      id: crypto.randomUUID(),
-      name: '',
-      type: 'screenshot',
-      url: URL.createObjectURL(file),
-      createdAt: new Date(),
-    };
-    onChange([...evidences, newEvidence]);
-    e.target.value = '';
-  };
+  //   const newEvidence: NestedEvidence = {
+  //     id: crypto.randomUUID(),
+  //     name: '',
+  //     type: 'screenshot',
+  //     url: URL.createObjectURL(file),
+  //     createdAt: new Date(),
+  //   };
+  //   onChange([...evidences, newEvidence]);
+  //   e.target.value = '';
+  // };
 
-  const handleEvidenceChange = (
-    id: string,
-    field: keyof NestedEvidence,
-    value: string,
-  ) => {
-    if (!onChange) return;
-    const newEvidences = evidences.map((e) =>
-      e.id === id ? { ...e, [field]: value } : e,
-    );
-    onChange(newEvidences);
-  };
+  // const handleEvidenceChange = (
+  //   id: string,
+  //   field: keyof NestedEvidence,
+  //   value: string,
+  // ) => {
+  //   if (!onChange) return;
+  //   const newEvidences = evidences.map((e) =>
+  //     e.id === id ? { ...e, [field]: value } : e,
+  //   );
+  //   onChange(newEvidences);
+  // };
 
-  const handleEvidenceDelete = (id: string) => {
-    if (!onChange) return;
-    const newEvidences = evidences.filter((e) => e.id !== id);
-    onChange(newEvidences);
-  };
+  // const handleEvidenceDelete = (id: string) => {
+  //   if (!onChange) return;
+  //   const newEvidences = evidences.filter((e) => e.id !== id);
+  //   onChange(newEvidences);
+  // };
 
   return (
     <div className="px-8 py-6">
@@ -58,7 +58,7 @@ export default function TestCaseEvidenceList({
         ref={fileInputRef}
         className="hidden"
         accept="image/*"
-        onChange={handleFileChange}
+        // onChange={handleFileChange}
       />
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-foreground text-lg">全体エビデンス</h3>
@@ -85,8 +85,8 @@ export default function TestCaseEvidenceList({
                 key={evidence.id}
                 evidence={evidence}
                 isEditing={isEditing}
-                onChange={handleEvidenceChange}
-                onDelete={handleEvidenceDelete}
+                // onChange={handleEvidenceChange}
+                // onDelete={handleEvidenceDelete}
                 onBlur={onBlur}
                 className="hover:bg-muted/50 transition-colors"
               />

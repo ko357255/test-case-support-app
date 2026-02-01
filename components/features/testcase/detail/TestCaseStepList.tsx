@@ -1,50 +1,56 @@
 import { Plus } from 'lucide-react';
-import { NestedTestStep } from '@/types/testcase';
 import TestStepItem from './TestStepItem';
+import { TestStepDTO } from '@/types/firestore';
 
 type Props = {
+  /** プロジェクトID */
+  projectId: string;
+  /** テストケースID */
+  testCaseId: string;
   /** 編集モードかどうか */
   isEditing: boolean;
   /** テストステップの配列 */
-  steps: NestedTestStep[];
+  steps: TestStepDTO[];
   /** テストステップ配列変更時のコールバック */
-  onStepsChange?: (steps: NestedTestStep[]) => void;
+  // onStepsChange?: (steps: NestedTestStep[]) => void;
   /** フォーカスが外れた時のコールバック（自動保存用） */
   onBlur?: () => void;
 };
 
 export default function TestCaseStepList({
+  projectId,
+  testCaseId,
   isEditing,
   steps,
-  onStepsChange,
+  // onStepsChange,
   onBlur,
 }: Props) {
-  const handleStepChange = (updatedStep: NestedTestStep) => {
-    const newSteps = steps.map((s) =>
-      s.id === updatedStep.id ? updatedStep : s,
-    );
-    onStepsChange?.(newSteps);
-  };
+  // const handleStepChange = (updatedStep: NestedTestStep) => {
+  //   const newSteps = steps.map((s) =>
+  //     s.id === updatedStep.id ? updatedStep : s,
+  //   );
+  //   onStepsChange?.(newSteps);
+  // };
 
-  const handleStepDelete = (id: string) => {
-    const newSteps = steps.filter((s) => s.id !== id);
-    onStepsChange?.(newSteps);
-  };
+  // const handleStepDelete = (id: string) => {
+  //   const newSteps = steps.filter((s) => s.id !== id);
+  //   onStepsChange?.(newSteps);
+  // };
 
-  const handleStepAdd = () => {
-    // ステップの初期値を設定
-    const newStep: NestedTestStep = {
-      id: crypto.randomUUID(),
-      stepNumber: steps.length + 1,
-      action: '',
-      expected: '',
-      status: 'not_started' as const,
-      evidences: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    onStepsChange?.([...steps, newStep]);
-  };
+  // const handleStepAdd = () => {
+  //   // ステップの初期値を設定
+  //   const newStep: NestedTestStep = {
+  //     id: crypto.randomUUID(),
+  //     stepNumber: steps.length + 1,
+  //     action: '',
+  //     expected: '',
+  //     status: 'not_started' as const,
+  //     evidences: [],
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //   };
+  //   onStepsChange?.([...steps, newStep]);
+  // };
 
   return (
     <div className="border-border border-b px-8 py-6">
@@ -55,18 +61,20 @@ export default function TestCaseStepList({
       <div className="space-y-4">
         {steps.map((step) => (
           <TestStepItem
+            projectId={projectId}
+            testCaseId={testCaseId}
             key={step.id}
             step={step}
             isEditing={isEditing}
-            onChange={handleStepChange}
-            onDelete={handleStepDelete}
+            // onChange={handleStepChange}
+            // onDelete={handleStepDelete}
             onBlur={onBlur}
           />
         ))}
 
         {isEditing && (
           <button
-            onClick={handleStepAdd}
+            // onClick={handleStepAdd}
             className="border-primary/50 text-primary hover:bg-primary/5 hover:border-primary ring-offset-background focus-visible:ring-ring flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed py-3 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             <Plus className="h-4 w-4" />

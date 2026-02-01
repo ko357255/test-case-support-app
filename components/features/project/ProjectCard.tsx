@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { NestedProject } from '@/types/testcase';
+import { ProjectDTO } from '@/types/firestore';
 
 interface Props {
-  project: NestedProject;
+  project: ProjectDTO;
 }
 
 export default function ProjectCard({ project }: Props) {
@@ -18,7 +18,7 @@ export default function ProjectCard({ project }: Props) {
 
       <div className="border-border text-muted-foreground mt-auto flex w-full items-center justify-between border-t pt-6 text-sm font-bold tracking-widest uppercase">
         <div className="flex flex-col gap-1">
-          <span>{project.testCases?.length || 0} ケース</span>
+          <span>{0} ケース</span>
         </div>
         <ChevronRight
           size={20}

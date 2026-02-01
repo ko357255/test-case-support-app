@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import { Layers, User } from 'lucide-react';
-import { NestedProject } from '@/types/testcase';
 import UserSettingsModal from '@/components/features/user/UserSettingsModal';
 import ProjectCard from '@/components/features/project/ProjectCard';
+import { ProjectDTO } from '@/types/firestore';
 
 interface Props {
-  initialProjects: NestedProject[];
+  initialProjects: ProjectDTO[];
 }
 
 /**
  * プロジェクト一覧ページ（クライアント）
  */
 export default function ProjectListPage({ initialProjects }: Props) {
-  const [projects] = useState<NestedProject[]>(initialProjects);
+  const [projects] = useState<ProjectDTO[]>(initialProjects);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
 
   return (

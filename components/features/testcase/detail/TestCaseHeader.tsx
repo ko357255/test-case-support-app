@@ -1,13 +1,13 @@
-import { NestedTestCase } from '@/types/testcase';
 import { statusConfig } from '@/config/testcase';
+import { TestCaseDTO } from '@/types/firestore';
 
 type Props = {
   /** 編集モードかどうか */
   isEditing: boolean;
   /** 編集中のテストケース */
-  editedTestCase: NestedTestCase;
+  editedTestCase: TestCaseDTO;
   /** テストケース更新時のコールバック */
-  setTestCase: (tc: NestedTestCase) => void;
+  setTestCase: (tc: TestCaseDTO) => void;
   /** ヘッダー右側に表示するアクション要素 */
   actions?: React.ReactNode;
   /** フォーカスが外れた時のコールバック（自動保存用） */
@@ -68,7 +68,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({
                   ...editedTestCase,
-                  status: e.target.value as NestedTestCase['status'],
+                  status: e.target.value as TestCaseDTO['status'],
                 })
               }
               onBlur={onBlur}
@@ -116,7 +116,7 @@ export default function TestCaseHeader({
               onChange={(e) =>
                 setTestCase({
                   ...editedTestCase,
-                  priority: e.target.value as NestedTestCase['priority'],
+                  priority: e.target.value as TestCaseDTO['priority'],
                 })
               }
               onBlur={onBlur}

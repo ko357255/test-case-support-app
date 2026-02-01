@@ -1,12 +1,12 @@
 import { Trash2 } from 'lucide-react';
 import { evidenceTypeConfig } from '@/config/testcase';
-import { NestedEvidence } from '@/types/testcase';
+import { EvidenceDTO } from '@/types/firestore';
 
 type Props = {
-  evidence: NestedEvidence;
+  evidence: EvidenceDTO;
   isEditing: boolean;
-  onChange?: (id: string, field: keyof NestedEvidence, value: string) => void;
-  onDelete?: (id: string) => void;
+  // onChange?: (id: string, field: keyof EvidenceDTO, value: string) => void;
+  // onDelete?: (id: string) => void;
   onBlur?: () => void;
   className?: string;
   compact?: boolean;
@@ -15,8 +15,8 @@ type Props = {
 export default function EvidenceItem({
   evidence,
   isEditing,
-  onChange,
-  onDelete,
+  // onChange,
+  // onDelete,
   onBlur,
   className = '',
   compact = false,
@@ -41,9 +41,9 @@ export default function EvidenceItem({
               <input
                 type="text"
                 value={evidence.name}
-                onChange={(e) =>
-                  onChange?.(evidence.id, 'name', e.target.value)
-                }
+                // onChange={(e) =>
+                //   onChange?.(evidence.id, 'name', e.target.value)
+                // }
                 onBlur={onBlur}
                 placeholder="エビデンス名"
                 className="border-input bg-background text-foreground placeholder:text-muted-foreground w-full rounded-md border px-2 py-1 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
@@ -51,9 +51,9 @@ export default function EvidenceItem({
               {evidence.type === 'text' && (
                 <textarea
                   value={evidence.textContent || ''}
-                  onChange={(e) =>
-                    onChange?.(evidence.id, 'textContent', e.target.value)
-                  }
+                  // onChange={(e) =>
+                  //   onChange?.(evidence.id, 'textContent', e.target.value)
+                  // }
                   onBlur={onBlur}
                   placeholder="テキスト内容"
                   className="border-input bg-background text-foreground placeholder:text-muted-foreground min-h-20 w-full rounded-md border px-2 py-1 text-xs focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
@@ -105,7 +105,7 @@ export default function EvidenceItem({
         {/* Delete Button */}
         {isEditing && (
           <button
-            onClick={() => onDelete?.(evidence.id)}
+            // onClick={() => onDelete?.(evidence.id)}
             className={`text-destructive hover:bg-destructive/10 -mt-1 -mr-1 inline-flex shrink-0 items-center justify-center rounded-md transition-colors ${deleteBtnClass}`}
           >
             <Trash2 className={deleteIconSize} />

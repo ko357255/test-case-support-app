@@ -5,15 +5,18 @@ import { useState } from 'react';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
-import { NestedTestCase } from '@/types/testcase';
+import { TestCaseDTO } from '@/types/firestore';
 
-type Props = {
-  onSave: (testCase: NestedTestCase) => void;
-  onCancel: () => void;
-};
+// type Props = {
+//   onSave: (testCase: NestedTestCase) => void;
+//   onCancel: () => void;
+// };
 
-export default function TestCaseCreate({ onSave, onCancel }: Props) {
-  const [newTestCase, setNewTestCase] = useState<NestedTestCase>(
+export default function TestCaseCreate() {
+  // {
+  //  onSave, onCancel
+  // }: Props
+  const [newTestCase, setNewTestCase] = useState<TestCaseDTO>(
     // テストケースの初期値を設定
     {
       id: '',
@@ -35,7 +38,7 @@ export default function TestCaseCreate({ onSave, onCancel }: Props) {
   const handleSave = async () => {
     // DB保存処理
     // 親コンポーネントにデータを渡す
-    onSave(newTestCase);
+    // onSave(newTestCase);
   };
 
   return (
@@ -57,7 +60,7 @@ export default function TestCaseCreate({ onSave, onCancel }: Props) {
                 保存
               </button>
               <button
-                onClick={onCancel}
+                // onClick={onCancel}
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/80 ring-offset-background focus-visible:ring-ring rounded-md px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 キャンセル
