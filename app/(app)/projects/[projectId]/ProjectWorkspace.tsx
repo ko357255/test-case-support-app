@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
-import TestCaseCreate from '@/components/features/testcase/detail/TestCaseCreate';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import ProjectSettingsModal from '@/components/features/project/ProjectSettingsModal';
 import UserSettingsModal from '@/components/features/user/UserSettingsModal';
@@ -22,7 +21,6 @@ export default function ProjectWorkspace({ project }: Props) {
   const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(
     null,
   );
-  const [isCreating, setIsCreating] = useState(false);
   const [isLoadingTestCases, setIsLoadingTestCases] = useState(true);
   const [isSavingNewTestCase, setIsSavingNewTestCase] = useState(false);
 
@@ -65,55 +63,6 @@ export default function ProjectWorkspace({ project }: Props) {
     return () => unsub();
   }, [project.id]);
 
-  /**
-   * テストケースが更新されたときに呼ばれるハンドラ
-   * @param updatedTestCase 更新されたテストケース
-   */
-  // const handleTestCaseUpdate = (updatedTestCase: NestedTestCase) => {
-  //   // プロジェクト内のテストケースリストを更新
-  //   const updatedTestCases = project.testCases.map((tc) =>
-  //     tc.id === updatedTestCase.id ? updatedTestCase : tc,
-  //   );
-  //   setProject({ ...project, testCases: updatedTestCases });
-
-  //   // 選択中のテストケースも更新
-  //   if (selectedTestCase?.id === updatedTestCase.id) {
-  //     setSelectedTestCase(updatedTestCase);
-  //   }
-  // };
-
-  /**
-   * 新規テストケース保存時のハンドラ
-   */
-  // const handleTestCaseCreate = (newTestCase: NestedTestCase) => {
-  //   // IDを生成してプロジェクトに追加 (本来はAPIレスポンスのIDを使用)
-  //   const createdTestCase = {
-  //     ...newTestCase,
-  //     id: crypto.randomUUID(),
-  //   };
-
-  //   const updatedTestCases = [...project.testCases, createdTestCase];
-  //   setProject({ ...project, testCases: updatedTestCases });
-
-  //   // 作成モードを終了し、作成したテストケースを選択
-  //   setIsCreating(false);
-  //   setSelectedTestCase(createdTestCase);
-  // };
-
-  /**
-   * テストケース削除時のハンドラ
-   */
-  // const handleTestCaseDelete = (testCaseId: string) => {
-  //   const updatedTestCases = project.testCases.filter(
-  //     (tc) => tc.id !== testCaseId,
-  //   );
-  //   setProject({ ...project, testCases: updatedTestCases });
-
-  //   if (selectedTestCase?.id === testCaseId) {
-  //     setSelectedTestCase(null);
-  //   }
-  // };
-
   const handleAddTestCase = async (payload: {
     title: string;
     category?: string;
@@ -130,7 +79,6 @@ export default function ProjectWorkspace({ project }: Props) {
         status: 'not_started',
       });
       setSelectedTestCaseId(ref.id);
-      setIsCreating(false);
     } catch (err) {
       console.error('Failed to create test case', err);
       alert('テストケースの作成に失敗しました。');
@@ -145,10 +93,7 @@ export default function ProjectWorkspace({ project }: Props) {
         project={project}
         testCases={testCases}
         selectedTestCaseId={selectedTestCaseId}
-        onSelectTestCaseId={(tc) => {
-          setSelectedTestCaseId(tc);
-          setIsCreating(false);
-        }}
+        onSelectTestCaseId={(tc) => setSelectedTestCaseId(tc)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onAddTestCase={handleAddTestCase}
         isLoading={isLoadingTestCases}
@@ -157,15 +102,7 @@ export default function ProjectWorkspace({ project }: Props) {
       />
 
       <main className="flex-1 overflow-y-auto">
-        {isCreating ? (
-          <TestCaseCreate
-          // onSave={handleTestCaseCreate}
-          // onCancel={() => {
-          //   setIsCreating(false);
-          //   // キャンセル時は選択状態を戻すなどの処理が必要ならここに追加
-          // }}
-          />
-        ) : !selectedTestCaseId || !project.id ? (
+        {!selectedTestCaseId || !project.id ? (
           <div className="text-muted-foreground flex h-full flex-col items-center justify-center p-8">
             <p className="text-lg font-medium">
               テストケースを選択してください
@@ -175,8 +112,6 @@ export default function ProjectWorkspace({ project }: Props) {
           <TestCaseDetail
             projectId={project.id}
             testCaseId={selectedTestCaseId}
-            // onUpdate={handleTestCaseUpdate}
-            // onDelete={handleTestCaseDelete}
           />
         )}
       </main>

@@ -27,16 +27,9 @@ import { useRouter } from 'next/navigation';
 type Props = {
   projectId: string;
   testCaseId: string;
-  // onUpdate: (updatedTestCase: NestedTestCase) => void;
-  // onDelete: (testCaseId: string) => void;
 };
 
-export default function TestCaseDetail({
-  projectId,
-  testCaseId,
-  // onUpdate,
-  // onDelete,
-}: Props) {
+export default function TestCaseDetail({ projectId, testCaseId }: Props) {
   const [testCase, setTestCase] = useState<TestCaseDTO | null>(null);
   const [testSteps, setTestSteps] = useState<TestStepDTO[]>([]);
   const [evidences, setEvidences] = useState<EvidenceDTO[]>([]);
@@ -153,9 +146,6 @@ export default function TestCaseDetail({
     );
     return () => unsub();
   }, [projectId, testCaseId]);
-
-  // 表示に使うテストケースを決定
-  // const currentTestCase = isEditing ? editedTestCase : testCase;
 
   /**
    * 編集内容に差分があるか判定
@@ -314,9 +304,6 @@ export default function TestCaseDetail({
           testCaseId={testCaseId}
           isEditing={isEditing}
           steps={testSteps}
-          // onStepsChange={(steps) =>
-          //   setEditedTestCase((prev) => (prev ? { ...prev, steps } : prev))
-          // }
           onBlur={handleAutoSave}
         />
 
