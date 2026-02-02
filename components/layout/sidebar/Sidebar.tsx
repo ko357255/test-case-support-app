@@ -133,6 +133,8 @@ export default function ProjectSidebar({
     const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
     Object.values(presences || {}).forEach((p) => {
       if (!p?.testCaseId) return;
+      // ignore presence records without identifiers (defensive: old overwritten records)
+      if (!p.sessionId && !p.userId) return;
       // exclude own session and own user id to avoid showing self as 'other'
       if (p.sessionId && currentSessionId && p.sessionId === currentSessionId)
         return;

@@ -7,6 +7,7 @@ import {
   ref as dbRef,
   onValue,
   set,
+  update,
   remove,
   onDisconnect,
 } from 'firebase/database';
@@ -144,7 +145,7 @@ export const usePresence = (projectId?: string) => {
       const cleaned = Object.fromEntries(
         Object.entries(toWrite).filter(([, v]) => v !== undefined),
       );
-      set(presenceRef.current as DatabaseReference, cleaned).catch(() => {});
+      update(presenceRef.current as DatabaseReference, cleaned).catch(() => {});
       pendingRef.current = null;
     }, 1000);
   }, []);
