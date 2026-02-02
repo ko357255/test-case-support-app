@@ -1,4 +1,4 @@
-import { Plus, Edit, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { Plus, ArrowUp, ArrowDown, Minus, User2 } from 'lucide-react';
 import { TestCaseDTO, Presence } from '@/types/firestore';
 
 type Props = {
@@ -160,7 +160,11 @@ export default function TestCaseList({
               selectedTestCaseId === tc.id
                 ? 'bg-primary/5'
                 : 'hover:bg-primary/5 hover:shadow-sm'
-            } ${(presenceByTestCase[tc.id] || []).length > 0 ? 'border-primary/10 dark:border-primary/20 border-l-2 pl-3' : ''}`}
+            } ${
+              (presenceByTestCase[tc.id] || []).length > 0
+                ? 'outline-primary/20 dark:outline-primary/30 outline-2'
+                : ''
+            } `}
           >
             <div className="mb-2 flex w-full items-start justify-between gap-2">
               <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
@@ -194,7 +198,7 @@ export default function TestCaseList({
             <div className="w-full">
               <div className="flex items-center gap-2">
                 {((presenceByTestCase[tc.id] || []).length ?? 0) > 0 && (
-                  <Edit className="text-muted-foreground" size={12} />
+                  <User2 className="text-muted-foreground" size={12} />
                 )}
                 <span className="text-left text-sm leading-snug font-bold">
                   {tc.title}
