@@ -4,23 +4,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUp,
-  ChevronDown,
-  ChevronUp,
-  Filter,
-  Minus,
-  Search,
-  X,
-  Settings as SettingsIcon,
-  Plus,
-  Edit,
-} from 'lucide-react';
-import Link from 'next/link';
 import { ProjectDTO, TestCaseDTO, Presence } from '@/types/firestore';
 import { usePresence } from '@/hook/use-presence';
+import SidebarHeader from './SidebarHeader';
+import SidebarFilters from './SidebarFilters';
+import TestCaseList from './TestCaseList';
+import SidebarFooter from './SidebarFooter';
 
 interface Props {
   project: ProjectDTO;
@@ -172,355 +161,57 @@ export default function ProjectSidebar({
   return (
     <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-100 flex-col border-r">
       {/* プロジェクトヘッダー */}
-      <div className="border-border bg-card border-b p-5">
-        <Link
-          href="/projects"
-          className="text-muted-foreground hover:text-foreground mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-colors"
-        >
-          <ArrowLeft size={14} /> プロジェクト一覧へ
-        </Link>
-        <div className="flex items-center justify-between">
-          <h2 className="truncate text-base font-black tracking-tight">
-            {project.name}
-          </h2>
-          <button
-            type="button"
-            aria-label="プロジェクト設定"
-            onClick={onOpenSettings}
-            className="text-muted-foreground hover:text-foreground cursor-pointer rounded-md p-1 transition-colors"
-          >
-            <SettingsIcon size={18} />
-          </button>
-        </div>
-      </div>
+      <SidebarHeader
+        projectName={project.name}
+        onOpenSettings={onOpenSettings}
+      />
 
       {/* 検索・フィルタセクション */}
-      <div className="border-border bg-card/50 border-b p-5">
-        <div className="relative mb-4">
-          <Search
-            className="text-muted-foreground absolute top-3 left-3"
-            size={16}
-          />
-          <input
-            type="text"
-            placeholder="タイトルで検索..."
-            aria-label="テストケースを検索"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-muted w-full rounded-lg border border-transparent py-2.5 pr-10 pl-10 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              aria-label="検索クリア"
-              onClick={() => setSearchQuery('')}
-              className="text-muted-foreground hover:text-foreground absolute top-2.5 right-3 rounded-md p-1"
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        {/* フィルター */}
-        <button
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="text-muted-foreground hover:text-foreground flex w-full items-center justify-between text-xs font-bold tracking-widest uppercase transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <Filter size={12} />
-            <span>フィルター</span>
-            {(categoryFilter || priorityFilter || statusFilter) && (
-              <span className="bg-primary h-2 w-2 rounded-full" />
-            )}
-          </div>
-          {isFilterOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        </button>
-
-        {isFilterOpen && (
-          <div className="animate-in slide-in-from-top-2 fade-in mt-4 space-y-4 duration-200">
-            {/* カテゴリフィルタ */}
-            <div className="space-y-2">
-              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
-                カテゴリ
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  onClick={() => setCategoryFilter(null)}
-                  className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
-                    !categoryFilter
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'bg-muted text-muted-foreground hover:bg-accent'
-                  }`}
-                >
-                  すべて
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat)}
-                    className={`rounded-md px-2 py-1 text-sm font-bold transition-all ${
-                      categoryFilter === cat
-                        ? 'bg-primary text-primary-foreground shadow-sm'
-                        : 'bg-muted text-muted-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 優先度フィルタ */}
-            <div className="space-y-2">
-              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
-                優先度
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { id: 'high', label: '高' },
-                  { id: 'medium', label: '中' },
-                  { id: 'low', label: '低' },
-                ].map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() =>
-                      setPriorityFilter(priorityFilter === p.id ? null : p.id)
-                    }
-                    className={`rounded-lg border px-3 py-1.5 text-sm font-black transition-all ${
-                      priorityFilter === p.id
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-border bg-background text-muted-foreground'
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* ステータスフィルタ */}
-            <div className="space-y-2">
-              <p className="text-muted-foreground px-1 text-[10px] font-black tracking-widest uppercase">
-                ステータス
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { id: 'passed', label: '成功' },
-                  { id: 'failed', label: '失敗' },
-                  { id: 'in_progress', label: '実施中' },
-                  { id: 'not_started', label: '未実施' },
-                ].map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() =>
-                      setStatusFilter(statusFilter === s.id ? null : s.id)
-                    }
-                    className={`rounded-lg border px-3 py-1.5 text-sm font-black transition-all ${
-                      statusFilter === s.id
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-border bg-background text-muted-foreground'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <SidebarFilters
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        isFilterOpen={isFilterOpen}
+        setIsFilterOpen={setIsFilterOpen}
+        categories={categories}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+      />
 
       {/* テストケースリスト */}
-      <nav className="no-scrollbar flex-1 space-y-2 overflow-y-auto px-3 py-4">
-        <div className="text-muted-foreground mb-2 flex items-center justify-between px-3 text-xs font-black uppercase">
-          <span>{filteredTestCases.length} 件のケース</span>
-          {!isAdding ? (
-            <button
-              onClick={handleStartAdd}
-              className="hover:text-foreground flex items-center gap-1 transition-colors"
-              disabled={isLoading || isSavingNewTestCase}
-            >
-              <Plus size={14} />
-              <span>{isSavingNewTestCase ? '作成中...' : '追加'}</span>
-            </button>
-          ) : (
-            <button
-              onClick={handleCancelAdd}
-              className="text-muted-foreground hover:text-foreground text-sm"
-              disabled={isSavingNewTestCase}
-            >
-              キャンセル
-            </button>
-          )}
-        </div>
-
-        {isAdding && (
-          <div className="mb-3 px-3">
-            <div className="flex w-full items-center gap-2">
-              <input
-                type="text"
-                placeholder="タイトル"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                className="flex-1 rounded-md border px-3 py-2 text-sm"
-              />
-              <select
-                value={newPriority}
-                onChange={(e) =>
-                  setNewPriority(e.target.value as TestCaseDTO['priority'])
-                }
-                className="bg-background text-foreground rounded-md border px-3 py-2 text-sm"
-              >
-                <option value="high">高</option>
-                <option value="medium">中</option>
-                <option value="low">低</option>
-              </select>
-              <button
-                onClick={handleSaveAdd}
-                disabled={isSavingNewTestCase}
-                className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm"
-              >
-                保存
-              </button>
-            </div>
-            <div className="mt-2 flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="カテゴリ（省略可）"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="flex-1 rounded-md border px-3 py-2 text-sm"
-              />
-              <button
-                onClick={handleCancelAdd}
-                disabled={isSavingNewTestCase}
-                className="rounded-md border px-3 py-2 text-sm"
-              >
-                キャンセル
-              </button>
-            </div>
-          </div>
-        )}
-        {isLoading ? (
-          // Loading skeleton
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-muted/50 animate-pulse rounded-xl px-4 py-4"
-              />
-            ))}
-          </div>
-        ) : filteredTestCases.length === 0 ? (
-          <div className="text-muted-foreground px-3 py-6 text-center text-sm">
-            <p className="mb-3">該当するテストケースが見つかりません。</p>
-            {searchQuery || categoryFilter || priorityFilter || statusFilter ? (
-              <button
-                type="button"
-                className="rounded-md border px-3 py-2 text-sm"
-                onClick={() => {
-                  setSearchQuery('');
-                  setCategoryFilter(null);
-                  setPriorityFilter(null);
-                  setStatusFilter(null);
-                }}
-              >
-                フィルターをクリア
-              </button>
-            ) : (
-              <p className="text-xs">
-                まだテストケースがありません。追加してください。
-              </p>
-            )}
-          </div>
-        ) : (
-          filteredTestCases.map((tc) => (
-            <button
-              key={tc.id}
-              type="button"
-              onClick={() => {
-                onSelectTestCaseId(tc.id);
-                // mark focused test case in presence
-                try {
-                  setPresence({
-                    testCaseId: tc.id,
-                    fieldId: undefined,
-                    isFocused: true,
-                  });
-                } catch {}
-              }}
-              className={`flex w-full flex-col items-start rounded-xl border px-4 py-3 text-left transition-all duration-150 ${
-                selectedTestCaseId === tc.id
-                  ? 'bg-primary/5'
-                  : 'hover:bg-primary/5 hover:shadow-sm'
-              } ${(presenceByTestCase[tc.id] || []).length > 0 ? 'border-primary/10 dark:border-primary/20 border-l-2 pl-3' : ''}`}
-            >
-              <div className="mb-2 flex w-full items-start justify-between gap-2">
-                <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
-                  {tc.category}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  {tc.priority === 'high' && (
-                    <ArrowUp className="text-destructive h-3.5 w-3.5 shrink-0" />
-                  )}
-                  {tc.priority === 'medium' && (
-                    <Minus className="h-3.5 w-3.5 shrink-0 text-yellow-500" />
-                  )}
-                  {tc.priority === 'low' && (
-                    <ArrowDown className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-                  )}
-                  <div
-                    className={`h-2 w-2 shrink-0 rounded-full ${
-                      tc.status === 'passed'
-                        ? 'bg-passed'
-                        : tc.status === 'failed'
-                          ? 'bg-failed'
-                          : 'bg-muted-foreground'
-                    }`}
-                  />
-
-                  <span className="text-muted-foreground ml-1 text-[11px] font-semibold">
-                    {tc.status === 'passed'
-                      ? '成功'
-                      : tc.status === 'failed'
-                        ? '失敗'
-                        : tc.status === 'in_progress'
-                          ? '実施中'
-                          : '未実施'}
-                  </span>
-                </div>
-              </div>
-              <div className="w-full">
-                <div className="flex items-center gap-2">
-                  {((presenceByTestCase[tc.id] || []).length ?? 0) > 0 && (
-                    <Edit className="text-muted-foreground" size={12} />
-                  )}
-                  <span className="text-left text-sm leading-snug font-bold">
-                    {tc.title}
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))
-        )}
-      </nav>
+      <TestCaseList
+        filteredTestCases={filteredTestCases}
+        isLoading={isLoading}
+        isAdding={isAdding}
+        handleStartAdd={handleStartAdd}
+        handleCancelAdd={handleCancelAdd}
+        newTitle={newTitle}
+        setNewTitle={setNewTitle}
+        newCategory={newCategory}
+        setNewCategory={setNewCategory}
+        newPriority={newPriority}
+        setNewPriority={setNewPriority}
+        handleSaveAdd={handleSaveAdd}
+        isSavingNewTestCase={isSavingNewTestCase}
+        selectedTestCaseId={selectedTestCaseId}
+        onSelectTestCaseId={onSelectTestCaseId}
+        presenceByTestCase={presenceByTestCase}
+        setPresence={setPresence}
+        searchQuery={searchQuery}
+        categoryFilter={categoryFilter}
+        priorityFilter={priorityFilter}
+        statusFilter={statusFilter}
+      />
 
       {/* フッター: ユーザー情報 */}
-      <div className="border-border mt-auto border-t px-3 py-1">
-        <button
-          type="button"
-          aria-label="ユーザー設定を開く"
-          onClick={onOpenUserSettings}
-          className="hover:bg-accent flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors"
-        >
-          <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full font-bold">
-            <span className="text-sm">{initials}</span>
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <p className="truncate text-sm font-bold">{userName}</p>
-          </div>
-        </button>
-      </div>
+      <SidebarFooter
+        initials={initials}
+        userName={userName}
+        onOpenUserSettings={onOpenUserSettings}
+      />
     </aside>
   );
 }
