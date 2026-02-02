@@ -16,9 +16,11 @@ import {
   X,
   Settings as SettingsIcon,
   Plus,
+  Edit,
 } from 'lucide-react';
 import Link from 'next/link';
-import { ProjectDTO, TestCaseDTO } from '@/types/firestore';
+import { ProjectDTO, TestCaseDTO, Presence } from '@/types/firestore';
+import { usePresence } from '@/hook/use-presence';
 
 interface Props {
   project: ProjectDTO;
@@ -121,6 +123,24 @@ export default function ProjectSidebar({
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }, [userName]);
+
+  // presence subscription (read minimal info) and writer
+  const { presences, setPresence, currentSessionId, currentUserId } =
+    usePresence(project.id);
+
+  const presenceByTestCase = useMemo(() => {
+    const map: Record<string, Presence[]> = {};
+    const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
+    Object.values(presences || {}).forEach((p) => {
+      if (!p?.testCaseId) return;
+      // exclude own session and own user id to avoid showing self as 'other'
+      if (p.sessionId && currentSessionId && p.sessionId === currentSessionId)
+        return;
+      if (p.userId && myUid && p.userId === myUid) return;
+      (map[p.testCaseId] = map[p.testCaseId] || []).push(p);
+    });
+    return map;
+  }, [presences, currentSessionId, currentUserId]);
 
   const handleStartAdd = () => {
     setIsAdding(true);
@@ -416,12 +436,22 @@ export default function ProjectSidebar({
             <button
               key={tc.id}
               type="button"
-              onClick={() => onSelectTestCaseId(tc.id)}
-              className={`flex w-full flex-col items-start rounded-xl border px-4 py-3 transition-all duration-150 ${
+              onClick={() => {
+                onSelectTestCaseId(tc.id);
+                // mark focused test case in presence
+                try {
+                  setPresence({
+                    testCaseId: tc.id,
+                    fieldId: undefined,
+                    isFocused: true,
+                  });
+                } catch {}
+              }}
+              className={`flex w-full flex-col items-start rounded-xl border px-4 py-3 text-left transition-all duration-150 ${
                 selectedTestCaseId === tc.id
-                  ? 'bg-primary/10 ring-primary/40 shadow-sm ring-1'
+                  ? 'bg-primary/5'
                   : 'hover:bg-primary/5 hover:shadow-sm'
-              }`}
+              } ${(presenceByTestCase[tc.id] || []).length > 0 ? 'border-primary/10 dark:border-primary/20 border-l-2 pl-3' : ''}`}
             >
               <div className="mb-2 flex w-full items-start justify-between gap-2">
                 <span className="text-primary/70 truncate text-[10px] font-black tracking-tighter uppercase">
@@ -446,6 +476,7 @@ export default function ProjectSidebar({
                           : 'bg-muted-foreground'
                     }`}
                   />
+
                   <span className="text-muted-foreground ml-1 text-[11px] font-semibold">
                     {tc.status === 'passed'
                       ? '成功'
@@ -457,9 +488,16 @@ export default function ProjectSidebar({
                   </span>
                 </div>
               </div>
-              <span className="text-left text-sm leading-snug font-bold">
-                {tc.title}
-              </span>
+              <div className="w-full">
+                <div className="flex items-center gap-2">
+                  {((presenceByTestCase[tc.id] || []).length ?? 0) > 0 && (
+                    <Edit className="text-muted-foreground" size={12} />
+                  )}
+                  <span className="text-left text-sm leading-snug font-bold">
+                    {tc.title}
+                  </span>
+                </div>
+              </div>
             </button>
           ))
         )}
