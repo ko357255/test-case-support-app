@@ -181,14 +181,22 @@ export default function TestCaseList({
                   <ArrowDown className="h-3.5 w-3.5 shrink-0 text-gray-400" />
                 )}
                 <div
-                  className={`h-2 w-2 shrink-0 rounded-full ${tc.status === 'passed' ? 'bg-passed' : tc.status === 'failed' ? 'bg-failed' : 'bg-muted-foreground'}`}
+                  className={`h-2 w-2 shrink-0 rounded-full ${
+                    tc.status === 'passed'
+                      ? 'bg-passed'
+                      : tc.status === 'failed'
+                        ? 'bg-failed'
+                        : tc.status === 'in_progress'
+                          ? 'bg-blue-500'
+                          : 'bg-muted-foreground'
+                  }`}
                 />
 
                 <span className="text-muted-foreground ml-1 text-[11px] font-semibold">
                   {tc.status === 'passed'
-                    ? '成功'
+                    ? '成功　'
                     : tc.status === 'failed'
-                      ? '失敗'
+                      ? '失敗　'
                       : tc.status === 'in_progress'
                         ? '実施中'
                         : '未実施'}

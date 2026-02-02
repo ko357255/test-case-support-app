@@ -191,7 +191,6 @@ export default function TestStepItem({
             <p className="text-foreground text-sm">{step.action}</p>
           )}
         </div>
-
         {/* 期待結果 */}
         <div>
           <label className="text-muted-foreground mb-1 block text-sm">
@@ -259,79 +258,73 @@ export default function TestStepItem({
             <p className="text-foreground text-sm">{step.expected}</p>
           )}
         </div>
-
-        {step.actual && (
-          // 実行結果
-          <div>
-            <label className="text-muted-foreground mb-1 block text-sm">
-              実行結果
-            </label>
-            {isEditing ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={localStep.actual ?? ''}
-                  onChange={(e) => handleChange('actual', e.target.value)}
-                  onBlur={() => {
-                    handleFieldBlur();
-                    setPresence?.({
-                      testCaseId,
-                      fieldId: `step:${step.id}:actual`,
-                      isFocused: false,
-                    });
-                  }}
-                  onFocus={() =>
-                    setPresence?.({
-                      testCaseId,
-                      fieldId: `step:${step.id}:actual`,
-                      isFocused: true,
-                    })
-                  }
-                  className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
-                />
-                {presenceByField?.[`step:${step.id}:actual`]?.length ? (
-                  <div className="flex -space-x-2">
-                    {presenceByField[`step:${step.id}:actual`]
-                      .slice(0, 3)
-                      .map((p) => (
+        {/* 実行結果 */}
+        <div>
+          <label className="text-muted-foreground mb-1 block text-sm">
+            実行結果
+          </label>
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={localStep.actual ?? ''}
+                onChange={(e) => handleChange('actual', e.target.value)}
+                onBlur={() => {
+                  handleFieldBlur();
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:actual`,
+                    isFocused: false,
+                  });
+                }}
+                onFocus={() =>
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:actual`,
+                    isFocused: true,
+                  })
+                }
+                className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
+              />
+              {presenceByField?.[`step:${step.id}:actual`]?.length ? (
+                <div className="flex -space-x-2">
+                  {presenceByField[`step:${step.id}:actual`]
+                    .slice(0, 3)
+                    .map((p) => (
+                      <div
+                        key={p.sessionId}
+                        className="group relative"
+                        title={p.displayName}
+                      >
                         <div
-                          key={p.sessionId}
-                          className="group relative"
-                          title={p.displayName}
+                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
+                          style={{
+                            backgroundColor: p.avatarUrl ? undefined : p.color,
+                          }}
                         >
-                          <div
-                            className="border-background h-5 w-5 shrink-0 rounded-full border-2"
-                            style={{
-                              backgroundColor: p.avatarUrl
-                                ? undefined
-                                : p.color,
-                            }}
-                          >
-                            {p.avatarUrl ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={p.avatarUrl}
-                                alt={p.displayName}
-                                className="h-5 w-5 rounded-full object-cover"
-                              />
-                            ) : (
-                              <User2 className="m-auto h-3.5 w-3.5 text-white" />
-                            )}
-                          </div>
-                          <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
-                            {p.displayName}
-                          </span>
+                          {p.avatarUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={p.avatarUrl}
+                              alt={p.displayName}
+                              className="h-5 w-5 rounded-full object-cover"
+                            />
+                          ) : (
+                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
+                          )}
                         </div>
-                      ))}
-                  </div>
-                ) : null}
-              </div>
-            ) : (
-              <p className="text-foreground text-sm">{step.actual}</p>
-            )}
-          </div>
-        )}
-
+                        <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                          {p.displayName}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              ) : null}
+            </div>
+          ) : (
+            <p className="text-foreground text-sm">{step.actual}</p>
+          )}
+        </div>
         {isEditing && (
           <div>
             <label className="text-muted-foreground mb-1 block text-sm">

@@ -75,6 +75,7 @@ export default function TestCaseStepList({
         testCaseId,
         stepNumber: nextNumber,
         action: '',
+        actual: '',
         expected: '',
         status: 'not_started',
       });

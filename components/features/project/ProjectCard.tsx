@@ -18,7 +18,7 @@ export default function ProjectCard({ project }: Props) {
 
       <div className="border-border text-muted-foreground mt-auto flex w-full items-center justify-between border-t pt-6 text-sm font-bold tracking-widest uppercase">
         <div className="flex flex-col gap-1">
-          <span>{0} ケース</span>
+          <span>{project.description}</span>
         </div>
         <ChevronRight
           size={20}

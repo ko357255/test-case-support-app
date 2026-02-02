@@ -54,7 +54,7 @@ export interface TestStepDoc {
   /** 期待される結果 */
   expected: string;
   /** 実際の実行結果（実行時に記入） */
-  actual?: string;
+  actual: string;
   /** ステップごとの合否ステータス */
   status?: 'passed' | 'failed' | 'in_progress' | 'not_started';
   /** 作成日時 */
