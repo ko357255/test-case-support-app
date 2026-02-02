@@ -30,7 +30,7 @@ export async function fetchTestSteps(projectId: string, testCaseId: string) {
 
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+  return snapshot.docs.map((d) => ({ id: d.id, ...(d.data() as TestStepDoc) }));
 }
 
 /** テストステップを作成 */
