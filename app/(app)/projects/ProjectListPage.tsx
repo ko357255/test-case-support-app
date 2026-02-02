@@ -49,7 +49,7 @@ export default function ProjectListPage({
 
           {/* マイプロジェクト */}
           <section className="mb-8">
-            <h2 className="mb-4 text-lg font-bold">自分のプロジェクト</h2>
+            <h2 className="mb-4 text-lg font-bold">マイプロジェクト</h2>
             {owned.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {owned.map((proj) => (
@@ -59,7 +59,7 @@ export default function ProjectListPage({
             ) : (
               <div className="border-border mb-4 flex h-28 items-center justify-center rounded-2xl border border-dashed">
                 <p className="text-muted-foreground text-sm">
-                  自分のプロジェクトが見つかりません。
+                  マイプロジェクトが見つかりません。
                 </p>
               </div>
             )}
@@ -67,7 +67,7 @@ export default function ProjectListPage({
 
           {/* 参加プロジェクト */}
           <section>
-            <h2 className="mb-4 text-lg font-bold">参加しているプロジェクト</h2>
+            <h2 className="mb-4 text-lg font-bold">参加中のプロジェクト</h2>
             {participating.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {participating.map((proj) => (
@@ -77,7 +77,7 @@ export default function ProjectListPage({
             ) : (
               <div className="border-border flex h-28 items-center justify-center rounded-2xl border border-dashed">
                 <p className="text-muted-foreground text-sm">
-                  参加しているプロジェクトが見つかりません。
+                  参加中のプロジェクトが見つかりません。
                 </p>
               </div>
             )}
