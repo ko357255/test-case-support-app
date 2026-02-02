@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 
 /**
  * プロジェクト
+ * /projects/[projectId]
  */
 export interface ProjectDoc {
   /** プロジェクト名 */
@@ -20,6 +21,7 @@ export interface ProjectDoc {
 
 /**
  * テストケース
+ * /projects/[projectId]/testCases/[testCaseId]
  */
 export interface TestCaseDoc {
   /** テストケース名 */
@@ -42,6 +44,7 @@ export interface TestCaseDoc {
 
 /**
  * テストステップ
+ * /projects/[projectId]/testCases/[testCaseId]/testSteps/[testStepId]
  */
 export interface TestStepDoc {
   /** 手順の実行順序（1始まり） */
@@ -62,6 +65,8 @@ export interface TestStepDoc {
 
 /**
  * エビデンス
+ * テストケース全体エビデンス /projects/[projectId]/testCases/[testCaseId]/evidences/[evidenceId]
+ * テストステップのエビデンス /projects/[projectId]/testCases/[testCaseId]/testSteps/[testStepId]/evidences/[evidenceId]
  */
 export interface EvidenceDoc {
   /** エビデンスの名称（例: エラー画面、疎通ログなど） */
@@ -76,6 +81,10 @@ export interface EvidenceDoc {
   createdAt: Timestamp;
 }
 
+/**
+ * ユーザー
+ * /users/[uid]
+ */
 export interface UserDoc {
   /** ユーザー名 */
   name: string;
