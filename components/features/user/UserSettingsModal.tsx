@@ -1,11 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hook/use-auth';
 import { LogOut, Moon, Sun, User, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
+import { auth, db } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 interface Props {
   isOpen: boolean;
@@ -31,6 +35,85 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
   const mounted = useMounted();
   const router = useRouter();
   const { logout, isLoading } = useAuth();
+
+  const [name, setName] = useState('');
+  const [originalName, setOriginalName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [hasDoc, setHasDoc] = useState(false);
+
+  // モーダルが開いたときにユーザードキュメントを取得する
+  useEffect(() => {
+    if (!isOpen) return;
+    let unsub: (() => void) | null = null;
+
+    const loadUser = async (uid: string) => {
+      try {
+        setLoading(true);
+        const d = await getDoc(doc(db, 'users', uid));
+        const data = d.exists() ? d.data() : undefined;
+        setName(data?.name ?? '');
+        setOriginalName(data?.name ?? '');
+        setHasDoc(d.exists());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const current = auth.currentUser;
+    if (current) {
+      loadUser(current.uid);
+    } else {
+      unsub = onAuthStateChanged(auth, (u) => {
+        if (u) loadUser(u.uid);
+      });
+    }
+
+    return () => {
+      if (unsub) unsub();
+    };
+  }, [isOpen]);
+
+  const handleSave = async () => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      alert('ログインしてください。');
+      return;
+    }
+    try {
+      setSaving(true);
+      if (hasDoc) {
+        // 既存ドキュメントの更新は createdAt を変更しない
+        await setDoc(
+          doc(db, 'users', uid),
+          {
+            name: name,
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        );
+      } else {
+        // 新規作成時のみ createdAt を設定
+        await setDoc(
+          doc(db, 'users', uid),
+          {
+            name: name,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        );
+        setHasDoc(true);
+      }
+      setOriginalName(name);
+      alert('保存しました。');
+    } catch (err) {
+      console.error(err);
+      alert('保存に失敗しました。');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleLogout = async () => {
     const result = await logout();
@@ -76,8 +159,29 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
             <input
               type="text"
               className="border-input bg-background mt-2 w-full rounded-lg border p-2 text-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none"
-              defaultValue="デモユーザー" // 仮のユーザー名
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={loading || saving}
             />
+            <div className="mt-2 flex gap-2">
+              <Button
+                onClick={handleSave}
+                disabled={
+                  saving || loading || name.trim() === originalName.trim()
+                }
+                className="py-2"
+              >
+                {saving ? '保存中...' : '保存'}
+              </Button>
+              <Button
+                onClick={() => setName(originalName)}
+                variant="outline"
+                disabled={saving || loading}
+                className="py-2"
+              >
+                キャンセル
+              </Button>
+            </div>
           </div>
 
           {/* テーマ切り替え */}

@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { auth, db } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, onSnapshot } from 'firebase/firestore';
 import {
   ArrowDown,
   ArrowLeft,
@@ -83,6 +86,34 @@ export default function ProjectSidebar({
   const [newPriority, setNewPriority] = useState<'high' | 'medium' | 'low'>(
     'medium',
   );
+
+  const [userName, setUserName] = useState('デモユーザー');
+
+  useEffect(() => {
+    let unsubAuth: (() => void) | null = null;
+    let unsubUser: (() => void) | null = null;
+
+    const startListener = (uid: string) => {
+      unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
+        const data = snap.exists() ? snap.data() : undefined;
+        setUserName(data?.name ?? 'デモユーザー');
+      });
+    };
+
+    const current = auth.currentUser;
+    if (current) {
+      startListener(current.uid);
+    } else {
+      unsubAuth = onAuthStateChanged(auth, (u) => {
+        if (u) startListener(u.uid);
+      });
+    }
+
+    return () => {
+      if (unsubAuth) unsubAuth();
+      if (unsubUser) unsubUser();
+    };
+  }, []);
 
   const handleStartAdd = () => {
     setIsAdding(true);
@@ -391,7 +422,7 @@ export default function ProjectSidebar({
             <User size={20} />
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="truncate text-sm font-bold">デモユーザー</p>
+            <p className="truncate text-sm font-bold">{userName}</p>
           </div>
         </button>
       </div>
