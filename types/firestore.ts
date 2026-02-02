@@ -76,6 +76,15 @@ export interface EvidenceDoc {
   createdAt: Timestamp;
 }
 
+export interface UserDoc {
+  /** ユーザー名 */
+  name: string;
+  /** 作成日時 */
+  createdAt: Timestamp;
+  /** ユーザー情報更新日時 */
+  updatedAt: Timestamp;
+}
+
 export type ProjectDTO = Omit<ProjectDoc, 'createdAt' | 'updatedAt'> & {
   id: string;
   createdAt: number;
@@ -97,6 +106,12 @@ export type TestStepDTO = Omit<TestStepDoc, 'createdAt' | 'updatedAt'> & {
 export type EvidenceDTO = Omit<EvidenceDoc, 'createdAt'> & {
   id: string;
   createdAt: number;
+};
+
+export type UserDTO = Omit<UserDoc, 'createdAt' | 'updatedAt'> & {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
 };
 
 export interface ProjectWithTestCasesDTO extends ProjectDTO {
