@@ -7,14 +7,19 @@ import ProjectCard from '@/components/features/project/ProjectCard';
 import { ProjectDTO } from '@/types/firestore';
 
 interface Props {
-  initialProjects: ProjectDTO[];
+  ownedProjects?: ProjectDTO[];
+  participatingProjects?: ProjectDTO[];
 }
 
 /**
  * プロジェクト一覧ページ（クライアント）
  */
-export default function ProjectListPage({ initialProjects }: Props) {
-  const [projects] = useState<ProjectDTO[]>(initialProjects);
+export default function ProjectListPage({
+  ownedProjects = [],
+  participatingProjects = [],
+}: Props) {
+  const [owned] = useState<ProjectDTO[]>(ownedProjects);
+  const [participating] = useState<ProjectDTO[]>(participatingProjects);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
 
   return (
@@ -42,20 +47,41 @@ export default function ProjectListPage({ initialProjects }: Props) {
             </div>
           </header>
 
-          {/* プロジェクト一覧 */}
-          {projects.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {projects.map((proj) => (
-                <ProjectCard key={proj.id} project={proj} />
-              ))}
-            </div>
-          ) : (
-            <div className="border-border flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed">
-              <p className="text-muted-foreground text-sm font-medium">
-                プロジェクトが見つかりませんでした。
-              </p>
-            </div>
-          )}
+          {/* マイプロジェクト */}
+          <section className="mb-8">
+            <h2 className="mb-4 text-lg font-bold">自分のプロジェクト</h2>
+            {owned.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {owned.map((proj) => (
+                  <ProjectCard key={proj.id} project={proj} />
+                ))}
+              </div>
+            ) : (
+              <div className="border-border mb-4 flex h-28 items-center justify-center rounded-2xl border border-dashed">
+                <p className="text-muted-foreground text-sm">
+                  自分のプロジェクトが見つかりません。
+                </p>
+              </div>
+            )}
+          </section>
+
+          {/* 参加プロジェクト */}
+          <section>
+            <h2 className="mb-4 text-lg font-bold">参加しているプロジェクト</h2>
+            {participating.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {participating.map((proj) => (
+                  <ProjectCard key={proj.id} project={proj} />
+                ))}
+              </div>
+            ) : (
+              <div className="border-border flex h-28 items-center justify-center rounded-2xl border border-dashed">
+                <p className="text-muted-foreground text-sm">
+                  参加しているプロジェクトが見つかりません。
+                </p>
+              </div>
+            )}
+          </section>
         </div>
       </div>
 
