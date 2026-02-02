@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 import TestCaseHeader from './TestCaseHeader';
 import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
+import { useMemo } from 'react';
+import { Presence } from '@/types/firestore';
+import { usePresence } from '@/hook/use-presence';
+import { auth } from '@/lib/firebase';
 import {
   EvidenceDoc,
   EvidenceDTO,
@@ -39,6 +43,26 @@ export default function TestCaseDetail({ projectId, testCaseId }: Props) {
   );
 
   const router = useRouter();
+
+  // presence (show where other users are focusing)
+  const { presences, setPresence, currentSessionId, currentUserId } =
+    usePresence(projectId);
+
+  // map fieldId => Presence[] for this test case
+  const presenceByField = useMemo((): Record<string, Presence[]> => {
+    const map: Record<string, Presence[]> = {};
+    const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
+    Object.values(presences || {}).forEach((p) => {
+      if (!p || p.testCaseId !== testCaseId) return;
+      if (!p.fieldId) return;
+      // ignore own presence
+      if (p.sessionId && currentSessionId && p.sessionId === currentSessionId)
+        return;
+      if (p.userId && myUid && p.userId === myUid) return;
+      (map[p.fieldId] = map[p.fieldId] || []).push(p);
+    });
+    return map;
+  }, [presences, currentSessionId, currentUserId, testCaseId]);
 
   // テストケースの読み込み
   useEffect(() => {
@@ -296,6 +320,10 @@ export default function TestCaseDetail({ projectId, testCaseId }: Props) {
               </button>
             ) : undefined
           }
+          // presence props
+          setPresence={setPresence}
+          presenceByField={presenceByField}
+          testCaseId={testCaseId}
         />
 
         {/* テストステップ一覧 */}
@@ -304,7 +332,9 @@ export default function TestCaseDetail({ projectId, testCaseId }: Props) {
           testCaseId={testCaseId}
           isEditing={isEditing}
           steps={testSteps}
-          onBlur={handleAutoSave}
+          onBlur={handleAutoSave} // presence props
+          setPresence={setPresence}
+          presenceByField={presenceByField}
         />
 
         {/* エビデンス一覧 */}

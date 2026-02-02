@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { auth, rtdb } from '@/lib/firebase';
+import { auth, rtdb, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import {
   ref as dbRef,
@@ -79,28 +80,46 @@ export const usePresence = (projectId?: string) => {
       const initialPayload: Partial<Presence> = {
         sessionId,
         userId: uid,
-        displayName: user.displayName ?? '',
+        displayName: '', // will be filled from users collection if available
         avatarUrl: user.photoURL ?? '',
         color: undefined,
         isFocused: false,
         lastActive: Date.now(),
       };
-      // Realtime DB は undefined プロパティを受け付けないため除去する
-      const cleanedInitial = Object.fromEntries(
-        Object.entries(initialPayload).filter(([, v]) => v !== undefined),
-      );
-      set(pRef, cleanedInitial)
-        .then(() =>
-          console.log(
-            'presence initial set',
-            projectId,
-            sessionId,
-            cleanedInitial,
-          ),
-        )
-        .catch((err) =>
-          console.error('presence initial set error', err, cleanedInitial),
+
+      // Try to read the user's name from Firestore users/{uid}.name and fall back to auth displayName
+      (async () => {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', uid));
+          const name = userDoc.exists()
+            ? (userDoc.data() as { name?: string }).name
+            : undefined;
+          initialPayload.displayName = name ?? user.displayName ?? '';
+        } catch (err) {
+          initialPayload.displayName = user.displayName ?? '';
+          console.error(
+            'presence: failed to fetch user name from users collection',
+            err,
+          );
+        }
+
+        // Realtime DB は undefined プロパティを受け付けないため除去する
+        const cleanedInitial = Object.fromEntries(
+          Object.entries(initialPayload).filter(([, v]) => v !== undefined),
         );
+        set(pRef, cleanedInitial)
+          .then(() =>
+            console.log(
+              'presence initial set',
+              projectId,
+              sessionId,
+              cleanedInitial,
+            ),
+          )
+          .catch((err) =>
+            console.error('presence initial set error', err, cleanedInitial),
+          );
+      })();
 
       // presence リストを購読
       const list = dbRef(rtdb, `presence/${projectId}`);

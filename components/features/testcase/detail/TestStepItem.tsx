@@ -1,10 +1,11 @@
-import { Trash2 } from 'lucide-react';
+import { Trash2, User2 } from 'lucide-react';
 import { stepStatusConfig } from '@/config/testcase';
 import StepEvidenceList from './StepEvidenceList';
 import { EvidenceDoc, EvidenceDTO, TestStepDTO } from '@/types/firestore';
 import { useEffect, useState } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import type { Presence } from '@/types/firestore';
 
 type Props = {
   /** プロジェクトID */
@@ -21,6 +22,8 @@ type Props = {
   onDelete?: (id: string) => void;
   /** フォーカスが外れた時のコールバック（自動保存用） */
   onBlur?: () => void;
+  setPresence?: (p: Partial<Presence>) => void;
+  presenceByField?: Record<string, Presence[]>;
 };
 
 export default function TestStepItem({
@@ -31,6 +34,8 @@ export default function TestStepItem({
   onChange,
   onDelete,
   onBlur,
+  setPresence,
+  presenceByField,
 }: Props) {
   const [evidences, setEvidences] = useState<EvidenceDTO[]>([]);
   const [localStep, setLocalStep] = useState<TestStepDTO>(step);
@@ -125,13 +130,56 @@ export default function TestStepItem({
             操作
           </label>
           {isEditing ? (
-            <input
-              type="text"
-              value={localStep.action}
-              onChange={(e) => handleChange('action', e.target.value)}
-              onBlur={handleFieldBlur}
-              className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={localStep.action}
+                onChange={(e) => handleChange('action', e.target.value)}
+                onBlur={() => {
+                  handleFieldBlur();
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:action`,
+                    isFocused: false,
+                  });
+                }}
+                onFocus={() =>
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:action`,
+                    isFocused: true,
+                  })
+                }
+                className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
+              />
+              {presenceByField?.[`step:${step.id}:action`]?.length ? (
+                <div className="flex -space-x-2">
+                  {presenceByField[`step:${step.id}:action`]
+                    .slice(0, 3)
+                    .map((p) => (
+                      <div
+                        key={p.sessionId}
+                        title={p.displayName}
+                        className="border-background h-5 w-5 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-5 w-5 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-3.5 w-3.5 text-white" />
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ) : null}
+            </div>
           ) : (
             <p className="text-foreground text-sm">{step.action}</p>
           )}
@@ -143,13 +191,56 @@ export default function TestStepItem({
             期待結果
           </label>
           {isEditing ? (
-            <input
-              type="text"
-              value={localStep.expected}
-              onChange={(e) => handleChange('expected', e.target.value)}
-              onBlur={handleFieldBlur}
-              className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={localStep.expected}
+                onChange={(e) => handleChange('expected', e.target.value)}
+                onBlur={() => {
+                  handleFieldBlur();
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:expected`,
+                    isFocused: false,
+                  });
+                }}
+                onFocus={() =>
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:expected`,
+                    isFocused: true,
+                  })
+                }
+                className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
+              />
+              {presenceByField?.[`step:${step.id}:expected`]?.length ? (
+                <div className="flex -space-x-2">
+                  {presenceByField[`step:${step.id}:expected`]
+                    .slice(0, 3)
+                    .map((p) => (
+                      <div
+                        key={p.sessionId}
+                        title={p.displayName}
+                        className="border-background h-5 w-5 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-5 w-5 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-3.5 w-3.5 text-white" />
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ) : null}
+            </div>
           ) : (
             <p className="text-foreground text-sm">{step.expected}</p>
           )}
@@ -162,13 +253,56 @@ export default function TestStepItem({
               実行結果
             </label>
             {isEditing ? (
-              <input
-                type="text"
-                value={localStep.actual ?? ''}
-                onChange={(e) => handleChange('actual', e.target.value)}
-                onBlur={handleFieldBlur}
-                className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={localStep.actual ?? ''}
+                  onChange={(e) => handleChange('actual', e.target.value)}
+                  onBlur={() => {
+                    handleFieldBlur();
+                    setPresence?.({
+                      testCaseId,
+                      fieldId: `step:${step.id}:actual`,
+                      isFocused: false,
+                    });
+                  }}
+                  onFocus={() =>
+                    setPresence?.({
+                      testCaseId,
+                      fieldId: `step:${step.id}:actual`,
+                      isFocused: true,
+                    })
+                  }
+                  className="border-input bg-background placeholder:text-muted-foreground flex h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
+                />
+                {presenceByField?.[`step:${step.id}:actual`]?.length ? (
+                  <div className="flex -space-x-2">
+                    {presenceByField[`step:${step.id}:actual`]
+                      .slice(0, 3)
+                      .map((p) => (
+                        <div
+                          key={p.sessionId}
+                          title={p.displayName}
+                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
+                          style={{
+                            backgroundColor: p.avatarUrl ? undefined : p.color,
+                          }}
+                        >
+                          {p.avatarUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={p.avatarUrl}
+                              alt={p.displayName}
+                              className="h-5 w-5 rounded-full object-cover"
+                            />
+                          ) : (
+                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <p className="text-foreground text-sm">{step.actual}</p>
             )}
@@ -180,19 +314,66 @@ export default function TestStepItem({
             <label className="text-muted-foreground mb-1 block text-sm">
               ステップステータス
             </label>
-            <select
-              value={localStep.status || ''}
-              onChange={(e) =>
-                handleChange('status', e.target.value as TestStepDTO['status'])
-              }
-              onBlur={handleFieldBlur}
-              className="border-input bg-background flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
-            >
-              <option value="not_started">未実施</option>
-              <option value="in_progress">実施中</option>
-              <option value="passed">成功</option>
-              <option value="failed">失敗</option>
-            </select>
+            <div className="flex items-center gap-2">
+              <select
+                value={localStep.status || ''}
+                onChange={(e) =>
+                  handleChange(
+                    'status',
+                    e.target.value as TestStepDTO['status'],
+                  )
+                }
+                onBlur={() => {
+                  handleFieldBlur();
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:status`,
+                    isFocused: false,
+                  });
+                }}
+                onFocus={() =>
+                  setPresence?.({
+                    testCaseId,
+                    fieldId: `step:${step.id}:status`,
+                    isFocused: true,
+                  })
+                }
+                className="border-input bg-background flex h-9 rounded-md border px-3 py-2 text-sm focus-visible:border-gray-500 focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:outline-none"
+              >
+                <option value="not_started">未実施</option>
+                <option value="in_progress">実施中</option>
+                <option value="passed">成功</option>
+                <option value="failed">失敗</option>
+              </select>
+
+              {presenceByField?.[`step:${step.id}:status`]?.length ? (
+                <div className="flex -space-x-2">
+                  {presenceByField[`step:${step.id}:status`]
+                    .slice(0, 3)
+                    .map((p) => (
+                      <div
+                        key={p.sessionId}
+                        title={p.displayName}
+                        className="border-background h-5 w-5 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-5 w-5 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-3.5 w-3.5 text-white" />
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ) : null}
+            </div>
           </div>
         )}
       </div>

@@ -9,6 +9,8 @@ import {
 
 import { useCallback } from 'react';
 
+import type { Presence } from '@/types/firestore';
+
 type Props = {
   /** プロジェクトID */
   projectId: string;
@@ -22,6 +24,8 @@ type Props = {
   // onStepsChange?: (steps: NestedTestStep[]) => void;
   /** フォーカスが外れた時のコールバック（自動保存用） */
   onBlur?: () => void;
+  setPresence?: (p: Partial<Presence>) => void;
+  presenceByField?: Record<string, Presence[]>;
 };
 
 export default function TestCaseStepList({
@@ -31,6 +35,8 @@ export default function TestCaseStepList({
   steps,
   // onStepsChange,
   onBlur,
+  setPresence,
+  presenceByField,
 }: Props) {
   const handleStepChange = useCallback(
     async (updatedStep: TestStepDTO) => {
@@ -94,6 +100,9 @@ export default function TestCaseStepList({
             onChange={handleStepChange}
             onDelete={handleStepDelete}
             onBlur={onBlur}
+            // presence props forwarded
+            setPresence={setPresence}
+            presenceByField={presenceByField}
           />
         ))}
 
