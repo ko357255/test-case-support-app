@@ -130,20 +130,29 @@ export default function TestCaseHeader({
               {presenceByField['description'].slice(0, 3).map((p) => (
                 <div
                   key={p.sessionId}
+                  className="group relative"
                   title={p.displayName}
-                  className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                  style={{ backgroundColor: p.avatarUrl ? undefined : p.color }}
                 >
-                  {p.avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={p.avatarUrl}
-                      alt={p.displayName}
-                      className="h-6 w-6 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User2 className="m-auto h-4 w-4 text-white" />
-                  )}
+                  <div
+                    className="border-background h-6 w-6 shrink-0 rounded-full border-2"
+                    style={{
+                      backgroundColor: p.avatarUrl ? undefined : p.color,
+                    }}
+                  >
+                    {p.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.avatarUrl}
+                        alt={p.displayName}
+                        className="h-6 w-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User2 className="m-auto h-4 w-4 text-white" />
+                    )}
+                  </div>
+                  <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                    {p.displayName}
+                  </span>
                 </div>
               ))}
             </div>
@@ -194,22 +203,29 @@ export default function TestCaseHeader({
                   {presenceByField['status'].slice(0, 3).map((p) => (
                     <div
                       key={p.sessionId}
+                      className="group relative"
                       title={p.displayName}
-                      className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                      style={{
-                        backgroundColor: p.avatarUrl ? undefined : p.color,
-                      }}
                     >
-                      {p.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={p.avatarUrl}
-                          alt={p.displayName}
-                          className="h-6 w-6 rounded-full object-cover"
-                        />
-                      ) : (
-                        <User2 className="m-auto h-4 w-4 text-white" />
-                      )}
+                      <div
+                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-6 w-6 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-4 w-4 text-white" />
+                        )}
+                      </div>
+                      <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                        {p.displayName}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -258,22 +274,29 @@ export default function TestCaseHeader({
                   {presenceByField['category'].slice(0, 3).map((p) => (
                     <div
                       key={p.sessionId}
+                      className="group relative"
                       title={p.displayName}
-                      className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                      style={{
-                        backgroundColor: p.avatarUrl ? undefined : p.color,
-                      }}
                     >
-                      {p.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={p.avatarUrl}
-                          alt={p.displayName}
-                          className="h-6 w-6 rounded-full object-cover"
-                        />
-                      ) : (
-                        <User2 className="m-auto h-4 w-4 text-white" />
-                      )}
+                      <div
+                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-6 w-6 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-4 w-4 text-white" />
+                        )}
+                      </div>
+                      <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                        {p.displayName}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -325,22 +348,29 @@ export default function TestCaseHeader({
                   {presenceByField['priority'].slice(0, 3).map((p) => (
                     <div
                       key={p.sessionId}
+                      className="group relative"
                       title={p.displayName}
-                      className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                      style={{
-                        backgroundColor: p.avatarUrl ? undefined : p.color,
-                      }}
                     >
-                      {p.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={p.avatarUrl}
-                          alt={p.displayName}
-                          className="h-6 w-6 rounded-full object-cover"
-                        />
-                      ) : (
-                        <User2 className="m-auto h-4 w-4 text-white" />
-                      )}
+                      <div
+                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
+                        style={{
+                          backgroundColor: p.avatarUrl ? undefined : p.color,
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.displayName}
+                            className="h-6 w-6 rounded-full object-cover"
+                          />
+                        ) : (
+                          <User2 className="m-auto h-4 w-4 text-white" />
+                        )}
+                      </div>
+                      <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                        {p.displayName}
+                      </span>
                     </div>
                   ))}
                 </div>
