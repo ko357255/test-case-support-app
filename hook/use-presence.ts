@@ -27,6 +27,8 @@ export const usePresence = (projectId?: string) => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const presenceRef = useRef<DatabaseReference | null>(null);
   const listRef = useRef<DatabaseReference | null>(null);
+  // store unsubscribe for onValue so we can explicitly detach on logout
+  const listUnsubRef = useRef<(() => void) | null>(null);
   const sessionIdRef = useRef<string | null>(null);
   const pendingRef = useRef<Record<string, unknown> | null>(null);
 
@@ -103,27 +105,73 @@ export const usePresence = (projectId?: string) => {
       // presence リストを購読
       const list = dbRef(rtdb, `presence/${projectId}`);
       listRef.current = list;
-      onValue(
+      // detach previous subscription if any
+      if (listUnsubRef.current) {
+        try {
+          listUnsubRef.current();
+        } catch {}
+        listUnsubRef.current = null;
+      }
+
+      // onValue returns an unsubscribe function — keep it so we can detach on logout
+      const unsubscribe = onValue(
         list,
         (snap) => {
           const val = snap.val() || {};
           console.log('presence onValue snap', projectId, val);
           setPresences(val);
         },
-        (err) => console.error('presence onValue error', err),
+        (err) => {
+          // permission_denied can occur transiently during logout; handle gracefully
+          if (
+            err &&
+            (err.code === 'permission_denied' ||
+              err.code === 'PERMISSION_DENIED')
+          ) {
+            console.warn(
+              'presence onValue permission denied (likely logged out)',
+              err,
+            );
+            setPresences({});
+            return;
+          }
+          console.error('presence onValue error', err);
+        },
       );
+      listUnsubRef.current = unsubscribe;
     };
 
     if (auth.currentUser) startWithUser(auth.currentUser);
     authUnsub = onAuthStateChanged(auth, (u) => {
-      if (u) startWithUser(u);
+      if (u) {
+        startWithUser(u);
+      } else {
+        // user logged out: remove own presence and detach list subscription
+        if (presenceRef.current) remove(presenceRef.current).catch(() => {});
+        if (listUnsubRef.current) {
+          try {
+            listUnsubRef.current();
+          } catch {}
+          listUnsubRef.current = null;
+        }
+        // clear local state
+        setPresences({});
+        sessionIdRef.current = null;
+        setCurrentSessionId(null);
+        setCurrentUserId(null);
+      }
     });
 
     return () => {
       // unmount: remove own presence
       if (presenceRef.current) remove(presenceRef.current).catch(() => {});
+      if (listUnsubRef.current) {
+        try {
+          listUnsubRef.current();
+        } catch {}
+        listUnsubRef.current = null;
+      }
       if (authUnsub) authUnsub();
-      // Note: onValue subscription will be cleaned by firebase when the component unmounts
     };
   }, [projectId]);
 
