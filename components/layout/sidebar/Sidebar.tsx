@@ -13,7 +13,7 @@ import {
   Filter,
   Minus,
   Search,
-  User,
+  X,
   Settings as SettingsIcon,
   Plus,
 } from 'lucide-react';
@@ -115,6 +115,13 @@ export default function ProjectSidebar({
     };
   }, []);
 
+  const initials = useMemo(() => {
+    const parts = userName.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return 'U';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }, [userName]);
+
   const handleStartAdd = () => {
     setIsAdding(true);
     setNewTitle('');
@@ -154,11 +161,14 @@ export default function ProjectSidebar({
           <h2 className="truncate text-base font-black tracking-tight">
             {project.name}
           </h2>
-          <SettingsIcon
-            size={18}
-            className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+          <button
+            type="button"
+            aria-label="プロジェクト設定"
             onClick={onOpenSettings}
-          />
+            className="text-muted-foreground hover:text-foreground cursor-pointer rounded-md p-1 transition-colors"
+          >
+            <SettingsIcon size={18} />
+          </button>
         </div>
       </div>
 
@@ -172,10 +182,21 @@ export default function ProjectSidebar({
           <input
             type="text"
             placeholder="タイトルで検索..."
+            aria-label="テストケースを検索"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-muted w-full rounded-lg border border-transparent py-2.5 pl-10 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
+            className="bg-muted w-full rounded-lg border border-transparent py-2.5 pr-10 pl-10 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              aria-label="検索クリア"
+              onClick={() => setSearchQuery('')}
+              className="text-muted-foreground hover:text-foreground absolute top-2.5 right-3 rounded-md p-1"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
 
         {/* フィルター */}
@@ -368,15 +389,38 @@ export default function ProjectSidebar({
               />
             ))}
           </div>
+        ) : filteredTestCases.length === 0 ? (
+          <div className="text-muted-foreground px-3 py-6 text-center text-sm">
+            <p className="mb-3">該当するテストケースが見つかりません。</p>
+            {searchQuery || categoryFilter || priorityFilter || statusFilter ? (
+              <button
+                type="button"
+                className="rounded-md border px-3 py-2 text-sm"
+                onClick={() => {
+                  setSearchQuery('');
+                  setCategoryFilter(null);
+                  setPriorityFilter(null);
+                  setStatusFilter(null);
+                }}
+              >
+                フィルターをクリア
+              </button>
+            ) : (
+              <p className="text-xs">
+                まだテストケースがありません。追加してください。
+              </p>
+            )}
+          </div>
         ) : (
           filteredTestCases.map((tc) => (
             <button
               key={tc.id}
+              type="button"
               onClick={() => onSelectTestCaseId(tc.id)}
-              className={`flex w-full flex-col items-start rounded-xl border-2 px-4 py-4 transition-all ${
+              className={`flex w-full flex-col items-start rounded-xl border px-4 py-3 transition-all duration-150 ${
                 selectedTestCaseId === tc.id
-                  ? 'bg-primary/10 border-transparent'
-                  : 'hover:bg-primary/10 border-transparent'
+                  ? 'bg-primary/10 ring-primary/40 shadow-sm ring-1'
+                  : 'hover:bg-primary/5 hover:shadow-sm'
               }`}
             >
               <div className="mb-2 flex w-full items-start justify-between gap-2">
@@ -402,6 +446,15 @@ export default function ProjectSidebar({
                           : 'bg-muted-foreground'
                     }`}
                   />
+                  <span className="text-muted-foreground ml-1 text-[11px] font-semibold">
+                    {tc.status === 'passed'
+                      ? '成功'
+                      : tc.status === 'failed'
+                        ? '失敗'
+                        : tc.status === 'in_progress'
+                          ? '実施中'
+                          : '未実施'}
+                  </span>
                 </div>
               </div>
               <span className="text-left text-sm leading-snug font-bold">
@@ -415,11 +468,13 @@ export default function ProjectSidebar({
       {/* フッター: ユーザー情報 */}
       <div className="border-border mt-auto border-t px-3 py-1">
         <button
+          type="button"
+          aria-label="ユーザー設定を開く"
           onClick={onOpenUserSettings}
           className="hover:bg-accent flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors"
         >
-          <div className="bg-muted text-muted-foreground flex h-9 w-9 items-center justify-center rounded-full">
-            <User size={20} />
+          <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full font-bold">
+            <span className="text-sm">{initials}</span>
           </div>
           <div className="flex-1 overflow-hidden">
             <p className="truncate text-sm font-bold">{userName}</p>
