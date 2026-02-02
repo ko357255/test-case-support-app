@@ -94,6 +94,24 @@ export interface UserDoc {
   updatedAt: Timestamp;
 }
 
+/**
+ * presence (Realtime Database)
+ * path: /presence/{projectId}/{sessionId}
+ */
+export interface Presence {
+  sessionId: string;
+  userId: string;
+  displayName?: string;
+  avatarUrl?: string;
+  color?: string;
+  testCaseId?: string;
+  fieldId?: string;
+  isFocused?: boolean;
+  lastActive?: number; // epoch ms
+}
+
+export type PresenceDTO = Presence & { id: string };
+
 export type ProjectDTO = Omit<ProjectDoc, 'createdAt' | 'updatedAt'> & {
   id: string;
   createdAt: number;
