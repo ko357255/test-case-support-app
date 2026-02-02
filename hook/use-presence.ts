@@ -113,7 +113,6 @@ export const usePresence = (projectId?: string) => {
         listUnsubRef.current = null;
       }
 
-      // onValue returns an unsubscribe function — keep it so we can detach on logout
       const unsubscribe = onValue(
         list,
         (snap) => {
@@ -121,13 +120,9 @@ export const usePresence = (projectId?: string) => {
           console.log('presence onValue snap', projectId, val);
           setPresences(val);
         },
-        (err) => {
-          // permission_denied can occur transiently during logout; handle gracefully
-          if (
-            err &&
-            (err.code === 'permission_denied' ||
-              err.code === 'PERMISSION_DENIED')
-          ) {
+        (err: unknown) => {
+          const code = (err as { code?: string })?.code;
+          if (code === 'permission_denied' || code === 'PERMISSION_DENIED') {
             console.warn(
               'presence onValue permission denied (likely logged out)',
               err,
