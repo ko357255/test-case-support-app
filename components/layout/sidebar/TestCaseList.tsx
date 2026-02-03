@@ -194,9 +194,9 @@ export default function TestCaseList({
 
                 <span className="text-muted-foreground ml-1 text-[11px] font-semibold">
                   {tc.status === 'passed'
-                    ? '成功　'
+                    ? '\u3000成功'
                     : tc.status === 'failed'
-                      ? '失敗　'
+                      ? '\u3000失敗'
                       : tc.status === 'in_progress'
                         ? '実施中'
                         : '未実施'}
