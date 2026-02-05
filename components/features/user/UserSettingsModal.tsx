@@ -12,7 +12,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 interface Props {
+  /** モーダルの開閉 */
   isOpen: boolean;
+  /** モーダルを閉じるための関数 */
   onClose: () => void;
 }
 
@@ -28,7 +30,7 @@ function useMounted() {
 }
 
 /**
- * ユーザー設定モーダル
+ * ユーザー設定モーダル（クライアント）
  */
 export default function UserSettingsModal({ isOpen, onClose }: Props) {
   const { setTheme, resolvedTheme } = useTheme();
@@ -50,6 +52,7 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
     const loadUser = async (uid: string) => {
       try {
         setLoading(true);
+        // Firestore からユーザー情報を取得
         const d = await getDoc(doc(db, 'users', uid));
         const data = d.exists() ? d.data() : undefined;
         setName(data?.name ?? '');
@@ -74,6 +77,9 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
     };
   }, [isOpen]);
 
+  /**
+   * ユーザー情報の保存処理
+   */
   const handleSave = async () => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
@@ -115,6 +121,9 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
     }
   };
 
+  /**
+   * ログアウト処理
+   */
   const handleLogout = async () => {
     const result = await logout();
     // ログアウト処理が成功した場合のみページ遷移する

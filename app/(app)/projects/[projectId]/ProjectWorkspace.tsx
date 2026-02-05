@@ -27,6 +27,7 @@ export default function ProjectWorkspace({ project }: Props) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
 
+  // テストケースのデータ取得
   useEffect(() => {
     const q = query(
       collection(db, 'projects', project.id, 'testCases'),

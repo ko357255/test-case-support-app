@@ -18,11 +18,12 @@ export default async function Page() {
   // ログインユーザーを取得
   const session = await getServerSession(authOptions);
   if (!session) {
+    // ログインしていない場合はログインページにリダイレクト
     redirect('/login');
   }
   const uid = session?.user?.uid as string;
 
-  // 自分がオーナーのプロジェクトと参加しているプロジェクトを取得
+  // 自分がオーナーのプロジェクトとメンバーのプロジェクトを取得
   const ownedSnap = await adminDb
     .collection('projects')
     .where('ownerId', '==', uid)

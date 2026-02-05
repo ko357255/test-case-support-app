@@ -7,7 +7,9 @@ import ProjectCard from '@/components/features/project/ProjectCard';
 import { ProjectDTO } from '@/types/firestore';
 
 interface Props {
+  /** オーナーのプロジェクト */
   ownedProjects?: ProjectDTO[];
+  /** 参加中のプロジェクト */
   participatingProjects?: ProjectDTO[];
 }
 
@@ -84,7 +86,7 @@ export default function ProjectListPage({
           </section>
         </div>
       </div>
-
+      {/* 個人設定モーダル */}
       <UserSettingsModal
         isOpen={isUserSettingsOpen}
         onClose={() => setIsUserSettingsOpen(false)}

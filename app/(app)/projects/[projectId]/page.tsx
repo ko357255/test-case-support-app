@@ -21,7 +21,6 @@ const getProjectCached = cache(async (projectId: string) => {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { projectId } = await params;
-  // Nextjs が自動で fetch を重複排除するので、負荷は増えない
   console.log('メタデータ取得開始');
   const projectDoc = await getProjectCached(projectId);
   console.log('メタデータ取得終了');
@@ -38,11 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export default async function Page({ params }: Props) {
   const { projectId } = await params;
-
-  console.log('データ取得開始');
   const projectDoc = await getProjectCached(projectId);
-
-  console.log('終了');
 
   // プロジェクトが見つからなければ、notfoundへ遷移
   if (!projectDoc.exists) {
