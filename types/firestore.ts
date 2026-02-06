@@ -99,15 +99,24 @@ export interface UserDoc {
  * path: /presence/{projectId}/{sessionId}
  */
 export interface Presence {
+  /** セッションID */
   sessionId: string;
+  /** ユーザーID */
   userId: string;
+  /** 表示名（ユーザー名） */
   displayName?: string;
+  /** アバター画像URL */
   avatarUrl?: string;
+  /** UIで使う識別カラー */
   color?: string;
+  /** フォーカス中のテストケースID */
   testCaseId?: string;
+  /** フォーカス中のフィールドID */
   fieldId?: string;
+  /** フォーカス中かどうか */
   isFocused?: boolean;
-  lastActive?: number; // epoch ms
+  /** 最終アクティブ時刻 */
+  lastActive?: number;
 }
 
 export type PresenceDTO = Presence & { id: string };
