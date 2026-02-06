@@ -5,7 +5,6 @@ import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { ProjectDTO, TestCaseDTO, Presence } from '@/types/firestore';
-import { usePresence } from '@/hook/use-presence';
 import SidebarHeader from './SidebarHeader';
 import SidebarFilters from './SidebarFilters';
 import TestCaseList from './TestCaseList';
@@ -17,6 +16,10 @@ interface Props {
   selectedTestCaseId: string | null;
   onSelectTestCaseId: (testCaseId: string) => void;
   onOpenSettings: () => void;
+  presences: Record<string, Presence>;
+  setPresence: (data: Partial<Presence>) => void;
+  currentSessionId: string | null;
+  currentUserId: string | null;
   onAddTestCase?: (payload: {
     title: string;
     category?: string;
@@ -36,6 +39,10 @@ export default function ProjectSidebar({
   selectedTestCaseId,
   onSelectTestCaseId,
   onOpenSettings,
+  presences,
+  setPresence,
+  currentSessionId,
+  currentUserId,
   onAddTestCase,
   isLoading = false,
   isSavingNewTestCase = false,
@@ -112,10 +119,6 @@ export default function ProjectSidebar({
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }, [userName]);
-
-  // presence subscription (read minimal info) and writer
-  const { presences, setPresence, currentSessionId, currentUserId } =
-    usePresence(project.id);
 
   const presenceByTestCase = useMemo(() => {
     const map: Record<string, Presence[]> = {};

@@ -8,6 +8,7 @@ import UserSettingsModal from '@/components/features/user/UserSettingsModal';
 import { ProjectDTO, TestCaseDoc, TestCaseDTO } from '@/types/firestore';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { usePresence } from '@/hook/use-presence';
 
 type Props = {
   project: ProjectDTO;
@@ -26,6 +27,9 @@ export default function ProjectWorkspace({ project }: Props) {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
+
+  const { presences, setPresence, currentSessionId, currentUserId } =
+    usePresence(project.id);
 
   // テストケースのデータ取得
   useEffect(() => {
@@ -100,6 +104,10 @@ export default function ProjectWorkspace({ project }: Props) {
         isLoading={isLoadingTestCases}
         isSavingNewTestCase={isSavingNewTestCase}
         onOpenUserSettings={() => setIsUserSettingsOpen(true)}
+        presences={presences}
+        setPresence={setPresence}
+        currentSessionId={currentSessionId}
+        currentUserId={currentUserId}
       />
 
       <main className="flex-1 overflow-y-auto">
@@ -113,6 +121,10 @@ export default function ProjectWorkspace({ project }: Props) {
           <TestCaseDetail
             projectId={project.id}
             testCaseId={selectedTestCaseId}
+            presences={presences}
+            setPresence={setPresence}
+            currentSessionId={currentSessionId}
+            currentUserId={currentUserId}
           />
         )}
       </main>

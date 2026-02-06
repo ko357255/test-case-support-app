@@ -7,7 +7,6 @@ import TestCaseStepList from './TestCaseStepList';
 import TestCaseEvidenceList from './TestCaseEvidenceList';
 import { useMemo } from 'react';
 import { Presence } from '@/types/firestore';
-import { usePresence } from '@/hook/use-presence';
 import { auth } from '@/lib/firebase';
 import {
   EvidenceDoc,
@@ -31,9 +30,20 @@ import { useRouter } from 'next/navigation';
 type Props = {
   projectId: string;
   testCaseId: string;
+  presences: Record<string, Presence>;
+  setPresence: (data: Partial<Presence>) => void;
+  currentSessionId: string | null;
+  currentUserId: string | null;
 };
 
-export default function TestCaseDetail({ projectId, testCaseId }: Props) {
+export default function TestCaseDetail({
+  projectId,
+  testCaseId,
+  presences,
+  setPresence,
+  currentSessionId,
+  currentUserId,
+}: Props) {
   const [testCase, setTestCase] = useState<TestCaseDTO | null>(null);
   const [testSteps, setTestSteps] = useState<TestStepDTO[]>([]);
   const [evidences, setEvidences] = useState<EvidenceDTO[]>([]);
@@ -43,10 +53,6 @@ export default function TestCaseDetail({ projectId, testCaseId }: Props) {
   );
 
   const router = useRouter();
-
-  // presence (show where other users are focusing)
-  const { presences, setPresence, currentSessionId, currentUserId } =
-    usePresence(projectId);
 
   // map fieldId => Presence[] for this test case
   const presenceByField = useMemo((): Record<string, Presence[]> => {
