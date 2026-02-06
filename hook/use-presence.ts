@@ -37,10 +37,10 @@ export const usePresence = (projectId?: string) => {
   const listUnsubRef = useRef<(() => void) | null>(null);
   // 現在のsessionId（タブ単位）
   const sessionIdRef = useRef<string | null>(null);
-  // 更新待ちのPresenceデータ（throttle用）
-  const pendingRef = useRef<Record<string, unknown> | null>(null);
 
   useEffect(() => {
+    console.log('[ログ] presence useEffect projectId', projectId);
+
     // projectIdが無い場合は何もしない
     if (!projectId) return;
 
@@ -49,6 +49,7 @@ export const usePresence = (projectId?: string) => {
 
     // 認証ユーザーごとにPresence登録・購読を開始する関数
     const startWithUser = (user: User) => {
+      console.log('[ログ] presence 購読開始', user.uid);
       const uid = user.uid;
 
       // sessionId はタブ単位で保持（プロジェクトごと）
@@ -215,33 +216,20 @@ export const usePresence = (projectId?: string) => {
     };
   }, [projectId]);
 
-  // Presenceデータの部分更新を1秒ごとにまとめてRTDBへ送信する関数
+  // Presenceデータの部分更新を即時にRTDBへ送信する関数
   const scheduleUpdate = useCallback((payload: Partial<Presence>) => {
     // Presence参照が無ければ何もしない
     if (!presenceRef.current) return;
 
-    pendingRef.current = { ...(pendingRef.current ?? {}), ...payload };
-
-    // １秒後に実行
-    setTimeout(() => {
-      // 更新待ちなら何もしない
-      if (!pendingRef.current) return;
-
-      // 書き込み対象を作成
-      const toWrite: Record<string, unknown> = {
-        ...(pendingRef.current as Record<string, unknown>),
-      };
-      // 最終アクティブ時刻を更新
-      toWrite.lastActive = Date.now();
-      // undefined を除去
-      const cleaned = Object.fromEntries(
-        Object.entries(toWrite).filter(([, v]) => v !== undefined),
-      );
-      // Presenceデータを更新
-      update(presenceRef.current as DatabaseReference, cleaned).catch(() => {});
-      // 更新待ちをクリア
-      pendingRef.current = null;
-    }, 1000); // １秒
+    // 最終アクティブ時刻を更新
+    payload.lastActive = Date.now();
+    // undefined を除去
+    const cleaned = Object.fromEntries(
+      Object.entries(payload).filter(([, v]) => v !== undefined),
+    );
+    console.log('presenceデータを送信', cleaned);
+    // Presenceデータを更新
+    update(presenceRef.current as DatabaseReference, cleaned).catch(() => {});
   }, []);
 
   // Presenceデータの部分更新用関数
