@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { auth, rtdb, db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-
 import {
   ref as dbRef, // RTDB参照生成
   onValue, // データ購読
@@ -16,6 +15,13 @@ import {
 import type { DatabaseReference } from 'firebase/database';
 import type { Presence, UserDoc } from '@/types/firestore';
 
+/**
+ * usePresence
+ * - projectId: Realtime DB の presence 配下を購読/更新する
+ * - presences: { [sessionId]: Presence }
+ * - setPresence: 部分更新（内部で throttle）
+ * - clearPresence: 自クライアントの presence を削除
+ */
 export const usePresence = (projectId?: string) => {
   // 全ユーザーのPresenceデータを保持する状態
   const [presences, setPresences] = useState<Record<string, Presence>>({});
@@ -44,6 +50,8 @@ export const usePresence = (projectId?: string) => {
     // 認証ユーザーごとにPresence登録・購読を開始する関数
     const startWithUser = (user: User) => {
       const uid = user.uid;
+
+      // sessionId はタブ単位で保持（プロジェクトごと）
       let sessionId = sessionIdRef.current;
 
       // sessionIdがなければ取得
@@ -171,12 +179,13 @@ export const usePresence = (projectId?: string) => {
 
     // ログイン済みならPresence購読開始
     if (auth.currentUser) startWithUser(auth.currentUser);
+    authUnsub = onAuthStateChanged(auth, (u) => {
+      if (u) {
+        // ログイン時は購読開始
+        startWithUser(u);
+      } else {
+        // ログアウト時は購読解除しデータを削除
 
-    // 認証状態の監視
-    authUnsub = onAuthStateChanged(auth, (user) => {
-      // ログアウト時の処理
-      if (!user) {
-        // データを削除
         if (presenceRef.current) remove(presenceRef.current).catch(() => {});
         if (listUnsubRef.current) {
           try {
@@ -211,7 +220,6 @@ export const usePresence = (projectId?: string) => {
     // Presence参照が無ければ何もしない
     if (!presenceRef.current) return;
 
-    // 直近の更新を貯める
     pendingRef.current = { ...(pendingRef.current ?? {}), ...payload };
 
     // １秒後に実行
@@ -251,7 +259,6 @@ export const usePresence = (projectId?: string) => {
     if (presenceRef.current) remove(presenceRef.current).catch(() => {});
   }, []);
 
-  // フックの返却値
   return {
     presences,
     setPresence,
