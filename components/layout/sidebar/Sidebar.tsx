@@ -11,22 +11,35 @@ import TestCaseList from './TestCaseList';
 import SidebarFooter from './SidebarFooter';
 
 interface Props {
+  /** プロジェクト */
   project: ProjectDTO;
+  /** テストケース一覧 */
   testCases: TestCaseDTO[];
+  /** 選択中のテストケースID */
   selectedTestCaseId: string | null;
+  /** テストケース選択時のコールバック */
   onSelectTestCaseId: (testCaseId: string) => void;
+  /** 設定画面オープン時のコールバック */
   onOpenSettings: () => void;
+  /** プレゼンス */
   presences: Record<string, Presence>;
+  /** プレゼンス設定関数 */
   setPresence: (data: Partial<Presence>) => void;
+  /** 現在のセッションID */
   currentSessionId: string | null;
+  /** 現在のユーザーID */
   currentUserId: string | null;
+  /** テストケース追加時のコールバック */
   onAddTestCase?: (payload: {
     title: string;
     category?: string;
     priority?: 'high' | 'medium' | 'low';
   }) => Promise<void>;
+  /** ローディング状態 */
   isLoading?: boolean;
+  /** 新規テストケース保存中状態 */
   isSavingNewTestCase?: boolean;
+  /** ユーザー設定画面オープン時のコールバック */
   onOpenUserSettings: () => void;
 }
 
