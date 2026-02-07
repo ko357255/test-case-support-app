@@ -279,8 +279,8 @@ export default function TestCaseDetail({
   if (!testCase) return <p>読み込み中...</p>;
 
   return (
-    <div className="p-8">
-      <div className="pointer-events-none sticky top-8 z-10 mb-4 flex justify-end gap-2">
+    <div className="px-8 pt-6 pb-8">
+      <div className="pointer-events-none sticky top-5 z-10 -mt-1 mb-3 flex justify-end gap-2">
         <div className="border-border bg-background pointer-events-auto flex items-center rounded-lg border p-1 shadow-sm">
           <button
             onClick={() => handleModeChange(false)}
