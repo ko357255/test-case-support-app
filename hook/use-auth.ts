@@ -4,11 +4,13 @@ import {
   signIn as nextAuthSignIn,
   signOut as nextAuthSignOut,
 } from 'next-auth/react';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import {
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +18,7 @@ export const useAuth = () => {
   const login = async (email: string, pass: string) => {
     setIsLoading(true);
     try {
-      // 1. Firebase Authで認証
+      // Firebase Authで認証
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -24,7 +26,46 @@ export const useAuth = () => {
       );
       const idToken = await userCredential.user.getIdToken();
 
-      // 2. NextAuthのセッション開始
+      // NextAuthのセッション開始
+      const result = await nextAuthSignIn('credentials', {
+        idToken,
+        redirect: false,
+      });
+
+      if (result?.error) throw new Error(result.error);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (name: string, email: string, pass: string) => {
+    setIsLoading(true);
+    try {
+      // Firebase Authでユーザー作成
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        pass,
+      );
+      const user = userCredential.user;
+      const trimmedName = name.trim();
+
+      // usersコレクションにユーザーデータを保存
+      await setDoc(
+        doc(db, 'users', user.uid),
+        {
+          name: trimmedName || 'ユーザー',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
+
+      // NextAuthのセッション開始
+      const idToken = await user.getIdToken();
       const result = await nextAuthSignIn('credentials', {
         idToken,
         redirect: false,
@@ -60,5 +101,5 @@ export const useAuth = () => {
     }
   };
 
-  return { login, logout, isLoading };
+  return { login, logout, register, isLoading };
 };
