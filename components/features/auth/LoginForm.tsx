@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -82,6 +83,13 @@ export default function LoginForm() {
             {isLoading ? 'ログイン中...' : 'ログイン'}
           </Button>
         </form>
+
+        <p className="text-muted-foreground mt-4 text-center text-sm">
+          アカウントをお持ちでない方は{' '}
+          <Link href="/signup" className="text-primary hover:underline">
+            サインアップ
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );
