@@ -82,7 +82,7 @@ export default function TestCaseEvidenceList({
                 onChange={async (id, patch) => {
                   try {
                     const { updateEvidence } =
-                      await import('@/lib/firestore/evidences');
+                      await import('@/lib/actions/evidences');
                     await updateEvidence(projectId, testCaseId, id, patch);
                   } catch (err) {
                     console.error('Failed to update evidence', err);
@@ -94,7 +94,7 @@ export default function TestCaseEvidenceList({
                     return;
                   try {
                     const { deleteEvidence } =
-                      await import('@/lib/firestore/evidences');
+                      await import('@/lib/actions/evidences');
                     await deleteEvidence(projectId, testCaseId, id);
                     onBlur?.();
                   } catch (err) {

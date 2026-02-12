@@ -1,9 +1,6 @@
 import {
   collection,
   addDoc,
-  updateDoc,
-  doc,
-  deleteDoc,
   getDocs,
   query,
   Timestamp,
@@ -46,41 +43,4 @@ export async function createTestStep(
       updatedAt: Timestamp.now(),
     },
   );
-}
-
-/** テストステップを更新 */
-export async function updateTestStep(
-  projectId: string,
-  testCaseId: string,
-  stepId: string,
-  data: Partial<Omit<TestStepDoc, 'createdAt' | 'updatedAt' | 'testCaseId'>>,
-) {
-  const ref = doc(
-    db,
-    'projects',
-    projectId,
-    'testCases',
-    testCaseId,
-    'testSteps',
-    stepId,
-  );
-  return updateDoc(ref, { ...data, updatedAt: Timestamp.now() });
-}
-
-/** テストステップを削除 */
-export async function deleteTestStep(
-  projectId: string,
-  testCaseId: string,
-  stepId: string,
-) {
-  const ref = doc(
-    db,
-    'projects',
-    projectId,
-    'testCases',
-    testCaseId,
-    'testSteps',
-    stepId,
-  );
-  return deleteDoc(ref);
 }

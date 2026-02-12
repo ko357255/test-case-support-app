@@ -1,11 +1,11 @@
 import { Plus } from 'lucide-react';
 import TestStepItem from './TestStepItem';
 import { TestStepDTO } from '@/types/firestore';
+import { createTestStep } from '@/lib/firestore/testSteps';
 import {
-  createTestStep,
-  updateTestStep,
-  deleteTestStep,
-} from '@/lib/firestore/testSteps';
+  updateTestStep as updateTestStepAction,
+  deleteTestStep as deleteTestStepAction,
+} from '@/lib/actions/testSteps';
 
 import { useCallback } from 'react';
 
@@ -45,9 +45,9 @@ export default function TestCaseStepList({
         const data = rest as Partial<Omit<TestStepDTO, 'id'>>;
         delete (data as Partial<TestStepDTO>).createdAt;
         delete (data as Partial<TestStepDTO>).updatedAt;
-        await updateTestStep(projectId, testCaseId, id, data);
+        await updateTestStepAction(projectId, testCaseId, id, data);
       } catch (e) {
-        console.error('Failed to update step', e);
+        console.error('ステップの更新に失敗', e);
         alert('ステップの保存に失敗しました。');
       }
     },
@@ -58,7 +58,7 @@ export default function TestCaseStepList({
     async (id: string) => {
       if (!confirm('このステップを削除してもよろしいですか？')) return;
       try {
-        await deleteTestStep(projectId, testCaseId, id);
+        await deleteTestStepAction(projectId, testCaseId, id);
       } catch (e) {
         console.error('Failed to delete step', e);
         alert('ステップの削除に失敗しました。');

@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { createProject } from '@/lib/api/projects';
+import { createProject } from '@/lib/actions/projects';
 
 interface Props {
   isOpen: boolean;

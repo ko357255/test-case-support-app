@@ -24,7 +24,7 @@ import {
   query,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { updateTestCase, deleteTestCase } from '@/lib/firestore/testCases';
+import { updateTestCase, deleteTestCase } from '@/lib/actions/testCases';
 import { useRouter } from 'next/navigation';
 
 type Props = {

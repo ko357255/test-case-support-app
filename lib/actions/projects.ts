@@ -5,6 +5,9 @@ import { authOptions } from '@/lib/auth';
 import { adminDb } from '@/lib/firebase-admin';
 import { ProjectDoc } from '@/types/firestore';
 
+/**
+ * プロジェクト作成
+ */
 export async function createProject(
   data: Pick<ProjectDoc, 'name' | 'description'>,
 ) {

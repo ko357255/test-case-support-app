@@ -5,9 +5,6 @@ import {
   query,
   where,
   Timestamp,
-  doc,
-  updateDoc,
-  deleteDoc,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -48,20 +45,4 @@ export async function createTestCase(
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   });
-}
-
-/** プロジェクト配下のテストケースを更新 */
-export async function updateTestCase(
-  projectId: string,
-  testCaseId: string,
-  data: Partial<Omit<TestCaseDoc, 'createdAt' | 'updatedAt' | 'projectId'>>,
-) {
-  const ref = doc(db, 'projects', projectId, 'testCases', testCaseId);
-  return updateDoc(ref, { ...data, updatedAt: Timestamp.now() });
-}
-
-/** プロジェクト配下のテストケースを削除 */
-export async function deleteTestCase(projectId: string, testCaseId: string) {
-  const ref = doc(db, 'projects', projectId, 'testCases', testCaseId);
-  return deleteDoc(ref);
 }
