@@ -281,7 +281,6 @@ export default function TestStepItem({
                           avatarUrl={p.avatarUrl}
                           name={p.displayName}
                           size={20}
-                          className="border-background border-2"
                           fallbackIconClassName="h-3.5 w-3.5 text-white"
                         />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
@@ -347,7 +346,6 @@ export default function TestStepItem({
                           avatarUrl={p.avatarUrl}
                           name={p.displayName}
                           size={20}
-                          className="border-background border-2"
                           fallbackIconClassName="h-3.5 w-3.5 text-white"
                         />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">

@@ -72,7 +72,6 @@ export default function TestCaseHeader({
                       avatarUrl={p.avatarUrl}
                       name={p.displayName}
                       size={24}
-                      className="border-background border-2"
                       backgroundColor={p.avatarUrl ? undefined : p.color}
                       fallbackIconClassName="h-4 w-4 text-white"
                     />
@@ -250,7 +249,6 @@ export default function TestCaseHeader({
                         avatarUrl={p.avatarUrl}
                         name={p.displayName}
                         size={24}
-                        className="border-background border-2"
                         backgroundColor={p.avatarUrl ? undefined : p.color}
                         fallbackIconClassName="h-4 w-4 text-white"
                       />
@@ -315,7 +313,6 @@ export default function TestCaseHeader({
                         avatarUrl={p.avatarUrl}
                         name={p.displayName}
                         size={24}
-                        className="border-background border-2"
                         backgroundColor={p.avatarUrl ? undefined : p.color}
                         fallbackIconClassName="h-4 w-4 text-white"
                       />
