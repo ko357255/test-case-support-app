@@ -14,6 +14,7 @@ import {
 } from 'firebase/database';
 import type { DatabaseReference } from 'firebase/database';
 import type { Presence, UserDoc } from '@/types/firestore';
+import { DEFAULT_AVATAR_URL } from '@/config/user';
 
 /**
  * usePresence
@@ -101,7 +102,7 @@ export const usePresence = (projectId?: string) => {
         sessionId, // セッションID
         userId: uid, // ユーザーID
         displayName: '', // ユーザー名
-        avatarUrl: user.photoURL ?? '', // アバターURL
+        avatarUrl: DEFAULT_AVATAR_URL, // アバターURL
         // color: undefined, // 色
         isFocused: false, // フォーカスしているかどうか
         lastActive: Date.now(), // 最終アクティブ時刻
@@ -112,10 +113,11 @@ export const usePresence = (projectId?: string) => {
       (async () => {
         try {
           const userDoc = await getDoc(doc(db, 'users', uid));
-          const displayName = userDoc.exists()
-            ? (userDoc.data() as UserDoc).displayName
+          const userData = userDoc.exists()
+            ? (userDoc.data() as UserDoc)
             : undefined;
-          initialPresence.displayName = displayName ?? '';
+          initialPresence.displayName = userData?.displayName ?? '';
+          initialPresence.avatarUrl = userData?.avatarUrl ?? DEFAULT_AVATAR_URL;
         } catch (err) {
           console.error(
             'presence: failed to fetch user name from users collection',
