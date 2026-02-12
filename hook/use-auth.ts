@@ -11,6 +11,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import type { UserDoc } from '@/types/firestore';
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,10 +58,10 @@ export const useAuth = () => {
       await setDoc(
         doc(db, 'users', user.uid),
         {
-          name: trimmedName || 'ユーザー',
+          displayName: trimmedName || 'ユーザー',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
-        },
+        } as UserDoc,
         { merge: true },
       );
 

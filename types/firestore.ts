@@ -86,8 +86,10 @@ export interface EvidenceDoc {
  * /users/[uid]
  */
 export interface UserDoc {
-  /** ユーザー名 */
-  name: string;
+  /** 表示名（ユーザー名） */
+  displayName: string;
+  /** アバター画像URL */
+  avatarUrl: string;
   /** 作成日時 */
   createdAt: Timestamp;
   /** ユーザー情報更新日時 */

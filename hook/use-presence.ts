@@ -112,10 +112,10 @@ export const usePresence = (projectId?: string) => {
       (async () => {
         try {
           const userDoc = await getDoc(doc(db, 'users', uid));
-          const name = userDoc.exists()
-            ? (userDoc.data() as UserDoc).name
+          const displayName = userDoc.exists()
+            ? (userDoc.data() as UserDoc).displayName
             : undefined;
-          initialPresence.displayName = name ?? '';
+          initialPresence.displayName = displayName ?? '';
         } catch (err) {
           console.error(
             'presence: failed to fetch user name from users collection',

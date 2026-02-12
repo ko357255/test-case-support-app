@@ -10,6 +10,7 @@ import { useSyncExternalStore } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { UserDoc } from '@/types/firestore';
 
 interface Props {
   /** モーダルの開閉 */
@@ -54,9 +55,9 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
         setLoading(true);
         // Firestore からユーザー情報を取得
         const d = await getDoc(doc(db, 'users', uid));
-        const data = d.exists() ? d.data() : undefined;
-        setName(data?.name ?? '');
-        setOriginalName(data?.name ?? '');
+        const data = d.exists() ? (d.data() as UserDoc) : undefined;
+        setName(data?.displayName ?? '');
+        setOriginalName(data?.displayName ?? '');
         setHasDoc(d.exists());
       } finally {
         setLoading(false);
@@ -93,7 +94,7 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
         await setDoc(
           doc(db, 'users', uid),
           {
-            name: name,
+            displayName: name,
             updatedAt: serverTimestamp(),
           },
           { merge: true },
@@ -103,7 +104,7 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
         await setDoc(
           doc(db, 'users', uid),
           {
-            name: name,
+            displayName: name,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
           },

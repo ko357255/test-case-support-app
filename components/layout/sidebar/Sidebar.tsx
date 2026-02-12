@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { ProjectDTO, TestCaseDTO, Presence } from '@/types/firestore';
+import { ProjectDTO, TestCaseDTO, Presence, UserDoc } from '@/types/firestore';
 import SidebarHeader from './SidebarHeader';
 import SidebarFilters from './SidebarFilters';
 import TestCaseList from './TestCaseList';
@@ -98,7 +98,7 @@ export default function ProjectSidebar({
     'medium',
   );
 
-  const [userName, setUserName] = useState('デモユーザー');
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     let unsubAuth: (() => void) | null = null;
@@ -106,8 +106,8 @@ export default function ProjectSidebar({
 
     const startListener = (uid: string) => {
       unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
-        const data = snap.exists() ? snap.data() : undefined;
-        setUserName(data?.name ?? 'デモユーザー');
+        const data = snap.exists() ? (snap.data() as UserDoc) : undefined;
+        setUserName(data?.displayName ?? '');
       });
     };
 
