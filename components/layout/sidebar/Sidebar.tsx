@@ -5,6 +5,7 @@ import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { ProjectDTO, TestCaseDTO, Presence, UserDoc } from '@/types/firestore';
+import { DEFAULT_AVATAR_URL } from '@/config/user';
 import SidebarHeader from './SidebarHeader';
 import SidebarFilters from './SidebarFilters';
 import TestCaseList from './TestCaseList';
@@ -99,6 +100,7 @@ export default function ProjectSidebar({
   );
 
   const [userName, setUserName] = useState('');
+  const [userAvatarUrl, setUserAvatarUrl] = useState(DEFAULT_AVATAR_URL);
 
   useEffect(() => {
     let unsubAuth: (() => void) | null = null;
@@ -108,6 +110,7 @@ export default function ProjectSidebar({
       unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
         const data = snap.exists() ? (snap.data() as UserDoc) : undefined;
         setUserName(data?.displayName ?? '');
+        setUserAvatarUrl(data?.avatarUrl ?? DEFAULT_AVATAR_URL);
       });
     };
 
@@ -224,6 +227,7 @@ export default function ProjectSidebar({
 
       {/* フッター: ユーザー情報 */}
       <SidebarFooter
+        avatarUrl={userAvatarUrl}
         initials={initials}
         userName={userName}
         onOpenUserSettings={onOpenUserSettings}
