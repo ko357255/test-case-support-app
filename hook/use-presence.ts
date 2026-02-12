@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { auth, rtdb, db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import {
   ref as dbRef, // RTDB参照生成
@@ -18,10 +18,10 @@ import { DEFAULT_AVATAR_URL } from '@/config/user';
 
 /**
  * usePresence
- * - projectId: Realtime DB の presence 配下を購読/更新する
- * - presences: { [sessionId]: Presence }
- * - setPresence: 部分更新（内部で throttle）
- * - clearPresence: 自クライアントの presence を削除
+ * - projectId: プロジェクトID
+ * - presences: 全ユーザーの presence データ
+ * - setPresence: 更新関数
+ * - clearPresence: 自クライアントの presence を削除する関数
  */
 export const usePresence = (projectId?: string) => {
   // 全ユーザーのPresenceデータを保持する状態
@@ -38,6 +38,8 @@ export const usePresence = (projectId?: string) => {
   const listUnsubRef = useRef<(() => void) | null>(null);
   // 現在のsessionId（タブ単位）
   const sessionIdRef = useRef<string | null>(null);
+  // ユーザードキュメント購読解除用
+  const userDocUnsubRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     console.log('[ログ] presence useEffect projectId', projectId);
@@ -96,6 +98,32 @@ export const usePresence = (projectId?: string) => {
       } catch (err) {
         console.error('onDisconnect exception', err);
       }
+
+      // Firestoreの users/{uid} をリアルタイムで監視し、更新があったら Presence も更新
+      if (userDocUnsubRef.current) {
+        userDocUnsubRef.current();
+        userDocUnsubRef.current = null;
+      }
+
+      const userDocUnsub = onSnapshot(
+        doc(db, 'users', uid),
+        (snap) => {
+          const userData = snap.exists() ? (snap.data() as UserDoc) : undefined;
+          const displayName = userData?.displayName ?? '';
+          const avatarUrl = userData?.avatarUrl ?? DEFAULT_AVATAR_URL;
+
+          // Presenceデータを更新
+          if (presenceRef.current) {
+            update(presenceRef.current, { displayName, avatarUrl }).catch(
+              () => {},
+            );
+          }
+        },
+        (err) => {
+          console.error('presence: user doc snapshot error', err);
+        },
+      );
+      userDocUnsubRef.current = userDocUnsub;
 
       // 初期Presenceデータを作成
       const initialPresence: Partial<Presence> = {
@@ -190,6 +218,12 @@ export const usePresence = (projectId?: string) => {
         // ログアウト時は購読解除しデータを削除
 
         if (presenceRef.current) remove(presenceRef.current).catch(() => {});
+        if (userDocUnsubRef.current) {
+          try {
+            userDocUnsubRef.current();
+          } catch {}
+          userDocUnsubRef.current = null;
+        }
         if (listUnsubRef.current) {
           try {
             listUnsubRef.current();
@@ -208,6 +242,12 @@ export const usePresence = (projectId?: string) => {
     return () => {
       // データを削除
       if (presenceRef.current) remove(presenceRef.current).catch(() => {});
+      if (userDocUnsubRef.current) {
+        try {
+          userDocUnsubRef.current();
+        } catch {}
+        userDocUnsubRef.current = null;
+      }
       if (listUnsubRef.current) {
         try {
           listUnsubRef.current();
