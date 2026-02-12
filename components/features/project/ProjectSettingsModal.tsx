@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import { Settings, Users, X } from 'lucide-react';
-import { ProjectDTO } from '@/types/firestore';
+import type { ProjectDTO, UserDoc } from '@/types/firestore';
 import { auth, db } from '@/lib/firebase';
 import {
-  doc,
-  updateDoc,
-  serverTimestamp,
-  arrayUnion,
-  arrayRemove,
+  addProjectMemberByEmail,
+  removeProjectMember,
+  updateProject,
+} from '@/lib/actions/projects';
+import {
+  collection,
+  documentId,
+  getDocs,
+  query,
+  where,
 } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -34,7 +39,10 @@ export default function ProjectSettingsModal({
     project.description,
   );
   const [members, setMembers] = useState<string[]>(project.memberIds || []);
-  const [newMemberId, setNewMemberId] = useState('');
+  const [memberProfiles, setMemberProfiles] = useState<Record<string, UserDoc>>(
+    {},
+  );
+  const [newMemberEmail, setNewMemberEmail] = useState('');
   const [saving, setSaving] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
 
@@ -44,6 +52,45 @@ export default function ProjectSettingsModal({
     setProjectDescription(project.description);
     setMembers(project.memberIds || []);
   }, [project]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchMemberProfiles = async () => {
+      if (members.length === 0) {
+        if (isActive) setMemberProfiles({});
+        return;
+      }
+
+      try {
+        const chunks: string[][] = [];
+        for (let i = 0; i < members.length; i += 10) {
+          chunks.push(members.slice(i, i + 10));
+        }
+
+        const profiles: Record<string, UserDoc> = {};
+        for (const chunk of chunks) {
+          const q = query(
+            collection(db, 'users'),
+            where(documentId(), 'in', chunk),
+          );
+          const snap = await getDocs(q);
+          snap.forEach((d) => {
+            profiles[d.id] = d.data() as UserDoc;
+          });
+        }
+
+        if (isActive) setMemberProfiles(profiles);
+      } catch (err) {
+        console.error('Failed to fetch member profiles', err);
+      }
+    };
+
+    fetchMemberProfiles();
+    return () => {
+      isActive = false;
+    };
+  }, [members]);
 
   // 現在のユーザーがオーナーかどうか判定
   useEffect(() => {
@@ -65,10 +112,9 @@ export default function ProjectSettingsModal({
     }
     try {
       setSaving(true);
-      await updateDoc(doc(db, 'projects', project.id), {
+      await updateProject(project.id, {
         name: projectName,
         description: projectDescription,
-        updatedAt: serverTimestamp(),
       });
       alert('プロジェクトを保存しました。');
     } catch (err) {
@@ -80,17 +126,14 @@ export default function ProjectSettingsModal({
   };
 
   const handleAddMember = async () => {
-    const id = newMemberId.trim();
-    if (!id) return alert('メンバーIDを入力してください。');
-    if (members.includes(id)) return alert('既にメンバーです。');
+    if (!isOwner) return alert('オーナーのみ変更できます。');
+    const email = newMemberEmail.trim().toLowerCase();
+    if (!email) return alert('メールアドレスを入力してください。');
     try {
       setSaving(true);
-      await updateDoc(doc(db, 'projects', project.id), {
-        memberIds: arrayUnion(id),
-        updatedAt: serverTimestamp(),
-      });
-      setMembers((s) => [...s, id]);
-      setNewMemberId('');
+      const userId = await addProjectMemberByEmail(project.id, email);
+      setMembers((s) => [...s, userId]);
+      setNewMemberEmail('');
     } catch (err) {
       console.error(err);
       alert('メンバーの追加に失敗しました。');
@@ -104,10 +147,7 @@ export default function ProjectSettingsModal({
     if (id === project.ownerId) return alert('オーナーは削除できません。');
     try {
       setSaving(true);
-      await updateDoc(doc(db, 'projects', project.id), {
-        memberIds: arrayRemove(id),
-        updatedAt: serverTimestamp(),
-      });
+      await removeProjectMember(project.id, id);
       setMembers((s) => s.filter((m) => m !== id));
     } catch (err) {
       console.error(err);
@@ -233,9 +273,9 @@ export default function ProjectSettingsModal({
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    placeholder="メンバーIDを追加"
-                    value={newMemberId}
-                    onChange={(e) => setNewMemberId(e.target.value)}
+                    placeholder="メールアドレスを追加"
+                    value={newMemberEmail}
+                    onChange={(e) => setNewMemberEmail(e.target.value)}
                     className="flex-1 rounded-md border px-3 py-2 text-sm"
                     disabled={!isOwner || saving}
                   />
@@ -248,35 +288,51 @@ export default function ProjectSettingsModal({
                   </button>
                 </div>
                 <div className="space-y-2">
-                  {members.map((id) => (
-                    <div
-                      key={id}
-                      className="border-border bg-accent/20 flex items-center justify-between rounded-xl border p-3 text-sm"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold">
-                          {id[0].toUpperCase()}
+                  {members.map((id) => {
+                    const profile = memberProfiles[id];
+                    const displayName = profile?.displayName || id;
+                    const email = profile?.email || '';
+                    const badgeLabel = (displayName || email || id)
+                      .slice(0, 1)
+                      .toUpperCase();
+
+                    return (
+                      <div
+                        key={id}
+                        className="border-border bg-accent/20 flex items-center justify-between rounded-xl border p-3 text-sm"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold">
+                            {badgeLabel || '?'}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{displayName}</span>
+                            {email && (
+                              <span className="text-muted-foreground text-xs">
+                                {email}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <span className="font-medium">{id}</span>
+                        <div className="flex items-center gap-2">
+                          {id === project.ownerId && (
+                            <span className="bg-secondary text-secondary-foreground rounded px-2 py-0.5 text-[10px] font-bold uppercase">
+                              オーナー
+                            </span>
+                          )}
+                          {isOwner && id !== project.ownerId && (
+                            <button
+                              onClick={() => handleRemoveMember(id)}
+                              disabled={saving}
+                              className="text-destructive rounded-md border px-3 py-1 text-sm"
+                            >
+                              削除
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {id === project.ownerId && (
-                          <span className="bg-secondary text-secondary-foreground rounded px-2 py-0.5 text-[10px] font-bold uppercase">
-                            オーナー
-                          </span>
-                        )}
-                        {isOwner && id !== project.ownerId && (
-                          <button
-                            onClick={() => handleRemoveMember(id)}
-                            disabled={saving}
-                            className="text-destructive rounded-md border px-3 py-1 text-sm"
-                          >
-                            削除
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
