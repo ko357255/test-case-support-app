@@ -88,6 +88,8 @@ export interface EvidenceDoc {
 export interface UserDoc {
   /** 表示名（ユーザー名） */
   displayName: string;
+  /** メールアドレス */
+  email: string;
   /** アバター画像URL */
   avatarUrl: string;
   /** 作成日時 */

@@ -46,6 +46,7 @@ export const useAuth = () => {
   const register = async (name: string, email: string, pass: string) => {
     setIsLoading(true);
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       // Firebase Authでユーザー作成
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -60,6 +61,7 @@ export const useAuth = () => {
         doc(db, 'users', user.uid),
         {
           displayName: trimmedName || 'ユーザー',
+          email: normalizedEmail,
           avatarUrl: DEFAULT_AVATAR_URL,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
