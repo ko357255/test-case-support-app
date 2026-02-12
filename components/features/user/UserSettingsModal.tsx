@@ -1,16 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hook/use-auth';
-import { LogOut, Moon, Sun, User, X } from 'lucide-react';
+import { LogOut, Moon, Sun, User, X, Upload } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
 import { auth, db } from '@/lib/firebase';
+import { storage } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { UserDoc } from '@/types/firestore';
+import Avatar from '@/components/shared/avatar';
+import { DEFAULT_AVATAR_URL } from '@/config/user';
 
 interface Props {
   /** モーダルの開閉 */
@@ -38,11 +42,14 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
   const mounted = useMounted();
   const router = useRouter();
   const { logout, isLoading } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState('');
   const [originalName, setOriginalName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState(DEFAULT_AVATAR_URL);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [hasDoc, setHasDoc] = useState(false);
 
   // モーダルが開いたときにユーザードキュメントを取得する
@@ -58,6 +65,7 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
         const data = d.exists() ? (d.data() as UserDoc) : undefined;
         setName(data?.displayName ?? '');
         setOriginalName(data?.displayName ?? '');
+        setAvatarUrl(data?.avatarUrl ?? DEFAULT_AVATAR_URL);
         setHasDoc(d.exists());
       } finally {
         setLoading(false);
@@ -77,6 +85,71 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
       if (unsub) unsub();
     };
   }, [isOpen]);
+
+  /**
+   * ユーザーアイコン画像アップロード処理
+   */
+  const handleAvatarUpload = async (file: File) => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      alert('ログインしてください。');
+      return;
+    }
+
+    // ファイルサイズチェック（5MB）
+    if (file.size > 5 * 1024 * 1024) {
+      alert('ファイルサイズが大きすぎます（5MB以下）');
+      return;
+    }
+
+    // 画像形式チェック
+    if (!file.type.startsWith('image/')) {
+      alert('画像ファイルのみアップロード可能です');
+      return;
+    }
+
+    try {
+      setUploadingAvatar(true);
+      const storageRef = ref(storage, `users/${uid}/avatar`);
+
+      // ファイルをアップロード
+      await uploadBytes(storageRef, file);
+
+      // ダウンロードURLを取得
+      const url = await getDownloadURL(storageRef);
+
+      // Firestoreに保存
+      await setDoc(
+        doc(db, 'users', uid),
+        {
+          avatarUrl: url,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
+
+      setAvatarUrl(url);
+      alert('アイコンを更新しました。');
+    } catch (err) {
+      console.error(err);
+      alert('アイコンのアップロードに失敗しました。');
+    } finally {
+      setUploadingAvatar(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  /**
+   * ファイル選択時のハンドラ
+   */
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleAvatarUpload(file);
+    }
+  };
 
   /**
    * ユーザー情報の保存処理
@@ -161,6 +234,39 @@ export default function UserSettingsModal({ isOpen, onClose }: Props) {
 
         {/* メインコンテンツ */}
         <div className="space-y-8 p-6">
+          {/* アイコン */}
+          <div>
+            <label className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              アイコン
+            </label>
+            <div className="mt-4 flex items-end gap-4">
+              <Avatar
+                avatarUrl={avatarUrl}
+                name={name}
+                size={80}
+                backgroundColor="#ccc"
+              />
+              <div className="flex flex-col gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  disabled={uploadingAvatar || loading}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingAvatar || loading}
+                  className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
+                >
+                  <Upload size={16} />
+                  {uploadingAvatar ? 'アップロード中...' : 'アップロード'}
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* ユーザー名 */}
           <div>
             <label className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
