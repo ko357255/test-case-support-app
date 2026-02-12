@@ -1,7 +1,6 @@
 import { statusConfig } from '@/config/testcase';
 import { TestCaseDTO } from '@/types/firestore';
-import { User2 } from 'lucide-react';
-
+import Avatar from '@/components/shared/avatar';
 import { Presence } from '@/types/firestore';
 
 type Props = {
@@ -68,25 +67,15 @@ export default function TestCaseHeader({
               {presenceByField?.['title']?.length ? (
                 <div className="flex -space-x-2">
                   {presenceByField['title'].slice(0, 3).map((p) => (
-                    <div
+                    <Avatar
                       key={p.sessionId}
-                      title={p.displayName}
-                      className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                      style={{
-                        backgroundColor: p.avatarUrl ? undefined : p.color,
-                      }}
-                    >
-                      {p.avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={p.avatarUrl}
-                          alt={p.displayName}
-                          className="h-6 w-6 rounded-full object-cover"
-                        />
-                      ) : (
-                        <User2 className="m-auto h-4 w-4 text-white" />
-                      )}
-                    </div>
+                      avatarUrl={p.avatarUrl}
+                      name={p.displayName}
+                      size={24}
+                      className="border-background border-2"
+                      backgroundColor={p.avatarUrl ? undefined : p.color}
+                      fallbackIconClassName="h-4 w-4 text-white"
+                    />
                   ))}
                 </div>
               ) : null}
@@ -133,23 +122,14 @@ export default function TestCaseHeader({
                   className="group relative"
                   title={p.displayName}
                 >
-                  <div
-                    className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                    style={{
-                      backgroundColor: p.avatarUrl ? undefined : p.color,
-                    }}
-                  >
-                    {p.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={p.avatarUrl}
-                        alt={p.displayName}
-                        className="h-6 w-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      <User2 className="m-auto h-4 w-4 text-white" />
-                    )}
-                  </div>
+                  <Avatar
+                    avatarUrl={p.avatarUrl}
+                    name={p.displayName}
+                    size={24}
+                    className="border-background border-2"
+                    backgroundColor={p.avatarUrl ? undefined : p.color}
+                    fallbackIconClassName="h-4 w-4 text-white"
+                  />
                   <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                     {p.displayName}
                   </span>
@@ -206,23 +186,14 @@ export default function TestCaseHeader({
                       className="group relative"
                       title={p.displayName}
                     >
-                      <div
-                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                        style={{
-                          backgroundColor: p.avatarUrl ? undefined : p.color,
-                        }}
-                      >
-                        {p.avatarUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={p.avatarUrl}
-                            alt={p.displayName}
-                            className="h-6 w-6 rounded-full object-cover"
-                          />
-                        ) : (
-                          <User2 className="m-auto h-4 w-4 text-white" />
-                        )}
-                      </div>
+                      <Avatar
+                        avatarUrl={p.avatarUrl}
+                        name={p.displayName}
+                        size={24}
+                        className="border-background border-2"
+                        backgroundColor={p.avatarUrl ? undefined : p.color}
+                        fallbackIconClassName="h-4 w-4 text-white"
+                      />
                       <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                         {p.displayName}
                       </span>
@@ -277,23 +248,14 @@ export default function TestCaseHeader({
                       className="group relative"
                       title={p.displayName}
                     >
-                      <div
-                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                        style={{
-                          backgroundColor: p.avatarUrl ? undefined : p.color,
-                        }}
-                      >
-                        {p.avatarUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={p.avatarUrl}
-                            alt={p.displayName}
-                            className="h-6 w-6 rounded-full object-cover"
-                          />
-                        ) : (
-                          <User2 className="m-auto h-4 w-4 text-white" />
-                        )}
-                      </div>
+                      <Avatar
+                        avatarUrl={p.avatarUrl}
+                        name={p.displayName}
+                        size={24}
+                        className="border-background border-2"
+                        backgroundColor={p.avatarUrl ? undefined : p.color}
+                        fallbackIconClassName="h-4 w-4 text-white"
+                      />
                       <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                         {p.displayName}
                       </span>
@@ -351,23 +313,14 @@ export default function TestCaseHeader({
                       className="group relative"
                       title={p.displayName}
                     >
-                      <div
-                        className="border-background h-6 w-6 shrink-0 rounded-full border-2"
-                        style={{
-                          backgroundColor: p.avatarUrl ? undefined : p.color,
-                        }}
-                      >
-                        {p.avatarUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={p.avatarUrl}
-                            alt={p.displayName}
-                            className="h-6 w-6 rounded-full object-cover"
-                          />
-                        ) : (
-                          <User2 className="m-auto h-4 w-4 text-white" />
-                        )}
-                      </div>
+                      <Avatar
+                        avatarUrl={p.avatarUrl}
+                        name={p.displayName}
+                        size={24}
+                        className="border-background border-2"
+                        backgroundColor={p.avatarUrl ? undefined : p.color}
+                        fallbackIconClassName="h-4 w-4 text-white"
+                      />
                       <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                         {p.displayName}
                       </span>

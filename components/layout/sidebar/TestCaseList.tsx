@@ -1,4 +1,5 @@
-import { Plus, ArrowUp, ArrowDown, Minus, User2 } from 'lucide-react';
+import { Plus, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import Avatar from '@/components/shared/avatar';
 import { TestCaseDTO, Presence } from '@/types/firestore';
 
 type Props = {
@@ -205,9 +206,29 @@ export default function TestCaseList({
             </div>
             <div className="w-full">
               <div className="flex items-center gap-2">
-                {((presenceByTestCase[tc.id] || []).length ?? 0) > 0 && (
-                  <User2 className="text-muted-foreground" size={12} />
-                )}
+                {(presenceByTestCase[tc.id] || []).length > 0 ? (
+                  <div className="flex -space-x-2">
+                    {presenceByTestCase[tc.id].slice(0, 3).map((p) => (
+                      <div
+                        key={p.sessionId}
+                        className="group relative"
+                        title={p.displayName}
+                      >
+                        <Avatar
+                          avatarUrl={p.avatarUrl}
+                          name={p.displayName}
+                          size={20}
+                          className="border-background border-2"
+                          backgroundColor={p.avatarUrl ? undefined : p.color}
+                          fallbackIconClassName="h-3.5 w-3.5 text-white"
+                        />
+                        <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
+                          {p.displayName}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
                 <span className="text-left text-sm leading-snug font-bold">
                   {tc.title}
                 </span>

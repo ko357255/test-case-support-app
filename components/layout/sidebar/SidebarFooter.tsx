@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Avatar from '@/components/shared/avatar';
 
 type Props = {
   avatarUrl?: string;
@@ -21,20 +21,14 @@ export default function SidebarFooter({
         onClick={onOpenUserSettings}
         className="hover:bg-accent flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors"
       >
-        <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center overflow-hidden rounded-full font-bold">
-          {avatarUrl ? (
-            <Image
-              src={avatarUrl}
-              alt={userName || 'User avatar'}
-              width={36}
-              height={36}
-              sizes="36px"
-              className="h-9 w-9 rounded-full object-cover"
-            />
-          ) : (
-            <span className="text-sm">{initials}</span>
-          )}
-        </div>
+        <Avatar
+          avatarUrl={avatarUrl}
+          name={userName}
+          size={36}
+          className="bg-primary text-primary-foreground font-bold"
+          fallbackInitials={initials}
+          fallbackTextClassName="text-sm"
+        />
         <div className="flex-1 overflow-hidden">
           <p className="truncate text-sm font-bold">{userName}</p>
         </div>

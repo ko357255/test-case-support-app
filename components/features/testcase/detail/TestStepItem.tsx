@@ -1,4 +1,5 @@
-import { Trash2, User2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import Avatar from '@/components/shared/avatar';
 import { stepStatusConfig } from '@/config/testcase';
 import StepEvidenceList from './StepEvidenceList';
 import { EvidenceDoc, EvidenceDTO, TestStepDTO } from '@/types/firestore';
@@ -162,23 +163,14 @@ export default function TestStepItem({
                         className="group relative"
                         title={p.displayName}
                       >
-                        <div
-                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
-                          style={{
-                            backgroundColor: p.avatarUrl ? undefined : p.color,
-                          }}
-                        >
-                          {p.avatarUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={p.avatarUrl}
-                              alt={p.displayName}
-                              className="h-5 w-5 rounded-full object-cover"
-                            />
-                          ) : (
-                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
-                          )}
-                        </div>
+                        <Avatar
+                          avatarUrl={p.avatarUrl}
+                          name={p.displayName}
+                          size={20}
+                          className="border-background border-2"
+                          backgroundColor={p.avatarUrl ? undefined : p.color}
+                          fallbackIconClassName="h-3.5 w-3.5 text-white"
+                        />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                           {p.displayName}
                         </span>
@@ -229,23 +221,14 @@ export default function TestStepItem({
                         className="group relative"
                         title={p.displayName}
                       >
-                        <div
-                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
-                          style={{
-                            backgroundColor: p.avatarUrl ? undefined : p.color,
-                          }}
-                        >
-                          {p.avatarUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={p.avatarUrl}
-                              alt={p.displayName}
-                              className="h-5 w-5 rounded-full object-cover"
-                            />
-                          ) : (
-                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
-                          )}
-                        </div>
+                        <Avatar
+                          avatarUrl={p.avatarUrl}
+                          name={p.displayName}
+                          size={20}
+                          className="border-background border-2"
+                          backgroundColor={p.avatarUrl ? undefined : p.color}
+                          fallbackIconClassName="h-3.5 w-3.5 text-white"
+                        />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                           {p.displayName}
                         </span>
@@ -296,23 +279,14 @@ export default function TestStepItem({
                         className="group relative"
                         title={p.displayName}
                       >
-                        <div
-                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
-                          style={{
-                            backgroundColor: p.avatarUrl ? undefined : p.color,
-                          }}
-                        >
-                          {p.avatarUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={p.avatarUrl}
-                              alt={p.displayName}
-                              className="h-5 w-5 rounded-full object-cover"
-                            />
-                          ) : (
-                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
-                          )}
-                        </div>
+                        <Avatar
+                          avatarUrl={p.avatarUrl}
+                          name={p.displayName}
+                          size={20}
+                          className="border-background border-2"
+                          backgroundColor={p.avatarUrl ? undefined : p.color}
+                          fallbackIconClassName="h-3.5 w-3.5 text-white"
+                        />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                           {p.displayName}
                         </span>
@@ -372,23 +346,14 @@ export default function TestStepItem({
                         className="group relative"
                         title={p.displayName}
                       >
-                        <div
-                          className="border-background h-5 w-5 shrink-0 rounded-full border-2"
-                          style={{
-                            backgroundColor: p.avatarUrl ? undefined : p.color,
-                          }}
-                        >
-                          {p.avatarUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={p.avatarUrl}
-                              alt={p.displayName}
-                              className="h-5 w-5 rounded-full object-cover"
-                            />
-                          ) : (
-                            <User2 className="m-auto h-3.5 w-3.5 text-white" />
-                          )}
-                        </div>
+                        <Avatar
+                          avatarUrl={p.avatarUrl}
+                          name={p.displayName}
+                          size={20}
+                          className="border-background border-2"
+                          backgroundColor={p.avatarUrl ? undefined : p.color}
+                          fallbackIconClassName="h-3.5 w-3.5 text-white"
+                        />
                         <span className="bg-muted/90 text-foreground pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 rounded px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
                           {p.displayName}
                         </span>
