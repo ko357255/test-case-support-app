@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import type { UserDoc } from '@/types/firestore';
+import { DEFAULT_AVATAR_URL } from '@/config/user';
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +60,7 @@ export const useAuth = () => {
         doc(db, 'users', user.uid),
         {
           displayName: trimmedName || 'ユーザー',
+          avatarUrl: DEFAULT_AVATAR_URL,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         } as UserDoc,
