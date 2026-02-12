@@ -77,7 +77,6 @@ export default function TestStepItem({
         'evidences',
       ),
       (snap) => {
-        console.log('onSnapshot: evidence');
         setEvidences(
           snap.docs.map((doc) => ({
             id: doc.id,

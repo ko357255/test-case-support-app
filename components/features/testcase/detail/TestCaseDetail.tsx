@@ -77,7 +77,6 @@ export default function TestCaseDetail({
       doc(db, 'projects', projectId, 'testCases', testCaseId), // 監視対象
       // 変更があると、発火する
       (snap) => {
-        console.log('テストケース取得');
         if (snap.exists()) {
           const data = snap.data() as TestCaseDoc;
           // テストケースのデータを再代入
@@ -117,7 +116,6 @@ export default function TestCaseDetail({
     const unsub = onSnapshot(
       q,
       (snap) => {
-        console.log('テストステップ取得');
         setTestSteps(
           snap.docs.map((doc) => {
             const data = doc.data() as TestStepDoc;
@@ -154,7 +152,6 @@ export default function TestCaseDetail({
         'evidences',
       ),
       (snap) => {
-        console.log('エビデンス一覧取得');
         setEvidences(
           snap.docs.map((doc) => {
             const data = doc.data() as EvidenceDoc;

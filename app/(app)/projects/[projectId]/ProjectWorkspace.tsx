@@ -42,7 +42,6 @@ export default function ProjectWorkspace({ project }: Props) {
     const unsub = onSnapshot(
       q,
       (snap) => {
-        console.log('onSnapshot: testCases');
         setTestCases(
           snap.docs.map((doc) => {
             const data = doc.data() as TestCaseDoc;

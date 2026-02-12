@@ -21,9 +21,7 @@ const getProjectCached = cache(async (projectId: string) => {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { projectId } = await params;
-  console.log('メタデータ取得開始');
   const projectDoc = await getProjectCached(projectId);
-  console.log('メタデータ取得終了');
   const projects = projectDoc.data() as ProjectDoc | undefined;
 
   return {

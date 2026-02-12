@@ -42,8 +42,6 @@ export const usePresence = (projectId?: string) => {
   const userDocUnsubRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    console.log('[ログ] presence useEffect projectId', projectId);
-
     // projectIdが無い場合は何もしない
     if (!projectId) return;
 
@@ -52,7 +50,6 @@ export const usePresence = (projectId?: string) => {
 
     // 認証ユーザーごとにPresence登録・購読を開始する関数
     const startWithUser = (user: User) => {
-      console.log('[ログ] presence 購読開始', user.uid);
       const uid = user.uid;
 
       // sessionId はタブ単位で保持（プロジェクトごと）
@@ -154,18 +151,9 @@ export const usePresence = (projectId?: string) => {
         }
 
         // 初期Presenceデータを書き込み
-        set(pRef, initialPresence)
-          .then(() =>
-            console.log(
-              'presence initial set',
-              projectId,
-              sessionId,
-              initialPresence,
-            ),
-          )
-          .catch((err) =>
-            console.error('presence initial set error', err, initialPresence),
-          );
+        set(pRef, initialPresence).catch((err) =>
+          console.error('presence initial set error', err, initialPresence),
+        );
       })();
 
       // Presenceリスト（全ユーザー分）のDB参照を作成
@@ -186,7 +174,6 @@ export const usePresence = (projectId?: string) => {
         (snap) => {
           // スナップショットから値を取得
           const val = (snap.val() as Record<string, Presence>) ?? {};
-          console.log('presence onValue snap', projectId, val);
           // Presenceリストを状態に反映
           setPresences(val);
         },
@@ -269,7 +256,6 @@ export const usePresence = (projectId?: string) => {
     const cleaned = Object.fromEntries(
       Object.entries(payload).filter(([, v]) => v !== undefined),
     );
-    console.log('presenceデータを送信', cleaned);
     // Presenceデータを更新
     update(presenceRef.current as DatabaseReference, cleaned).catch(() => {});
   }, []);
