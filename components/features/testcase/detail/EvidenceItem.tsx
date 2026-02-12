@@ -1,4 +1,5 @@
 import { Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { evidenceTypeConfig } from '@/config/testcase';
 import { EvidenceDTO } from '@/types/firestore';
@@ -52,12 +53,10 @@ export default function EvidenceItem({
   return (
     <div className={`border-border rounded-lg border p-3 ${className}`}>
       <div className="flex items-start justify-between gap-3">
-        {/* Icon */}
         <EvidenceIcon
           className={`mt-1 shrink-0 ${iconSize} ${evidenceTypeConfig[evidence.type].color}`}
         />
 
-        {/* Content */}
         <div className="min-w-0 flex-1 space-y-2">
           {isEditing ? (
             <>
@@ -103,25 +102,25 @@ export default function EvidenceItem({
             </>
           )}
 
-          {/* Image Preview */}
+          {/* エビデンス画像 */}
           {evidence.type === 'screenshot' && evidence.url && (
-            <div className="mt-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative mt-2 h-64 w-full">
+              <Image
                 src={evidence.url}
                 alt={evidence.name}
-                className="border-border bg-muted/20 max-h-64 w-full rounded-md border object-contain"
+                fill
+                className="border-border bg-muted/20 rounded-md border object-contain"
               />
             </div>
           )}
 
-          {/* Date */}
+          {/* 日付 */}
           <div className="text-muted-foreground text-xs">
-            {evidence.createdAt.toLocaleString('ja-JP')}
+            {new Date(evidence.createdAt).toLocaleString('ja-JP')}
           </div>
         </div>
 
-        {/* Delete Button */}
+        {/* 削除ボタン */}
         {isEditing && (
           <button
             onClick={() => onDelete?.(evidence.id)}
