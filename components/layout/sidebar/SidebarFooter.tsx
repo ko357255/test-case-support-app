@@ -26,8 +26,6 @@ export default function SidebarFooter({
           name={userName}
           size={36}
           className="bg-primary text-primary-foreground font-bold"
-          fallbackInitials={initials}
-          fallbackTextClassName="text-sm"
         />
         <div className="flex-1 overflow-hidden">
           <p className="truncate text-sm font-bold">{userName}</p>

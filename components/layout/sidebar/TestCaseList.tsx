@@ -205,9 +205,12 @@ export default function TestCaseList({
               </div>
             </div>
             <div className="w-full">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-left text-sm leading-snug font-bold">
+                  {tc.title}
+                </span>
                 {(presenceByTestCase[tc.id] || []).length > 0 ? (
-                  <div className="flex -space-x-2">
+                  <div className="flex shrink-0 -space-x-2">
                     {presenceByTestCase[tc.id].slice(0, 3).map((p) => (
                       <div
                         key={p.sessionId}
@@ -218,7 +221,6 @@ export default function TestCaseList({
                           avatarUrl={p.avatarUrl}
                           name={p.displayName}
                           size={20}
-                          className="border-background border-2"
                           backgroundColor={p.avatarUrl ? undefined : p.color}
                           fallbackIconClassName="h-3.5 w-3.5 text-white"
                         />
@@ -229,9 +231,6 @@ export default function TestCaseList({
                     ))}
                   </div>
                 ) : null}
-                <span className="text-left text-sm leading-snug font-bold">
-                  {tc.title}
-                </span>
               </div>
             </div>
           </button>

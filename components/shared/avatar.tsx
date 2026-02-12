@@ -9,10 +9,7 @@ type Props = {
   name?: string;
   size: number;
   className?: string;
-  imageClassName?: string;
   backgroundColor?: string;
-  fallbackInitials?: string;
-  fallbackTextClassName?: string;
   fallbackIconClassName?: string;
 };
 
@@ -21,10 +18,7 @@ export default function Avatar({
   name,
   size,
   className,
-  imageClassName,
   backgroundColor,
-  fallbackInitials,
-  fallbackTextClassName,
   fallbackIconClassName,
 }: Props) {
   const wrapperClassName = joinClassNames(
@@ -40,13 +34,11 @@ export default function Avatar({
       {avatarUrl ? (
         <Image
           src={avatarUrl}
-          alt={name || 'User avatar'}
+          alt={name || 'ユーザーアバター'}
           fill
           sizes={`${size}px`}
-          className={joinClassNames('object-cover', imageClassName)}
+          className="object-cover"
         />
-      ) : fallbackInitials ? (
-        <span className={fallbackTextClassName}>{fallbackInitials}</span>
       ) : (
         <User2 className={fallbackIconClassName || 'h-4 w-4 text-white'} />
       )}
