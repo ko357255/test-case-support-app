@@ -51,7 +51,7 @@ export default function TestStepItem({
   };
 
   const handleFieldBlur = () => {
-    // Only notify parent when there is an actual change
+    // 実際に変更があった時だけ親に通知する
     if (!onChange) {
       onBlur?.();
       return;

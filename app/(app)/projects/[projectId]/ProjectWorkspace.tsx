@@ -56,7 +56,7 @@ export default function ProjectWorkspace({ project }: Props) {
         setIsLoadingTestCases(false);
       },
       (err) => {
-        // Permission denied can occur during sign-out when the user loses access
+        // サインアウト時にユーザーがアクセス権を失うことによる権限エラーの可能性がある
         if ((err as { code?: string })?.code === 'permission-denied') {
           console.warn('Snapshot listener permission-denied after sign-out');
           return;

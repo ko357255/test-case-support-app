@@ -54,14 +54,14 @@ export default function TestCaseDetail({
 
   const router = useRouter();
 
-  // map fieldId => Presence[] for this test case
+  // このテストケースのフィールドIDからPresence[]へのマップ
   const presenceByField = useMemo((): Record<string, Presence[]> => {
     const map: Record<string, Presence[]> = {};
     const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
     Object.values(presences || {}).forEach((p) => {
       if (!p || p.testCaseId !== testCaseId) return;
       if (!p.fieldId) return;
-      // ignore own presence
+      // 自身のPresenceは除外
       if (p.sessionId && currentSessionId && p.sessionId === currentSessionId)
         return;
       if (p.userId && myUid && p.userId === myUid) return;
@@ -77,7 +77,7 @@ export default function TestCaseDetail({
       doc(db, 'projects', projectId, 'testCases', testCaseId), // 監視対象
       // 変更があると、発火する
       (snap) => {
-        console.log('onSnapshot: testcase');
+        console.log('テストケース取得');
         if (snap.exists()) {
           const data = snap.data() as TestCaseDoc;
           // テストケースのデータを再代入
@@ -91,10 +91,10 @@ export default function TestCaseDetail({
       },
       (err) => {
         if ((err as { code?: string })?.code === 'permission-denied') {
-          console.warn('Snapshot listener permission-denied on testcase doc');
+          console.warn('テストケースドキュメントへのアクセス権限がありません');
           return;
         }
-        console.error('Snapshot listener error (testcase doc):', err);
+        console.error('テストケースドキュメントの監視でエラーが発生:', err);
       },
     );
     return () => unsub();
@@ -117,7 +117,7 @@ export default function TestCaseDetail({
     const unsub = onSnapshot(
       q,
       (snap) => {
-        console.log('onSnapshot: testSteps');
+        console.log('テストステップ取得');
         setTestSteps(
           snap.docs.map((doc) => {
             const data = doc.data() as TestStepDoc;
@@ -132,10 +132,10 @@ export default function TestCaseDetail({
       },
       (err) => {
         if ((err as { code?: string })?.code === 'permission-denied') {
-          console.warn('Snapshot listener permission-denied on testSteps');
+          console.warn('テストステップへのアクセス権限がありません');
           return;
         }
-        console.error('Snapshot listener error (testSteps):', err);
+        console.error('テストステップの監視でエラーが発生:', err);
       },
     );
 
@@ -154,7 +154,7 @@ export default function TestCaseDetail({
         'evidences',
       ),
       (snap) => {
-        console.log('onSnapshot: all evidences');
+        console.log('エビデンス一覧取得');
         setEvidences(
           snap.docs.map((doc) => {
             const data = doc.data() as EvidenceDoc;
@@ -168,10 +168,10 @@ export default function TestCaseDetail({
       },
       (err) => {
         if ((err as { code?: string })?.code === 'permission-denied') {
-          console.warn('Snapshot listener permission-denied on evidences');
+          console.warn('エビデンスへのアクセス権限がありません');
           return;
         }
-        console.error('Snapshot listener error (evidences):', err);
+        console.error('エビデンスの監視でエラーが発生:', err);
       },
     );
     return () => unsub();
@@ -220,7 +220,7 @@ export default function TestCaseDetail({
           delete data.updatedAt;
           await updateTestCase(projectId, id, data);
         } catch (e) {
-          console.error('Failed to update test case', e);
+          console.error('テストケースの更新に失敗しました', e);
           alert('テストケースの保存に失敗しました。');
         }
       }
@@ -243,7 +243,7 @@ export default function TestCaseDetail({
       delete data.updatedAt;
       await updateTestCase(projectId, id, data);
     } catch (e) {
-      console.error('Failed to autosave test case', e);
+      console.error('テストケースの自動保存に失敗しました', e);
     }
   };
 
@@ -269,10 +269,12 @@ export default function TestCaseDetail({
    * 編集中なら自動で編集モードをオフにしてローカルコピーを破棄
    */
   useEffect(() => {
+    // testCase切り替え時に編集モードをリセット
     if (isEditing) {
       setIsEditing(false);
       setEditedTestCase(null);
     }
+    // isEditingを依存配列に入れると無限ループになるため、含めない
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testCase?.id]);
 

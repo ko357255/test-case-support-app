@@ -28,6 +28,7 @@ export default function SidebarFilters({
   statusFilter,
   setStatusFilter,
 }: Props) {
+  // フィルターのいずれかが有効かどうか
   const hasAnyFilter = useMemo(
     () => !!(categoryFilter || priorityFilter || statusFilter),
     [categoryFilter, priorityFilter, statusFilter],

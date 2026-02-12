@@ -101,7 +101,7 @@ export default function TestCaseStepList({
             onChange={handleStepChange}
             onDelete={handleStepDelete}
             onBlur={onBlur}
-            // presence props forwarded
+            // Presenceプロップを渡す
             setPresence={setPresence}
             presenceByField={presenceByField}
           />

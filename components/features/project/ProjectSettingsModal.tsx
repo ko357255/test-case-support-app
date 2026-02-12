@@ -38,14 +38,14 @@ export default function ProjectSettingsModal({
   const [saving, setSaving] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
 
-  // Sync when props.project changes
+  // props.project が変わったときに状態を同期
   useEffect(() => {
     setProjectName(project.name);
     setProjectDescription(project.description);
     setMembers(project.memberIds || []);
   }, [project]);
 
-  // Check if current user is owner
+  // 現在のユーザーがオーナーかどうか判定
   useEffect(() => {
     const current = auth.currentUser;
     if (current) {

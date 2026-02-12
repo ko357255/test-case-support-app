@@ -68,7 +68,7 @@ export default function ProjectSidebar({
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // カテゴリ一覧を抽出（空文字・空白のみのカテゴリは除外）
+  // カテゴリ一覧を抽出
   const categories = useMemo(() => {
     return Array.from(
       new Set(
@@ -134,13 +134,17 @@ export default function ProjectSidebar({
     const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
     Object.values(presences || {}).forEach((p) => {
       if (!p?.testCaseId) return;
-      // ignore presence records without identifiers (defensive: old overwritten records)
+      // 削除されたPresenceを除外
       if (!p.sessionId && !p.userId) return;
-      // exclude own session and own user id to avoid showing self as 'other'
+      // 自分のセッションと自分のユーザーIDを除外
       if (p.sessionId && currentSessionId && p.sessionId === currentSessionId)
         return;
       if (p.userId && myUid && p.userId === myUid) return;
-      (map[p.testCaseId] = map[p.testCaseId] || []).push(p);
+
+      if (!map[p.testCaseId]) {
+        map[p.testCaseId] = [];
+      }
+      map[p.testCaseId].push(p);
     });
     return map;
   }, [presences, currentSessionId, currentUserId]);
