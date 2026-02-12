@@ -2,14 +2,12 @@ import Avatar from '@/components/shared/avatar';
 
 type Props = {
   avatarUrl?: string;
-  initials: string;
   userName: string;
   onOpenUserSettings: () => void;
 };
 
 export default function SidebarFooter({
   avatarUrl,
-  initials,
   userName,
   onOpenUserSettings,
 }: Props) {

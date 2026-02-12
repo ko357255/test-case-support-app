@@ -129,13 +129,6 @@ export default function ProjectSidebar({
     };
   }, []);
 
-  const initials = useMemo(() => {
-    const parts = userName.trim().split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return 'U';
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }, [userName]);
-
   const presenceByTestCase = useMemo(() => {
     const map: Record<string, Presence[]> = {};
     const myUid = auth.currentUser?.uid ?? currentUserId ?? null;
@@ -228,7 +221,6 @@ export default function ProjectSidebar({
       {/* フッター: ユーザー情報 */}
       <SidebarFooter
         avatarUrl={userAvatarUrl}
-        initials={initials}
         userName={userName}
         onOpenUserSettings={onOpenUserSettings}
       />
