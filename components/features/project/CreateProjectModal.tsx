@@ -72,9 +72,6 @@ export default function CreateProjectModal({
               <FolderPlus size={18} />
               新規プロジェクト
             </DialogTitle>
-            <DialogDescription>
-              プロジェクトの基本情報を入力してください。
-            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -85,7 +82,7 @@ export default function CreateProjectModal({
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="例: 次世代EC品質保証"
+                placeholder=""
                 disabled={saving}
               />
             </div>
