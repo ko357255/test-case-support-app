@@ -9,6 +9,7 @@ import { ProjectDTO, TestCaseDoc, TestCaseDTO } from '@/types/firestore';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { usePresence } from '@/hook/use-presence';
+import { createTestCase } from '@/lib/firestore/testCases';
 
 type Props = {
   project: ProjectDTO;
@@ -75,7 +76,6 @@ export default function ProjectWorkspace({ project }: Props) {
   }) => {
     setIsSavingNewTestCase(true);
     try {
-      const { createTestCase } = await import('@/lib/firestore/testCases');
       const ref = await createTestCase(project.id, {
         title: payload.title,
         description: '',

@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { Paperclip, Upload } from 'lucide-react';
 import EvidenceItem from './EvidenceItem';
 import { EvidenceDTO } from '@/types/firestore';
+import { updateEvidence, deleteEvidence } from '@/lib/actions/evidences';
+import { uploadEvidence } from '@/lib/storage/uploadEvidence';
 
 type Props = {
   evidences: EvidenceDTO[];
@@ -30,7 +32,6 @@ export default function StepEvidenceList({
     if (!file) return;
     try {
       setIsUploading(true);
-      const { uploadEvidence } = await import('@/lib/storage/uploadEvidence');
       await uploadEvidence({
         file,
         projectId,
@@ -87,8 +88,6 @@ export default function StepEvidenceList({
                 isEditing={isEditing}
                 onChange={async (id, patch) => {
                   try {
-                    const { updateEvidence } =
-                      await import('@/lib/actions/evidences');
                     await updateEvidence(
                       projectId,
                       testCaseId,
@@ -105,8 +104,6 @@ export default function StepEvidenceList({
                   if (!confirm('このエビデンスを削除してもよろしいですか？'))
                     return;
                   try {
-                    const { deleteEvidence } =
-                      await import('@/lib/actions/evidences');
                     await deleteEvidence(projectId, testCaseId, id, stepId);
                     onBlur?.();
                   } catch (err) {

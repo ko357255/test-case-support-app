@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { Upload } from 'lucide-react';
 import EvidenceItem from './EvidenceItem';
 import { EvidenceDTO } from '@/types/firestore';
+import { updateEvidence, deleteEvidence } from '@/lib/actions/evidences';
+import { uploadEvidence } from '@/lib/storage/uploadEvidence';
 
 type Props = {
   isEditing: boolean;
@@ -27,7 +29,6 @@ export default function TestCaseEvidenceList({
     if (!file) return;
     try {
       setIsUploading(true);
-      const { uploadEvidence } = await import('@/lib/storage/uploadEvidence');
       await uploadEvidence({
         file,
         projectId,
@@ -81,8 +82,6 @@ export default function TestCaseEvidenceList({
                 isEditing={isEditing}
                 onChange={async (id, patch) => {
                   try {
-                    const { updateEvidence } =
-                      await import('@/lib/actions/evidences');
                     await updateEvidence(projectId, testCaseId, id, patch);
                   } catch (err) {
                     console.error('Failed to update evidence', err);
@@ -93,8 +92,6 @@ export default function TestCaseEvidenceList({
                   if (!confirm('このエビデンスを削除してもよろしいですか？'))
                     return;
                   try {
-                    const { deleteEvidence } =
-                      await import('@/lib/actions/evidences');
                     await deleteEvidence(projectId, testCaseId, id);
                     onBlur?.();
                   } catch (err) {
