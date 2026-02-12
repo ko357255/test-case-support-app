@@ -5,6 +5,8 @@ import { Layers, User } from 'lucide-react';
 import UserSettingsModal from '@/components/features/user/UserSettingsModal';
 import ProjectCard from '@/components/features/project/ProjectCard';
 import { ProjectDTO } from '@/types/firestore';
+import CreateProjectModal from '@/components/features/project/CreateProjectModal';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   /** オーナーのプロジェクト */
@@ -20,9 +22,11 @@ export default function ProjectListPage({
   ownedProjects = [],
   participatingProjects = [],
 }: Props) {
+  const router = useRouter();
   const [owned] = useState<ProjectDTO[]>(ownedProjects);
   const [participating] = useState<ProjectDTO[]>(participatingProjects);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
 
   return (
     <>
@@ -37,7 +41,10 @@ export default function ProjectListPage({
               </h1>
             </div>
             <div className="flex items-center gap-4">
-              <button className="bg-primary text-primary-foreground rounded-lg px-6 py-3 text-sm font-bold shadow-md transition-all hover:opacity-90">
+              <button
+                onClick={() => setIsCreateProjectOpen(true)}
+                className="bg-primary text-primary-foreground rounded-lg px-6 py-3 text-sm font-bold shadow-md transition-all hover:opacity-90"
+              >
                 + 新規プロジェクト
               </button>
               <button
@@ -90,6 +97,11 @@ export default function ProjectListPage({
       <UserSettingsModal
         isOpen={isUserSettingsOpen}
         onClose={() => setIsUserSettingsOpen(false)}
+      />
+      <CreateProjectModal
+        isOpen={isCreateProjectOpen}
+        onClose={() => setIsCreateProjectOpen(false)}
+        onCreated={(projectId) => router.push(`/projects/${projectId}`)}
       />
     </>
   );
