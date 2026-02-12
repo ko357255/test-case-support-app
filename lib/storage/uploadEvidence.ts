@@ -2,6 +2,9 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { storage, db } from '@/lib/firebase';
 
+/**
+ * 画像エビデンスのアップロード
+ */
 export async function uploadEvidence(params: {
   file?: File;
   textContent?: string;
@@ -14,7 +17,7 @@ export async function uploadEvidence(params: {
   const { file, textContent, name, projectId, testCaseId, stepId, type } =
     params;
 
-  // 保存先コレクションを決定（stepId がある場合は step のサブコレクションへ）
+  // 保存先コレクション
   const targetCollection = stepId
     ? collection(
         db,
@@ -35,7 +38,7 @@ export async function uploadEvidence(params: {
         'evidences',
       );
 
-  // テキスト証拠
+  // テキストエビデンスの場合
   if (type === 'text') {
     if (!textContent)
       throw new Error('textContent is required for text evidence');
@@ -52,6 +55,7 @@ export async function uploadEvidence(params: {
   if (!file) throw new Error('file is required for non-text evidence');
 
   const uuid = crypto.randomUUID();
+  // ストレージの保存先パス
   const storagePath = stepId
     ? `projects/${projectId}/testCases/${testCaseId}/testSteps/${stepId}/evidences/${uuid}`
     : `projects/${projectId}/testCases/${testCaseId}/evidences/${uuid}`;

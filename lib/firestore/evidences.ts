@@ -2,7 +2,7 @@ import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 /**
- * Update an evidence document under either testCase or testStep
+ * エビデンスの更新
  */
 export async function updateEvidence(
   projectId: string,
@@ -35,6 +35,9 @@ export async function updateEvidence(
   return updateDoc(ref, data);
 }
 
+/**
+ * エビデンスの削除
+ */
 export async function deleteEvidence(
   projectId: string,
   testCaseId: string,
