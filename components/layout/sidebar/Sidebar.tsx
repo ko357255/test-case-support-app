@@ -42,6 +42,8 @@ interface Props {
   isSavingNewTestCase?: boolean;
   /** ユーザー設定画面オープン時のコールバック */
   onOpenUserSettings: () => void;
+  /** サイドバーを閉じる */
+  onCloseSidebar: () => void;
 }
 
 /**
@@ -61,6 +63,7 @@ export default function ProjectSidebar({
   isLoading = false,
   isSavingNewTestCase = false,
   onOpenUserSettings,
+  onCloseSidebar,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -175,11 +178,12 @@ export default function ProjectSidebar({
   };
 
   return (
-    <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-100 flex-col border-r">
+    <aside className="border-border bg-sidebar text-sidebar-foreground flex h-full w-85 flex-col border-r">
       {/* プロジェクトヘッダー */}
       <SidebarHeader
         projectName={project.name}
         onOpenSettings={onOpenSettings}
+        onCloseSidebar={onCloseSidebar}
       />
 
       {/* 検索・フィルタセクション */}

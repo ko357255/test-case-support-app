@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import TestCaseDetail from '@/components/features/testcase/detail/TestCaseDetail';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import ProjectSettingsModal from '@/components/features/project/ProjectSettingsModal';
@@ -25,6 +26,7 @@ export default function ProjectWorkspace({ project }: Props) {
   );
   const [isLoadingTestCases, setIsLoadingTestCases] = useState(true);
   const [isSavingNewTestCase, setIsSavingNewTestCase] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
@@ -93,23 +95,36 @@ export default function ProjectWorkspace({ project }: Props) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar
-        project={project}
-        testCases={testCases}
-        selectedTestCaseId={selectedTestCaseId}
-        onSelectTestCaseId={(tc) => setSelectedTestCaseId(tc)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onAddTestCase={handleAddTestCase}
-        isLoading={isLoadingTestCases}
-        isSavingNewTestCase={isSavingNewTestCase}
-        onOpenUserSettings={() => setIsUserSettingsOpen(true)}
-        presences={presences}
-        setPresence={setPresence}
-        currentSessionId={currentSessionId}
-        currentUserId={currentUserId}
-      />
+      {isSidebarOpen && (
+        <Sidebar
+          project={project}
+          testCases={testCases}
+          selectedTestCaseId={selectedTestCaseId}
+          onSelectTestCaseId={(tc) => setSelectedTestCaseId(tc)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onAddTestCase={handleAddTestCase}
+          isLoading={isLoadingTestCases}
+          isSavingNewTestCase={isSavingNewTestCase}
+          onOpenUserSettings={() => setIsUserSettingsOpen(true)}
+          presences={presences}
+          setPresence={setPresence}
+          currentSessionId={currentSessionId}
+          currentUserId={currentUserId}
+          onCloseSidebar={() => setIsSidebarOpen(false)}
+        />
+      )}
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="relative flex-1 overflow-y-auto">
+        {!isSidebarOpen && (
+          <button
+            type="button"
+            aria-label="サイドバーを開く"
+            onClick={() => setIsSidebarOpen(true)}
+            className="bg-background/90 text-foreground hover:bg-accent absolute top-3 left-3 z-10 rounded-md border px-2 py-1 shadow-sm transition-colors"
+          >
+            <ChevronRight size={18} />
+          </button>
+        )}
         {!selectedTestCaseId || !project.id ? (
           <div className="text-muted-foreground flex h-full flex-col items-center justify-center p-8">
             <p className="text-lg font-medium">
