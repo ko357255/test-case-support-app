@@ -4,15 +4,12 @@ import {
   signIn as nextAuthSignIn,
   signOut as nextAuthSignOut,
 } from 'next-auth/react';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import type { UserDoc } from '@/types/firestore';
-import { DEFAULT_AVATAR_URL } from '@/config/user';
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,27 +47,20 @@ export const useAuth = () => {
       // Firebase Authでユーザー作成
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
+        normalizedEmail,
         pass,
       );
       const user = userCredential.user;
       const trimmedName = name.trim();
 
-      // usersコレクションにユーザーデータを保存
-      await setDoc(
-        doc(db, 'users', user.uid),
-        {
-          displayName: trimmedName || 'ユーザー',
-          email: normalizedEmail,
-          avatarUrl: DEFAULT_AVATAR_URL,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        } as UserDoc,
-        { merge: true },
-      );
+      // idTokenを取得
+      const idToken = await user.getIdToken();
+
+      // Server ActionでFirestoreにユーザー情報を保存
+      const { registerUser } = await import('@/lib/actions/users');
+      await registerUser(idToken, trimmedName);
 
       // NextAuthのセッション開始
-      const idToken = await user.getIdToken();
       const result = await nextAuthSignIn('credentials', {
         idToken,
         redirect: false,
