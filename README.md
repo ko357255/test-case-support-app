@@ -29,6 +29,7 @@
 ### バックエンド
 
 - Cloud Firestore
+- Cloud Storage for Firebase
 - Firebase Realtime Database
 - Firebase Authentication
 - NextAuth.js
